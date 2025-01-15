@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_mapa"
+            android:title="Mapa"
+            android:icon="@drawable/map_icon"
+            android:iconSize="24dp"
+            >
+        </item>
+        <item
+            android:id="@+id/nav_camaras"
+            android:title="Camaras"
+            android:icon="@drawable/camaras_icon"
+            android:iconSize="24dp"
+            >
+        </item>
+        <item
+            android:id="@+id/nav_incidencias"
+            android:title="Incidencias"
+            android:icon="@drawable/incidencias"
+            android:iconSize="24dp">
+        </item>
+        <item
+            android:id="@+id/nav_favoritos"
+            android:title="Favoritos"
+            android:icon="@drawable/map_icon"
+            >
+        </item>
+        <item
+            android:id="@+id/nav_infoApp"
+            android:title="InfoApp"
+            android:icon="@drawable/map_icon"
+            >
+        </item>
+    </group>
+
+</menu>
