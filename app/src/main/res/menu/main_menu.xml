@@ -7,6 +7,7 @@
             android:title="Mapa"
             android:icon="@drawable/map_icon"
             android:iconSize="24dp"
+
             >
         </item>
         <item
@@ -25,13 +26,13 @@
         <item
             android:id="@+id/nav_favoritos"
             android:title="Favoritos"
-            android:icon="@drawable/map_icon"
+            android:icon="@drawable/estrella_claro"
             >
         </item>
         <item
             android:id="@+id/nav_infoApp"
             android:title="InfoApp"
-            android:icon="@drawable/map_icon"
+            android:icon="@drawable/info_icon"
             >
         </item>
     </group>
