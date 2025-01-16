@@ -6,7 +6,6 @@
             android:id="@+id/nav_mapa"
             android:title="Mapa"
             android:icon="@drawable/map_icon"
-            android:iconSize="24dp"
 
             >
         </item>
@@ -14,14 +13,13 @@
             android:id="@+id/nav_camaras"
             android:title="Camaras"
             android:icon="@drawable/camaras_icon"
-            android:iconSize="24dp"
             >
         </item>
         <item
             android:id="@+id/nav_incidencias"
             android:title="Incidencias"
             android:icon="@drawable/incidencias"
-            android:iconSize="24dp">
+            >
         </item>
         <item
             android:id="@+id/nav_favoritos"
@@ -36,5 +34,29 @@
             >
         </item>
     </group>
+
+    <item android:title="Perfil">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_perfil"
+                    android:icon="@drawable/perfil_icon"
+                    android:title="Perfil"
+                    >
+
+                </item>
+
+                <item
+                    android:id="@+id/nav_cerrar_sesion"
+                    android:icon="@drawable/logout_icon"
+                    android:title="Cerrar sesion"
+                    >
+
+                </item>
+            </group>
+        </menu>
+
+
+    </item>
 
 </menu>
