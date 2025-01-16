@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
 
-       navigationView.bringChildToFront();
+       navigationView.bringToFront();
 
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
