@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_mapa"
+            android:title="Mapa"
+            android:icon="@drawable/map_icon"
+
+            >
+        </item>
+        <item
+            android:id="@+id/nav_camaras"
+            android:title="Camaras"
+            android:icon="@drawable/camaras_icon"
+            >
+        </item>
+        <item
+            android:id="@+id/nav_incidencias"
+            android:title="Incidencias"
+            android:icon="@drawable/incidencias"
+            >
+        </item>
+        <item
+            android:id="@+id/nav_favoritos"
+            android:title="Favoritos"
+            android:icon="@drawable/estrella_claro"
+            >
+        </item>
+        <item
+            android:id="@+id/nav_infoApp"
+            android:title="InfoApp"
+            android:icon="@drawable/info_icon"
+            >
+        </item>
+    </group>
+
+    <item android:title="Perfil">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_perfil"
+                    android:icon="@drawable/perfil_icon"
+                    android:title="Perfil"
+                    >
+
+                </item>
+
+                <item
+                    android:id="@+id/nav_cerrar_sesion"
+                    android:icon="@drawable/logout_icon"
+                    android:title="Cerrar sesion"
+                    >
+
+                </item>
+            </group>
+        </menu>
+
+
+    </item>
+
+</menu>
