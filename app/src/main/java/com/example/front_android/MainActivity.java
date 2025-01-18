@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_camaras:
                 ArrayList<Usuario> miListaUsuarios = new ArrayList<Usuario>();
                 message = "Cámaras seleccionado";
-                new PeticionesUsuarios.ObtenerUsuarios().execute();
+
                 break;
             case R.id.nav_incidencias:
                 message = "Incidencias seleccionado";
@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
+                new PeticionesUsuarios.ObtenerUsuario().execute();
                 break;
             case R.id.nav_cerrar_sesion:
                 message = "Cerrar sesión seleccionado";

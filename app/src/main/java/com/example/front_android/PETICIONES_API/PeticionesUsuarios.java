@@ -19,7 +19,7 @@ import java.net.URL;
 public class PeticionesUsuarios {
 
 
-    public static class ObtenerUsuarios extends AsyncTask<Void, Void, String> {
+    public static class ObtenerUsuario extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
@@ -28,6 +28,7 @@ public class PeticionesUsuarios {
 
             try {
 //                https://jsonplaceholder.typicode.com/users
+//                android:usesCleartextTraffic="true"
                 URL url = new URL("http://10.0.2.2:8080/usuario/1");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -69,15 +70,17 @@ public class PeticionesUsuarios {
                         String nombre = userObject.getString("nombre");
                         String contrasena = userObject.getString("contraseña");
                         String correo = userObject.getString("correo");
+                        String rol = userObject.getString("rol");
 
                         usuario.setNombre(nombre);
                         usuario.setContrasena(contrasena);
                         usuario.setCorreoElectronico(correo);
+                        usuario.setRol(rol);
 
 
 
                         Log.d("ObtenerUsuarios", "Usuario: Nombre = " + nombre +
-                                ", Usuario = " + contrasena + ", Correo = " + correo);
+                                ", Usuario = " + contrasena + ", Correo = " + correo +  ", Rol = " + rol);
                     }
 
 
