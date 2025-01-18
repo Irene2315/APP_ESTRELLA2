@@ -8,6 +8,7 @@ public class Usuario implements Serializable {
     private String correoElectronico;
     private String contrasena;
     private String rol;
+    //private Rol rol;
 
     public Usuario() {
     }
