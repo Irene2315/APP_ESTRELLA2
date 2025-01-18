@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -17,6 +18,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.front_android.Modelos.Usuario;
+import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,6 +29,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
@@ -88,9 +93,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_mapa:
                 message = "Mapa seleccionado";
+                ListView listaUsuarios;
+
+
                 break;
             case R.id.nav_camaras:
+                ArrayList<Usuario> miListaUsuarios = new ArrayList<Usuario>();
                 message = "Cámaras seleccionado";
+                new PeticionesUsuarios.ObtenerUsuarios().execute();
                 break;
             case R.id.nav_incidencias:
                 message = "Incidencias seleccionado";
