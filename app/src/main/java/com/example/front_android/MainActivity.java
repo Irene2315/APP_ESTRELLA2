@@ -22,6 +22,8 @@ import com.example.front_android.Modelos.Usuario;
 import com.example.front_android.PETICIONES_API.PeticionesCiudades;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
 import com.example.front_android.PETICIONES_API.PeticionesProvincias;
+import com.example.front_android.PETICIONES_API.PeticionesRegiones;
+import com.example.front_android.PETICIONES_API.PeticionesTiposDeIncidencia;
 import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -102,8 +104,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //new PeticionesIncidencias.ObtenerIncidenciasCiudad().execute();
                 //new PeticionesIncidencias.ObtenerIncidenciasTipoIncidencia().execute();
                 //new PeticionesCiudades.ObtenerTodasLasCiudades().execute();
-                new PeticionesProvincias.ObtenerTodasLasProvincias().execute();
+                //new PeticionesProvincias.ObtenerTodasLasProvincias().execute();
+                //  new PeticionesRegiones.ObtenerTodasLasRegiones().execute();
+                //new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia().execute();
 
+                //penticion camara pendiente
 
 
 

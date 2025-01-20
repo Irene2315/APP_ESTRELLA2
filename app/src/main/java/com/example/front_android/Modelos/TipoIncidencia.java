@@ -40,4 +40,13 @@ public class TipoIncidencia implements Serializable {
     public void setIncidencias(List<Incidencia> incidencias) {
         this.incidencias = incidencias;
     }
+
+    @Override
+    public String toString() {
+        return "TipoIncidencia{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", incidencias=" + incidencias +
+                '}';
+    }
 }
