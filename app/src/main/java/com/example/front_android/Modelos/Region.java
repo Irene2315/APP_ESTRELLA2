@@ -5,8 +5,9 @@ import java.util.List;
 
 public class Region implements Serializable {
     private int id;
+    private int idRegion;
     private String nombreEs;
-    private String nombreEus;
+    private String nombreEu;
 
     private List<Camara> camaras;
     private List<Incidencia> incidencias;
@@ -14,10 +15,11 @@ public class Region implements Serializable {
     public Region() {
     }
 
-    public Region(int id, String nombreEs, String nombreEus, List<Camara> camaras, List<Incidencia> incidencias) {
+    public Region(int id, int idRegion, String nombreEs, String nombreEu, List<Camara> camaras, List<Incidencia> incidencias) {
         this.id = id;
+        this.idRegion = idRegion;
         this.nombreEs = nombreEs;
-        this.nombreEus = nombreEus;
+        this.nombreEu = nombreEu;
         this.camaras = camaras;
         this.incidencias = incidencias;
     }
@@ -30,6 +32,14 @@ public class Region implements Serializable {
         this.id = id;
     }
 
+    public int getIdRegion() {
+        return idRegion;
+    }
+
+    public void setIdRegion(int idRegion) {
+        this.idRegion = idRegion;
+    }
+
     public String getNombreEs() {
         return nombreEs;
     }
@@ -38,12 +48,12 @@ public class Region implements Serializable {
         this.nombreEs = nombreEs;
     }
 
-    public String getNombreEus() {
-        return nombreEus;
+    public String getNombreEu() {
+        return nombreEu;
     }
 
-    public void setNombreEus(String nombreEus) {
-        this.nombreEus = nombreEus;
+    public void setNombreEu(String nombreEu) {
+        this.nombreEu = nombreEu;
     }
 
     public List<Camara> getCamaras() {

@@ -29,7 +29,8 @@ public class PeticionesUsuarios {
             try {
 //                https://jsonplaceholder.typicode.com/users
 //                android:usesCleartextTraffic="true"
-                URL url = new URL("http://10.0.2.2:8080/usuario/1");
+                //10.0.2.2
+                URL url = new URL("http:/10.10.13.251:8080/usuarios");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
                 int code = urlConnection.getResponseCode();
@@ -71,6 +72,7 @@ public class PeticionesUsuarios {
                         String contrasena = userObject.getString("contraseña");
                         String correo = userObject.getString("correo");
                         String rol = userObject.getString("rol");
+
 
                         usuario.setNombre(nombre);
                         usuario.setContrasena(contrasena);
