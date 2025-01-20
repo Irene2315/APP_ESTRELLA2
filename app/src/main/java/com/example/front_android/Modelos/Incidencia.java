@@ -14,11 +14,13 @@ public class Incidencia implements Serializable {
     private Region region;
     private Ciudad ciudad;
     private TipoIncidencia tipoIncidencia;
+    private Provincia provincia;
+
 
     public Incidencia() {
     }
 
-    public Incidencia(int id, String latitud, String longitud, String causa, String nivelIncidencia, String carretera, String fechaInicio, Region region, Ciudad ciudad, TipoIncidencia tipoIncidencia) {
+    public Incidencia(int id, String latitud, String longitud, String causa, String nivelIncidencia, String carretera, String fechaInicio, Region region, Ciudad ciudad, TipoIncidencia tipoIncidencia, Provincia provincia) {
         this.id = id;
         this.latitud = latitud;
         this.longitud = longitud;
@@ -29,7 +31,9 @@ public class Incidencia implements Serializable {
         this.region = region;
         this.ciudad = ciudad;
         this.tipoIncidencia = tipoIncidencia;
+        this.provincia = provincia;
     }
+
 
     public int getId() {
         return id;
@@ -109,5 +113,30 @@ public class Incidencia implements Serializable {
 
     public void setTipoIncidencia(TipoIncidencia tipoIncidencia) {
         this.tipoIncidencia = tipoIncidencia;
+    }
+
+    public Provincia getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(Provincia provincia) {
+        this.provincia = provincia;
+    }
+
+    @Override
+    public String toString() {
+        return "Incidencia{" +
+                "id=" + id +
+                ", latitud='" + latitud + '\'' +
+                ", longitud='" + longitud + '\'' +
+                ", causa='" + causa + '\'' +
+                ", nivelIncidencia='" + nivelIncidencia + '\'' +
+                ", carretera='" + carretera + '\'' +
+                ", fechaInicio='" + fechaInicio + '\'' +
+                ", region=" + region +
+                ", ciudad=" + ciudad +
+                ", tipoIncidencia=" + tipoIncidencia +
+                ", provincia=" + provincia +
+                '}';
     }
 }

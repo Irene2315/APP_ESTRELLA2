@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.front_android.Modelos.Usuario;
+import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
 import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -95,13 +96,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_mapa:
                 message = "Mapa seleccionado";
-                ListView listaUsuarios;
+
+                //new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
+               new PeticionesIncidencias.ObtenerIncidenciasRegion().execute();
 
 
                 break;
             case R.id.nav_camaras:
                 ArrayList<Usuario> miListaUsuarios = new ArrayList<Usuario>();
                 message = "Cámaras seleccionado";
+
 
                 break;
             case R.id.nav_incidencias:
