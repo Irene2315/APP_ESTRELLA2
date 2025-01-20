@@ -5,8 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -14,14 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.front_android.Modelos.Usuario;
+import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +29,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
 
@@ -53,7 +53,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setSupportActionBar(toolbar);
 
-        navigationView.bringToFront();
+
+
+       navigationView.bringToFront();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.abrir_menu_nav, R.string.cerrar_menu_nav);
         drawerLayout.addDrawerListener(toggle);
@@ -69,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mapFragment.getMapAsync(this);
         }
         setPermisosGeoloc();
+        new PeticionesUsuarios.ObtenerUsuario();
+
     }
 
     @Override
@@ -90,9 +95,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_mapa:
                 message = "Mapa seleccionado";
+                ListView listaUsuarios;
+
+
                 break;
             case R.id.nav_camaras:
+                ArrayList<Usuario> miListaUsuarios = new ArrayList<Usuario>();
                 message = "Cámaras seleccionado";
+
                 break;
             case R.id.nav_incidencias:
                 message = "Incidencias seleccionado";
@@ -105,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
+                new PeticionesUsuarios.ObtenerUsuario().execute();
                 break;
             case R.id.nav_cerrar_sesion:
                 message = "Cerrar sesión seleccionado";
