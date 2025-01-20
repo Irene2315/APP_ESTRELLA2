@@ -19,7 +19,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.front_android.Modelos.Usuario;
+import com.example.front_android.PETICIONES_API.PeticionesCiudades;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
+import com.example.front_android.PETICIONES_API.PeticionesProvincias;
 import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -94,9 +96,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_mapa:
                 message = "Mapa seleccionado";
+//                new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
+                // new PeticionesIncidencias.ObtenerIncidenciasRegion().execute();
+                //new PeticionesIncidencias.ObtenerIncidenciasProvincia().execute();
+                //new PeticionesIncidencias.ObtenerIncidenciasCiudad().execute();
+                //new PeticionesIncidencias.ObtenerIncidenciasTipoIncidencia().execute();
+                //new PeticionesCiudades.ObtenerTodasLasCiudades().execute();
+                new PeticionesProvincias.ObtenerTodasLasProvincias().execute();
 
-                //new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
-               new PeticionesIncidencias.ObtenerIncidenciasRegion().execute();
+
+
 
 
                 break;
@@ -108,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_incidencias:
                 message = "Incidencias seleccionado";
+//                new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
                 break;
             case R.id.nav_favoritos:
                 message = "Favoritos seleccionado";
