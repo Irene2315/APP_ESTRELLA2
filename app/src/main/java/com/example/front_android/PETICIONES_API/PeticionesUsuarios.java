@@ -2,7 +2,9 @@ package com.example.front_android.PETICIONES_API;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.front_android.Modelos.Rol;
 import com.example.front_android.Modelos.Usuario;
 
 import org.json.JSONArray;
@@ -15,9 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 public class PeticionesUsuarios {
-
 
     public static class ObtenerUsuario extends AsyncTask<Void, Void, String> {
 
@@ -27,16 +27,23 @@ public class PeticionesUsuarios {
             StringBuilder jsonResult = new StringBuilder();
 
             try {
+
 //                https://jsonplaceholder.typicode.com/users
 //                android:usesCleartextTraffic="true"
                 //10.0.2.2
-                URL url = new URL("http:/10.10.13.251:8080/usuarios");
+
+                URL url = new URL("http://localhost:8080/usuario");
+
                 urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
 
                 int code = urlConnection.getResponseCode();
+                Log.d("ObtenerUsuarios", "Código de respuesta: " + code);
+
                 if (code != 200) {
-                    throw new IOException("Invalid response from server: " + code);
+                    throw new IOException("Respuesta inválida del servidor: " + code);
                 }
+
 
                 BufferedReader rd = new BufferedReader(new InputStreamReader(
                         urlConnection.getInputStream()));
@@ -44,25 +51,23 @@ public class PeticionesUsuarios {
                 while ((line = rd.readLine()) != null) {
                     jsonResult.append(line).append("\n");
                 }
+                Log.d("ObtenerUsuarios", "Respuesta JSON: " + jsonResult.toString());
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.e("ObtenerUsuarios", "Error en la conexión: " + e.getMessage(), e);
                 return null;
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
             }
-
             return jsonResult.toString();
         }
 
         @Override
         protected void onPostExecute(String result) {
-            if (result != null) {
+            if (result != null && !result.isEmpty()) {
                 try {
                     JSONArray jsonArray = new JSONArray(result);
-
-
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         Usuario usuario = new Usuario();
@@ -71,7 +76,11 @@ public class PeticionesUsuarios {
                         String nombre = userObject.getString("nombre");
                         String contrasena = userObject.getString("contraseña");
                         String correo = userObject.getString("correo");
-                        String rol = userObject.getString("rol");
+
+                        JSONObject rolObject = userObject.getJSONObject("rol");
+                        Rol rol = new Rol();
+                        rol.setId(rolObject.getInt("id"));
+                        rol.setNombre(rolObject.getString("nombre"));
 
 
                         usuario.setNombre(nombre);
@@ -79,20 +88,12 @@ public class PeticionesUsuarios {
                         usuario.setCorreoElectronico(correo);
                         usuario.setRol(rol);
 
-
-
-                        Log.d("ObtenerUsuarios", "Usuario: Nombre = " + nombre +
-                                ", Usuario = " + contrasena + ", Correo = " + correo +  ", Rol = " + rol);
                     }
 
-
-
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e("ObtenerUsuarios", "Error procesando el JSON: " + e.getMessage());
                 }
             }
         }
     }
-
-
 }

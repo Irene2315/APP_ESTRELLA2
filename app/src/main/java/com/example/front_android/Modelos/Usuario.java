@@ -7,13 +7,12 @@ public class Usuario implements Serializable {
     private String nombre;
     private String correoElectronico;
     private String contrasena;
-    private String rol;
-    //private Rol rol;
+    private Rol rol;
 
     public Usuario() {
     }
 
-    public Usuario(int id, String correoElectronico, String contrasena, String nombre, String rol) {
+    public Usuario(int id, String correoElectronico, String contrasena, String nombre, Rol rol) {
         this.id = id;
         this.correoElectronico = correoElectronico;
         this.contrasena = contrasena;
@@ -54,11 +53,11 @@ public class Usuario implements Serializable {
     }
 
 
-    public String getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
     }
 }
