@@ -79,6 +79,7 @@ public class PeticionesIncidencias {
 
         @Override
         protected List<Incidencia> doInBackground(Void... params) {
+
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             StringBuilder jsonResult = new StringBuilder();

@@ -73,8 +73,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mapFragment.getMapAsync(this);
         }
         setPermisosGeoloc();
-        new PeticionesUsuarios.ObtenerUsuario();
-
     }
 
     @Override
