@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mapFragment.getMapAsync(this);
         }
         setPermisosGeoloc();
-        new PeticionesUsuarios.ObtenerUsuario();
+
 
     }
 
@@ -111,7 +111,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //  new PeticionesRegiones.ObtenerTodasLasRegiones().execute();
                 //new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia().execute();
 
-                new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
+                //new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
+
+
+
+
 
 
 
@@ -135,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
-                new PeticionesUsuarios.ObtenerUsuario().execute();
+                new PeticionesUsuarios.ObtenerUnUsuario().execute();
                 break;
             case R.id.nav_cerrar_sesion:
                 message = "Cerrar sesión seleccionado";

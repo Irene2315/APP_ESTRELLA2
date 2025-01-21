@@ -2,12 +2,10 @@ package com.example.front_android.PETICIONES_API;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.front_android.Modelos.Rol;
 import com.example.front_android.Modelos.Usuario;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,81 +17,95 @@ import java.net.URL;
 
 public class PeticionesUsuarios {
 
-    public static class ObtenerUsuario extends AsyncTask<Void, Void, String> {
+    /**
+     * Método para parsear un objeto JSON a un objeto Usuario.
+     */
+    private static Usuario parseUsuario(JSONObject usuarioObject) throws JSONException {
+        Usuario usuario = new Usuario();
+
+        usuario.setId(usuarioObject.getInt("id"));
+        usuario.setNombre(usuarioObject.getString("nombre"));
+        usuario.setCorreoElectronico(usuarioObject.getString("correoElectronico"));
+        usuario.setContrasena(usuarioObject.optString("contrasena", null)); // Manejo opcional de la contraseña
+
+        // Parsear el rol del usuario
+        JSONObject rolObject = usuarioObject.getJSONObject("rol");
+        Rol rol = new Rol();
+        rol.setId(rolObject.getInt("id"));
+        rol.setNombre(rolObject.getString("nombre"));
+        usuario.setRol(rol);
+
+        return usuario;
+    }
+
+    /**
+     * Clase AsyncTask para obtener un usuario desde el servidor.
+     */
+    public static class ObtenerUnUsuario extends AsyncTask<Void, Void, Usuario> {
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Usuario doInBackground(Void... params) {
             HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
             StringBuilder jsonResult = new StringBuilder();
 
             try {
-
-//                https://jsonplaceholder.typicode.com/users
-//                android:usesCleartextTraffic="true"
-                //10.0.2.2
-
-                URL url = new URL("http://localhost:8080/usuario");
-
+                // URL para obtener el usuario
+                URL url = new URL("http://10.10.13.251:8080/usuarios/1");
                 urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
 
+                // Verificar el código de respuesta del servidor
                 int code = urlConnection.getResponseCode();
-                Log.d("ObtenerUsuarios", "Código de respuesta: " + code);
-
-                if (code != 200) {
+                if (code != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + code);
                 }
 
-
-                BufferedReader rd = new BufferedReader(new InputStreamReader(
-                        urlConnection.getInputStream()));
+                // Leer la respuesta del servidor
+                reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
-                while ((line = rd.readLine()) != null) {
+                while ((line = reader.readLine()) != null) {
                     jsonResult.append(line).append("\n");
                 }
-                Log.d("ObtenerUsuarios", "Respuesta JSON: " + jsonResult.toString());
-            } catch (Exception e) {
-                Log.e("ObtenerUsuarios", "Error en la conexión: " + e.getMessage(), e);
+            } catch (IOException e) {
+                Log.e("Error", "Error de conexión: " + e.getMessage());
+                e.printStackTrace();
                 return null;
             } finally {
+                // Cerrar recursos
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        Log.e("Error", "Error al cerrar el reader: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
             }
-            return jsonResult.toString();
+
+            // Parsear la respuesta JSON a un objeto Usuario
+            try {
+                JSONObject usuarioObject = new JSONObject(jsonResult.toString());
+                return parseUsuario(usuarioObject);
+            } catch (JSONException e) {
+                Log.e("Error", "Error al parsear el JSON: " + e.getMessage());
+                e.printStackTrace();
+                return null;
+            }
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            if (result != null && !result.isEmpty()) {
-                try {
-                    JSONArray jsonArray = new JSONArray(result);
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        Usuario usuario = new Usuario();
-                        JSONObject userObject = jsonArray.getJSONObject(i);
-
-                        String nombre = userObject.getString("nombre");
-                        String contrasena = userObject.getString("contraseña");
-                        String correo = userObject.getString("correo");
-
-                        JSONObject rolObject = userObject.getJSONObject("rol");
-                        Rol rol = new Rol();
-                        rol.setId(rolObject.getInt("id"));
-                        rol.setNombre(rolObject.getString("nombre"));
-
-
-                        usuario.setNombre(nombre);
-                        usuario.setContrasena(contrasena);
-                        usuario.setCorreoElectronico(correo);
-                        usuario.setRol(rol);
-
-                    }
-
-                } catch (JSONException e) {
-                    Log.e("ObtenerUsuarios", "Error procesando el JSON: " + e.getMessage());
-                }
+        protected void onPostExecute(Usuario usuario) {
+            if (usuario != null) {
+                Log.d("Usuario", usuario.toString());
+            } else {
+                Log.e("Usuario", "No se pudo obtener el usuario.");
             }
         }
     }
+
+
+
 }
