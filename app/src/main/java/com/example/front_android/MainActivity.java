@@ -17,34 +17,26 @@ import androidx.core.view.GravityCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.front_android.Modelos.Usuario;
-import com.example.front_android.PETICIONES_API.PeticionesCamaras;
-import com.example.front_android.PETICIONES_API.PeticionesCiudades;
-import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
-import com.example.front_android.PETICIONES_API.PeticionesProvincias;
-import com.example.front_android.PETICIONES_API.PeticionesRegiones;
-import com.example.front_android.PETICIONES_API.PeticionesTiposDeIncidencia;
 import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
-    GoogleMap map;
-    FusedLocationProviderClient fs;
+    MapaFragment mapaFragment = new MapaFragment();
+    CamarasFragment camarasFragment = new CamarasFragment();
+    IncidenciasFragment incidenciasFragment = new IncidenciasFragment();
+    FavoritosFragment favoritosFragment = new FavoritosFragment();
+    InfoAppFragment infoAppFragment = new InfoAppFragment();
+    PerfilFragment perfilFragment = new PerfilFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
+
 
         setSupportActionBar(toolbar);
 
@@ -71,13 +64,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        fs = LocationServices.getFusedLocationProviderClient(this);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        }
-        setPermisosGeoloc();
+
+        fragmentTransaction.replace(R.id.fragment_container,mapaFragment);
+        fragmentTransaction.commit();
+
+
+
+
     }
 
     @Override
@@ -96,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         String message = "";
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
         switch (id) {
             case R.id.nav_mapa:
                 message = "Mapa seleccionado";
@@ -110,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia().execute();
 
                 //new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
+                fragmentTransaction.replace(R.id.fragment_container,mapaFragment);
+
 
 
 
@@ -118,23 +119,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_camaras:
                 ArrayList<Usuario> miListaUsuarios = new ArrayList<Usuario>();
                 message = "Cámaras seleccionado";
+                fragmentTransaction.replace(R.id.fragment_container,camarasFragment);
 
 
                 break;
             case R.id.nav_incidencias:
                 message = "Incidencias seleccionado";
 //                new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
+                fragmentTransaction.replace(R.id.fragment_container,incidenciasFragment);
                 break;
             case R.id.nav_favoritos:
                 message = "Favoritos seleccionado";
+                fragmentTransaction.replace(R.id.fragment_container,favoritosFragment);
                 break;
             case R.id.nav_infoApp:
                 message = "Información de la app seleccionada";
+                fragmentTransaction.replace(R.id.fragment_container,infoAppFragment);
                 break;
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
 //                new PeticionesUsuarios.ObtenerUsuario().execute();
-                new PeticionesUsuarios.LoguearUsuario().execute();
+                fragmentTransaction.replace(R.id.fragment_container,perfilFragment);
                 break;
             case R.id.nav_cerrar_sesion:
                 message = "Cerrar sesión seleccionado";
@@ -142,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             default:
                 message = "Opción no reconocida";
         }
+        fragmentTransaction.commit();
 
         // Mostrar el mensaje si existe
         if (!message.isEmpty()) {
@@ -154,41 +160,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    public void obtenerGeolocalizacion() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fs.getLastLocation()
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
 
-                            LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                            map.addMarker(new MarkerOptions().position(currentLocation).title("Ubicación actual"));
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-                        }
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(MainActivity.this, "Error al obtener ubicación: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        } else {
-            Toast.makeText(this, "Permisos de geolocalización denegados", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void setPermisosGeoloc() {
-        int geoPermisos = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-
-        if (geoPermisos == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Permisos de geolocalización concedido", Toast.LENGTH_SHORT).show();
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
-            }
-            Toast.makeText(this, "Permisos de geolocalización denegados", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        map = googleMap;
-        obtenerGeolocalizacion();
-    }
 
 
 }
