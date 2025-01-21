@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.front_android.Modelos.Usuario;
+import com.example.front_android.PETICIONES_API.PeticionesCamaras;
 import com.example.front_android.PETICIONES_API.PeticionesCiudades;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
 import com.example.front_android.PETICIONES_API.PeticionesProvincias;
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //  new PeticionesRegiones.ObtenerTodasLasRegiones().execute();
                 //new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia().execute();
 
-                //penticion camara pendiente
+                new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
 
 
 
