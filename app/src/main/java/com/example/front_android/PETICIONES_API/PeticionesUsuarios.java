@@ -186,12 +186,10 @@ public class PeticionesUsuarios {
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setDoOutput(true);
 
-                // Crear objeto JSON para el rol
                 JSONObject rolJson = new JSONObject();
                 rolJson.put("id", 2);
                 rolJson.put("nombre", "usuario");
 
-                // Crear objeto JSON para el usuario
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("nombre", "a");
                 jsonParam.put("correo", "a@3.com");
@@ -200,13 +198,11 @@ public class PeticionesUsuarios {
 
                 Log.d("RegistrarUsuario", "JSON enviado: " + jsonParam.toString());
 
-                // Enviar el JSON
                 try (DataOutputStream writer = new DataOutputStream(urlConnection.getOutputStream())) {
                     writer.write(jsonParam.toString().getBytes(StandardCharsets.UTF_8));
                     writer.flush();
                 }
 
-                // Leer respuesta del servidor
                 int responseCode = urlConnection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8));
@@ -241,7 +237,6 @@ public class PeticionesUsuarios {
         protected void onPostExecute(String result) {
             if (result != null) {
                 Log.d("RegistrarUsuario", "Respuesta del servidor: " + result);
-                // Aquí podrías procesar la respuesta del servidor según tus necesidades.
             } else {
                 Log.e("RegistrarUsuario", "No se recibió respuesta del servidor.");
             }
