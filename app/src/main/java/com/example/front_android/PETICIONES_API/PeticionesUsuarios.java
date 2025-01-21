@@ -27,7 +27,14 @@ public class PeticionesUsuarios {
             StringBuilder jsonResult = new StringBuilder();
 
             try {
+
+
+//                https://jsonplaceholder.typicode.com/users
+//                android:usesCleartextTraffic="true"
+                //10.0.2.2
+
                 URL url = new URL("http://localhost:8080/usuario");
+
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
 
@@ -70,6 +77,13 @@ public class PeticionesUsuarios {
                         String nombre = userObject.getString("nombre");
                         String contrasena = userObject.getString("contraseña");
                         String correo = userObject.getString("correo");
+
+
+                        JSONObject rolObject = userObject.getJSONObject("rol");
+                        Rol rol = new Rol();
+                        rol.setId(rolObject.getInt("id"));
+                        rol.setNombre(rolObject.getString("nombre"));
+
 
                         JSONObject rolObject = userObject.getJSONObject("rol");
                         Rol rol = new Rol();
