@@ -3,8 +3,6 @@ package com.example.front_android.PETICIONES_API;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.front_android.Modelos.Incidencia;
-import com.example.front_android.Modelos.Rol;
 import com.example.front_android.Modelos.Usuario;
 
 import org.json.JSONArray;
@@ -16,91 +14,84 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class PeticionesUsuarios {
 
-    public static Usuario parseUsuario(JSONObject usuarioObject) throws JSONException{
-        Usuario usuario = new Usuario();
 
-        usuario.setId(usuarioObject.getInt("id"));
-        usuario.setNombre(usuarioObject.getString("nombre"));
-        usuario.setCorreoElectronico(usuarioObject.getString("correo"));
-        usuario.setContrasena(usuarioObject.getString("contraseña"));
-
-        JSONObject rolObject = usuarioObject.getJSONObject("rol");
-        Rol rol = new Rol();
-        rol.setId(rolObject.getInt("id"));
-        rol.setNombre(rolObject.getString("nombre"));
-
-
-        return usuario;
-    }
-
-    public static class ObtenerUsuario extends AsyncTask<Void, Void, List<Usuario>> {
+    public static class ObtenerUsuario extends AsyncTask<Void, Void, String> {
 
         @Override
-        protected List<Usuario> doInBackground(Void... params) {
-
+        protected String doInBackground(Void... params) {
             HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
             StringBuilder jsonResult = new StringBuilder();
-            List<Usuario> usuarios = new ArrayList<>();
 
             try {
-                URL url = new URL("http://localhost:8080/usuarios");
+//                https://jsonplaceholder.typicode.com/users
+//                android:usesCleartextTraffic="true"
+                //10.0.2.2
+                URL url = new URL("http:/10.10.13.251:8080/usuarios");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
                 int code = urlConnection.getResponseCode();
-                if (code != HttpURLConnection.HTTP_OK) {
-                    throw new IOException("Respuesta inválida del servidor: " + code);
+                if (code != 200) {
+                    throw new IOException("Invalid response from server: " + code);
                 }
 
-                reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                BufferedReader rd = new BufferedReader(new InputStreamReader(
+                        urlConnection.getInputStream()));
                 String line;
-                while ((line = reader.readLine()) != null) {
+                while ((line = rd.readLine()) != null) {
                     jsonResult.append(line).append("\n");
                 }
-
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                return null; // Si ocurre un error, retornar null
+                return null;
             } finally {
-                // Asegurarse de cerrar el BufferedReader y la conexión
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
             }
-            try {
-                JSONArray jsonArray = new JSONArray(jsonResult.toString());
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject usuarioObject = jsonArray.getJSONObject(i);
-                    Usuario in = parseUsuario(usuarioObject);
-                    usuarios.add(in);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
 
-            return usuarios;
+            return jsonResult.toString();
         }
 
         @Override
-        protected void onPostExecute(List<Usuario> usuarios) {
-            if (usuarios != null){
-                for (Usuario u : usuarios){
-                    Log.d("Usuarios", u.toString());
+        protected void onPostExecute(String result) {
+            if (result != null) {
+                try {
+                    JSONArray jsonArray = new JSONArray(result);
+
+
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        Usuario usuario = new Usuario();
+                        JSONObject userObject = jsonArray.getJSONObject(i);
+
+                        String nombre = userObject.getString("nombre");
+                        String contrasena = userObject.getString("contraseña");
+                        String correo = userObject.getString("correo");
+                        String rol = userObject.getString("rol");
+
+
+                        usuario.setNombre(nombre);
+                        usuario.setContrasena(contrasena);
+                        usuario.setCorreoElectronico(correo);
+                        usuario.setRol(rol);
+
+
+                        Log.d("ObtenerUsuarios", "Usuario: Nombre = " + nombre +
+                                ", Usuario = " + contrasena + ", Correo = " + correo +  ", Rol = " + rol);
+                    }
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }
     }
+
+
 }
