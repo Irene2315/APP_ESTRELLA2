@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 message = "Cámaras seleccionado";
 
                 drawerLayout.closeDrawer(GravityCompat.START);
-                loadFragment(new CamarasFragment());
                 break;
 
                 case R.id.nav_incidencias:
@@ -136,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
-//                new PeticionesUsuarios.ObtenerUsuario().execute();
-                new PeticionesUsuarios.LoguearUsuario().execute();
+                new PeticionesUsuarios.RegistrarUsuario().execute();
+                //new PeticionesUsuarios.LoguearUsuario().execute();
                 break;
             case R.id.nav_cerrar_sesion:
                 message = "Cerrar sesión seleccionado";
@@ -156,13 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
+
 
 
 
