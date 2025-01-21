@@ -9,19 +9,16 @@ public class Region implements Serializable {
     private String nombreEs;
     private String nombreEu;
 
-    private List<Camara> camaras;
-    private List<Incidencia> incidencias;
+
 
     public Region() {
     }
 
-    public Region(int id, int idRegion, String nombreEs, String nombreEu, List<Camara> camaras, List<Incidencia> incidencias) {
+    public Region(int id, int idRegion, String nombreEs, String nombreEu) {
         this.id = id;
         this.idRegion = idRegion;
         this.nombreEs = nombreEs;
         this.nombreEu = nombreEu;
-        this.camaras = camaras;
-        this.incidencias = incidencias;
     }
 
     public int getId() {
@@ -56,19 +53,13 @@ public class Region implements Serializable {
         this.nombreEu = nombreEu;
     }
 
-    public List<Camara> getCamaras() {
-        return camaras;
-    }
-
-    public void setCamaras(List<Camara> camaras) {
-        this.camaras = camaras;
-    }
-
-    public List<Incidencia> getIncidencias() {
-        return incidencias;
-    }
-
-    public void setIncidencias(List<Incidencia> incidencias) {
-        this.incidencias = incidencias;
+    @Override
+    public String toString() {
+        return "Region{" +
+                "id=" + id +
+                ", idRegion=" + idRegion +
+                ", nombreEs='" + nombreEs + '\'' +
+                ", nombreEu='" + nombreEu + '\'' +
+                '}';
     }
 }

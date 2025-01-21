@@ -8,19 +8,17 @@ public class Ciudad implements Serializable {
     private String nombre;
     private String latitud;
     private String longitud;
-    private Provincia provincia;
-    private List<Incidencia> incidencias;
+
 
     public Ciudad() {
     }
 
-    public Ciudad(int id, String nombre, String latitud, String longitud, Provincia provincia, List<Incidencia> incidencias) {
+    public Ciudad(int id, String nombre, String latitud, String longitud) {
         this.id = id;
         this.nombre = nombre;
         this.latitud = latitud;
         this.longitud = longitud;
-        this.provincia = provincia;
-        this.incidencias = incidencias;
+
     }
 
     public int getId() {
@@ -55,19 +53,13 @@ public class Ciudad implements Serializable {
         this.longitud = longitud;
     }
 
-    public Provincia getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(Provincia provincia) {
-        this.provincia = provincia;
-    }
-
-    public List<Incidencia> getIncidencias() {
-        return incidencias;
-    }
-
-    public void setIncidencias(List<Incidencia> incidencias) {
-        this.incidencias = incidencias;
+    @Override
+    public String toString() {
+        return "Ciudad{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", latitud='" + latitud + '\'' +
+                ", longitud='" + longitud + '\'' +
+                '}';
     }
 }
