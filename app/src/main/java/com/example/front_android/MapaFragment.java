@@ -1,6 +1,7 @@
 package com.example.front_android;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,11 +11,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.front_android.Modelos.Incidencia;
+import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,10 +28,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap map;
     private FusedLocationProviderClient fs;
+    private List<Incidencia> miListaIncidencias = new ArrayList<>();
 
     public MapaFragment() {
         // Constructor requerido vacío
@@ -36,31 +44,31 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflar el diseño para este fragmento
+
         View view = inflater.inflate(R.layout.fragment_mapa, container, false);
 
-        // Inicializar el cliente de ubicación
         fs = LocationServices.getFusedLocationProviderClient(getContext());
 
-        // Configurar el fragmento del mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map); // Cambiar a getChildFragmentManager()
+                .findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         } else {
             Toast.makeText(getContext(), "Error al cargar el mapa", Toast.LENGTH_SHORT).show();
         }
 
-        // Solicitar permisos de geolocalización
+
         setPermisosGeoloc();
+
+
 
         return view;
     }
 
     public void obtenerGeolocalizacion() {
-        // Verifica si los permisos están concedidos
+
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            // Obtiene la última ubicación conocida
+
             fs.getLastLocation()
                     .addOnSuccessListener(location -> {
                         if (location != null && map != null) {
@@ -105,14 +113,40 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
+    public void pintarIncidencias() {
+
+        new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
+            @Override
+            protected void onPostExecute(List<Incidencia> incidencias) {
+                super.onPostExecute(incidencias);
+                if (incidencias != null && !incidencias.isEmpty()) {
+
+                    miListaIncidencias.clear();
+                    miListaIncidencias.addAll(incidencias);
+
+                    for (Incidencia incidencia : miListaIncidencias) {
+                        Log.d("IncidenciaMapa", incidencia.toString());
+                    }
+                } else {
+                    Log.d("Incidencia", "No hay incidencias para pintar.");
+                }
+            }
+        }.execute();
+    }
+
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
 
-        // Configura el mapa una vez que está listo
+
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true); // Habilitar el botón de "Mi ubicación"
+            map.setMyLocationEnabled(true);
             obtenerGeolocalizacion();
+            pintarIncidencias();
+
+
         } else {
             setPermisosGeoloc();
         }
