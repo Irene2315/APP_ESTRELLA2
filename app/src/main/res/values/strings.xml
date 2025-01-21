@@ -2,5 +2,7 @@
     <string name="app_name">Front_Android</string>
     <string name="abrir_menu_nav">Abrir el menu de navegacion</string>
     <string name="cerrar_menu_nav">Cerrar el menu de navegacion</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
