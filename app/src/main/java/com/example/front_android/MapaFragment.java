@@ -121,46 +121,51 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     public void pintarIncidencias() {
 
 
-        final  LatLng punto = new LatLng(40.4190531,-3.6936194);
-
-        map.addMarker(new MarkerOptions().position(punto));
-
-
+        // Obtener las incidencias de la API
         new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
             @Override
             protected void onPostExecute(List<Incidencia> incidencias) {
                 super.onPostExecute(incidencias);
-                if (incidencias != null && !incidencias.isEmpty()) {
 
+                if (map == null) {
+                    Log.e("Error", "Mapa no inicializado en onPostExecute.");
+                    return;
+                }
+
+                if (incidencias != null && !incidencias.isEmpty()) {
                     miListaIncidencias.clear();
                     miListaIncidencias.addAll(incidencias);
 
-
-
                     for (Incidencia incidencia : miListaIncidencias) {
-                        Log.d("Incidencia", incidencia.toString());
+                        try {
+                            double lat = Double.parseDouble(incidencia.getLatitud());
+                            double lng = Double.parseDouble(incidencia.getLongitud());
+                            LatLng punto = new LatLng(lat, lng);
+                            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.incidencias);
 
-                        LatLng punto = new LatLng(
-                                Double.parseDouble(incidencia.getLatitud()),
-                                Double.parseDouble(incidencia.getLongitud())
-                        );
+                            Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
 
 
-
-
-                        map.addMarker(new MarkerOptions().position(punto).title("ID: " + incidencia.getId()));
+                            map.setInfoWindowAdapter(new CustomInfoWindowAdapter(getLayoutInflater()));
+                            map.addMarker(new MarkerOptions()
+                                    .position(punto)
+                                    .title("Ciudad: " + incidencia.getId())
+                                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+                        } catch (NumberFormatException e) {
+                            Log.e("Error", "Coordenadas inválidas para la incidencia: " + incidencia.getId(), e);
+                        }
                     }
-
                 } else {
                     Log.d("Incidencia", "No hay incidencias para pintar.");
                 }
             }
         }.execute();
-    }
-
+        }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
+
+        pintarIncidencias();
 
 
         map.getUiSettings().setZoomControlsEnabled(true);
@@ -168,7 +173,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             map.setMyLocationEnabled(true);
             //obtenerGeolocalizacion();
 
-            pintarIncidencias();
 
 
         } else {
