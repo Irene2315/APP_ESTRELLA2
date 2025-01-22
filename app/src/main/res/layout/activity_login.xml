@@ -32,6 +32,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:tabSelectedTextColor="@color/theme_azul"
         >
 
         <androidx.viewpager.widget.ViewPager
@@ -54,7 +55,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            />
+            app:tabSelectedTextColor="@color/theme_azul"
+            app:tabTextAppearance="@style/CustomTabTextAppearance"
+            app:tabIndicatorColor="@color/theme_azul"
+            app:tabTextColor="@color/default_tab_color" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
