@@ -146,7 +146,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                             Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
 
 
-                            map.setInfoWindowAdapter(new CustomInfoWindowAdapter(getLayoutInflater()));
+                            map.setInfoWindowAdapter(new WindowAdapterIncidencias(getLayoutInflater()));
                             Marker marker = map.addMarker(new MarkerOptions()
                                     .position(punto)
                                     .title("Ciudad: " + incidencia.getId())

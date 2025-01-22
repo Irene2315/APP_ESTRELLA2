@@ -9,12 +9,12 @@ import com.example.front_android.Modelos.Incidencia;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
-public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public class WindowAdapterIncidencias implements GoogleMap.InfoWindowAdapter {
     private static final String TAG = "CustomInfoWindowAdapter";
     private LayoutInflater inflater;
 
     // Corregido el constructor para inicializar el inflater
-    public CustomInfoWindowAdapter(LayoutInflater inflater) {
+    public WindowAdapterIncidencias(LayoutInflater inflater) {
         this.inflater = inflater;  // Asigna el inflater pasado al campo de la clase
     }
 
@@ -27,7 +27,7 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         }
 
         // Inflar el layout personalizado
-        View v = inflater.inflate(R.layout.infowindow_layout, null);
+        View v = inflater.inflate(R.layout.infowindow_incidencias, null);
 
         Incidencia incidencia = (Incidencia) m.getTag();
 
