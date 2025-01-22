@@ -17,9 +17,6 @@ import androidx.core.view.GravityCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.front_android.Modelos.Usuario;
 import com.example.front_android.PETICIONES_API.PeticionesCamaras;
@@ -63,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
 
+
        navigationView.bringToFront();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -79,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
-
         setPermisosGeoloc();
     }
 
@@ -115,15 +112,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
 
 
+
+
                 break;
             case R.id.nav_camaras:
                 ArrayList<Usuario> miListaUsuarios = new ArrayList<Usuario>();
                 message = "Cámaras seleccionado";
 
-                drawerLayout.closeDrawer(GravityCompat.START);
-                break;
 
-                case R.id.nav_incidencias:
+                break;
+            case R.id.nav_incidencias:
                 message = "Incidencias seleccionado";
 //                new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
                 break;
@@ -135,8 +133,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
-                new PeticionesUsuarios.RegistrarUsuario().execute();
-                //new PeticionesUsuarios.LoguearUsuario().execute();
+//                new PeticionesUsuarios.ObtenerUsuario().execute();
+                new PeticionesUsuarios.LoguearUsuario().execute();
                 break;
             case R.id.nav_cerrar_sesion:
                 message = "Cerrar sesión seleccionado";
@@ -154,9 +152,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
 
 
     public void obtenerGeolocalizacion() {
