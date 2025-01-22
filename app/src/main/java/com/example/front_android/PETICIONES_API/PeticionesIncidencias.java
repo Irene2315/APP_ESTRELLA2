@@ -1,6 +1,5 @@
 package com.example.front_android.PETICIONES_API;
 
-import static com.example.front_android.MapaFragment.miListaIncidencias;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -105,12 +104,9 @@ public class PeticionesIncidencias {
 
         @Override
         protected List<Incidencia> doInBackground(Void... params) {
-<<<<<<< HEAD
 
-=======
             Log.d("doInBackground", "Iniciando tarea asíncrona");
             List<Incidencia> incidencias = new ArrayList<>();
->>>>>>> f1eb112b4a63385ee855a3bf515351733b0f00c8
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             StringBuilder jsonResult = new StringBuilder();
@@ -511,7 +507,6 @@ public class PeticionesIncidencias {
             if (incidencias != null) {
                 for (Incidencia incidencia : incidencias) {
                     Log.d("Incidencia", incidencia.toString());
-                    miListaIncidencias.add(incidencia);
                 }
             }
 
