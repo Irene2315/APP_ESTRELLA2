@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp" >
+
+    <!-- Imagen del InfoWindow -->
+    <ImageView
+        android:id="@+id/info_window_imagen"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/logout_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+    <!-- Nombre -->
+    <TextView
+        android:id="@+id/info_window_nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/info_window_imagen"
+        android:paddingLeft="8dp"
+        android:text="Carlo Estrada Solano"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:maxWidth="200dp" />
+
+    <!-- Placas -->
+    <TextView
+        android:id="@+id/info_window_placas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_below="@id/info_window_nombre"
+        android:layout_toRightOf="@id/info_window_imagen"
+        android:paddingLeft="8dp"
+        android:text="Placas: SX5487"
+        android:maxWidth="200dp" />
+
+    <!-- Estado -->
+    <TextView
+        android:id="@+id/info_window_estado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_window_placas"
+        android:layout_toRightOf="@id/info_window_imagen"
+        android:paddingLeft="8dp"
+        android:text="Estado: Activo"
+        android:textSize="16sp"
+        android:maxWidth="200dp" />
+
+</RelativeLayout>

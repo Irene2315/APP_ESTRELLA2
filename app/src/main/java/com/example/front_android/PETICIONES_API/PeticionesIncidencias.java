@@ -1,6 +1,5 @@
 package com.example.front_android.PETICIONES_API;
 
-import static com.example.front_android.MapaFragment.miListaIncidencias;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -504,12 +503,13 @@ public class PeticionesIncidencias {
 
         @Override
         protected void onPostExecute(List<Incidencia> incidencias) {
-            if (incidencias != null) {
-                for (Incidencia incidencia : incidencias) {
-                    Log.d("Incidencia", incidencia.toString());
-                    miListaIncidencias.add(incidencia);
+
+                if (incidencias != null) {
+                    for (Incidencia incidencia : incidencias) {
+                        Log.d("Incidencia", incidencia.toString());
+                    }
                 }
-            }
+
 
         }
 

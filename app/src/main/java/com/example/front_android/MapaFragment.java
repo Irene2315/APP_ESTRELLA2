@@ -3,6 +3,8 @@ package com.example.front_android;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -25,7 +27,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -75,7 +79,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                             // Configurar la ubicación actual en el mapa
                             LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
                             map.addMarker(new MarkerOptions().position(currentLocation).title("Ubicación actual"));
-                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 10));
                         } else {
                             Toast.makeText(getContext(), "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show();
                         }
@@ -116,6 +120,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("StaticFieldLeak")
     public void pintarIncidencias() {
 
+
+        final  LatLng punto = new LatLng(40.4190531,-3.6936194);
+
+        map.addMarker(new MarkerOptions().position(punto));
+
+
         new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
             @Override
             protected void onPostExecute(List<Incidencia> incidencias) {
@@ -125,9 +135,22 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     miListaIncidencias.clear();
                     miListaIncidencias.addAll(incidencias);
 
+
+
                     for (Incidencia incidencia : miListaIncidencias) {
-                        Log.d("IncidenciaMapa", incidencia.toString());
+                        Log.d("Incidencia", incidencia.toString());
+
+                        LatLng punto = new LatLng(
+                                Double.parseDouble(incidencia.getLatitud()),
+                                Double.parseDouble(incidencia.getLongitud())
+                        );
+
+
+
+
+                        map.addMarker(new MarkerOptions().position(punto).title("ID: " + incidencia.getId()));
                     }
+
                 } else {
                     Log.d("Incidencia", "No hay incidencias para pintar.");
                 }
@@ -135,15 +158,16 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }.execute();
     }
 
-
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
 
 
+        map.getUiSettings().setZoomControlsEnabled(true);
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
-            obtenerGeolocalizacion();
+            //obtenerGeolocalizacion();
+
             pintarIncidencias();
 
 
