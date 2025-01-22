@@ -254,9 +254,7 @@ public class PeticionesIncidencias {
                 URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/provincia?idProvincia=1");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
-
                 urlConnection.setRequestMethod("POST");
-
 
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
@@ -326,11 +324,7 @@ public class PeticionesIncidencias {
 
                 }
             }
-
-
         }
-
-
     }
 
     public static class ObtenerIncidenciasCiudad extends AsyncTask<Void, Void, List<Incidencia>> {
