@@ -147,10 +147,13 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
 
                             map.setInfoWindowAdapter(new CustomInfoWindowAdapter(getLayoutInflater()));
-                            map.addMarker(new MarkerOptions()
+                            Marker marker = map.addMarker(new MarkerOptions()
                                     .position(punto)
                                     .title("Ciudad: " + incidencia.getId())
                                     .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+
+
+                            marker.setTag(incidencia);
                         } catch (NumberFormatException e) {
                             Log.e("Error", "Coordenadas inválidas para la incidencia: " + incidencia.getId(), e);
                         }

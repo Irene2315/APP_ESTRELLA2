@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.front_android.Modelos.Incidencia;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
@@ -28,15 +29,20 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         // Inflar el layout personalizado
         View v = inflater.inflate(R.layout.infowindow_layout, null);
 
-        // Obtener el título del marcador
-        String[] info = m.getTitle().split("&");  // Asumimos que el título contiene "&" como delimitador, ajústalo si es necesario
-        String url = m.getSnippet();  // Si necesitas usar el "snippet" también, puedes hacerlo
+        Incidencia incidencia = (Incidencia) m.getTag();
 
-        // Configurar los textos en el layout inflado
-        ((TextView)v.findViewById(R.id.info_window_nombre)).setText(info[0]);  // Ajusta según la estructura de tu título
-        ((TextView)v.findViewById(R.id.info_window_placas)).setText("Placas: " + (info.length > 1 ? info[1] : "No disponible"));
-        ((TextView)v.findViewById(R.id.info_window_estado)).setText("Estado: Activo");
+        if (incidencia != null) {
 
+            ((TextView) v.findViewById(R.id.info_window_carretera)).setText("Carretera: " + incidencia.getCarretera());
+
+            // Placas
+            String ciudadNombre = incidencia.getCiudad() != null ? incidencia.getCiudad().getNombre() : "No disponible";
+            ((TextView) v.findViewById(R.id.info_window_ciudad)).setText("Ciudad: " + ciudadNombre);
+
+            // Estado
+            String tipoIncidenciaNombre = incidencia.getTipoIncidencia() != null ? incidencia.getTipoIncidencia().getNombre() : "No especificado";
+            ((TextView) v.findViewById(R.id.info_window_tipoI)).setText("Incidencia: " + tipoIncidenciaNombre);
+        }
         return v;
     }
 
