@@ -7,14 +7,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 
 public class LoginTabFragment extends Fragment {
 
     EditText text_usuario, text_contraseña;
     TextView forget;
-    Button entrar;
+    Button btn_entrar;
     float v = 0;
 
     @Override
@@ -26,6 +29,22 @@ public class LoginTabFragment extends Fragment {
         text_usuario =view.findViewById(R.id.text_usuario);
         text_contraseña = view.findViewById(R.id.text_contraseña);
         forget = view.findViewById(R.id.texto);
+        btn_entrar = view.findViewById(R.id.btn_entrar);
+
+        btn_entrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String usuario = text_usuario.getText().toString();
+                String contraseña = text_contraseña.getText().toString();
+
+                if (usuario.isEmpty() || contraseña.isEmpty()) {
+                    Toast.makeText(getActivity(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
+                } else {
+                    new PeticionesUsuarios.LoguearUsuario(getActivity()).execute(usuario, contraseña);
+                }
+            }
+        });
+
 
         return view;
     }

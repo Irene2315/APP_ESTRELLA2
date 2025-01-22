@@ -1,7 +1,9 @@
 package com.example.front_android.PETICIONES_API;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.front_android.Modelos.Rol;
 import com.example.front_android.Modelos.Usuario;
@@ -18,9 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-
 public class PeticionesUsuarios {
-
 
     public static class ObtenerUsuario extends AsyncTask<Void, Void, String> {
 
@@ -30,9 +30,6 @@ public class PeticionesUsuarios {
             StringBuilder jsonResult = new StringBuilder();
 
             try {
-//                https://jsonplaceholder.typicode.com/users
-//                android:usesCleartextTraffic="true"
-                //10.0.2.2
                 URL url = new URL("http://10.10.13.251:8080/usuarios");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -83,22 +80,23 @@ public class PeticionesUsuarios {
                         usuario.setCorreoElectronico(correo);
                         usuario.setRol(rol);
 
-
                         Log.d("ObtenerUsuarios", "Usuario: Nombre = " + nombre +
-                                ", Usuario = " + contrasena + ", Correo = " + correo +  ", Rol = " + rol);
+                                ", Contraseña = " + contrasena + ", Correo = " + correo + ", Rol = " + rol);
                     }
-
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 
     public static class LoguearUsuario extends AsyncTask<String, Void, String> {
+        private Context context;
+
+        public LoguearUsuario(Context context) {
+            this.context = context;
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -114,9 +112,12 @@ public class PeticionesUsuarios {
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setDoOutput(true);
 
+                String nombre = params[0];
+                String contraseña = params[1];
+
                 JSONObject jsonParam = new JSONObject();
-                jsonParam.put("nombre", "mijael");
-                jsonParam.put("contraseña", "admin");
+                jsonParam.put("nombre", nombre);
+                jsonParam.put("contraseña", contraseña);
 
                 Log.d("LoguearUsuario", "JSON enviado: " + jsonParam.toString());
 
@@ -141,13 +142,7 @@ public class PeticionesUsuarios {
                 Log.e("LoguearUsuario", "Error en la conexión: " + e.getMessage(), e);
                 return null;
             } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        Log.e("LoguearUsuario", "Error al cerrar el reader: " + e.getMessage());
-                    }
-                }
+
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
@@ -160,16 +155,24 @@ public class PeticionesUsuarios {
             if (result != null) {
                 try {
                     JSONObject responseJson = new JSONObject(result);
-                    String rol = responseJson.optString("rol", "No se recibió rol");
-                    Log.d("LoguearUsuario", "Rol recibido: " + rol);
+
+                    String rol = responseJson.optString("rol");
+
+                    if (rol != null && !rol.isEmpty()) {
+                        Toast.makeText(context, "Bienvenido, " + rol, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "Error: No se pudo determinar el rol", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (JSONException e) {
                     Log.e("LoguearUsuario", "Error al parsear la respuesta JSON: " + e.getMessage());
+                    Toast.makeText(context, "Error al procesar la respuesta del servidor", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Log.e("LoguearUsuario", "No se recibió respuesta del servidor.");
+                Toast.makeText(context, "Error de conexión con el servidor", Toast.LENGTH_SHORT).show();
             }
-
         }
+
+
     }
 
     public static class RegistrarUsuario extends AsyncTask<String, Void, String> {
@@ -244,5 +247,4 @@ public class PeticionesUsuarios {
             }
         }
     }
-
 }

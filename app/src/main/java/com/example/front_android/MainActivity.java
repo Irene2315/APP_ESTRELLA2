@@ -131,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
 //                new PeticionesUsuarios.ObtenerUsuario().execute();
-                new PeticionesUsuarios.LoguearUsuario().execute();
                 break;
             case R.id.nav_cerrar_sesion:
                 message = "Cerrar sesión seleccionado";
