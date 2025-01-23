@@ -4,16 +4,14 @@
     android:layout_height="match_parent"
     tools:context=".MapaFragment">
 
-
     <Spinner
         android:id="@+id/spinnerRegion"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="80dp"
         android:layout_marginStart="20dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
-
 
     <Spinner
         android:id="@+id/spinnerProvincia"
@@ -24,7 +22,6 @@
         android:layout_below="@id/spinnerRegion"
         android:layout_alignParentStart="true" />
 
-    <!-- Spinner Ciudad -->
     <Spinner
         android:id="@+id/spinnerCiudad"
         android:layout_width="200dp"
@@ -33,7 +30,6 @@
         android:layout_marginStart="20dp"
         android:layout_toEndOf="@id/spinnerProvincia"
         android:layout_alignTop="@id/spinnerProvincia" />
-
 
     <Spinner
         android:id="@+id/spinnerTipoIncidencia"
@@ -44,14 +40,48 @@
         android:layout_below="@id/spinnerProvincia"
         android:layout_alignParentStart="true" />
 
+    <!-- Switch Incidencias -->
+    <Switch
+        android:id="@+id/switch_incidencias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_below="@id/spinnerTipoIncidencia"
+        android:text="@string/incidencias_text"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <!-- Switch Cámaras -->
+    <Switch
+        android:id="@+id/switch_camaras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/switch_incidencias"
+        android:layout_alignTop="@id/switch_incidencias"
+        android:text="@string/camaras_text"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <!-- Switch Favoritos -->
+    <Switch
+        android:id="@+id/switch_fevoritos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_toEndOf="@id/switch_camaras"
+        android:layout_alignTop="@id/switch_incidencias"
+        android:text="@string/favoritos"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/spinnerTipoIncidencia"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp" />
+        android:layout_height="0dp"
+        android:layout_below="@id/switch_incidencias"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="5dp" />
+
 </RelativeLayout>
