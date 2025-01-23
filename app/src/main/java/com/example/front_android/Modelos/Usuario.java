@@ -1,19 +1,19 @@
 package com.example.front_android.Modelos;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Usuario implements Serializable {
     private int id;
     private String nombre;
     private String correoElectronico;
     private String contrasena;
-    private String rol;
-    //private Rol rol;
+    private Rol rol;
 
     public Usuario() {
     }
 
-    public Usuario(int id, String correoElectronico, String contrasena, String nombre, String rol) {
+    public Usuario(int id, String correoElectronico, String contrasena, String nombre, Rol rol) {
         this.id = id;
         this.correoElectronico = correoElectronico;
         this.contrasena = contrasena;
@@ -54,11 +54,22 @@ public class Usuario implements Serializable {
     }
 
 
-    public String getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", correoElectronico='" + correoElectronico + '\'' +
+                ", contrasena='" + contrasena + '\'' +
+                ", rol=" + rol +
+                '}';
     }
 }

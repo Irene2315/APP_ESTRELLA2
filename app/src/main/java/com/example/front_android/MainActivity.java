@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
     }
 
     @Override
@@ -109,7 +110,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia().execute();
 
                 //new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
+
                 fragmentTransaction.replace(R.id.fragment_container,mapaFragment);
+
 
 
 
@@ -138,8 +141,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
-//                new PeticionesUsuarios.ObtenerUsuario().execute();
+
                 fragmentTransaction.replace(R.id.fragment_container,perfilFragment);
+
+                new PeticionesUsuarios.ObtenerUnUsuario().execute();
+
                 break;
             case R.id.nav_cerrar_sesion:
                 message = "Cerrar sesión seleccionado";
