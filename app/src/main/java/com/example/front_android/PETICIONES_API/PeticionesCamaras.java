@@ -24,24 +24,38 @@ public class PeticionesCamaras {
     private static Camara parseCamara(JSONObject camaraObject) throws JSONException {
         Camara camara = new Camara();
 
+
         camara.setId(camaraObject.getInt("id"));
-        camara.setNombre(camaraObject.getString("nombre"));
+        camara.setNombre(camaraObject.getString("cameraName"));
         camara.setLatitud(camaraObject.getString("latitud"));
         camara.setLongitud(camaraObject.getString("longitud"));
-        camara.setUrlImagen(camaraObject.getString("urlImagen"));
 
 
-        JSONObject regionObject = camaraObject.getJSONObject("region");
-        Region region = new Region();
-        region.setId(regionObject.getInt("id"));
-        region.setIdRegion(regionObject.getInt("idRegion"));
-        region.setNombreEs(regionObject.getString("nombreEs"));
-        region.setNombreEu(regionObject.getString("nombreEu"));
-        camara.setRegion(region);
+        if (!camaraObject.isNull("urlImagen")) {
+            camara.setUrlImagen(camaraObject.getString("urlImagen"));
+        } else {
+            camara.setUrlImagen(null);
+        }
 
+
+        if (!camaraObject.isNull("region")) {
+            JSONObject regionObject = camaraObject.getJSONObject("region");
+            Region region = new Region();
+
+            // Parsear los campos de "region"
+            region.setId(regionObject.getInt("id"));
+            region.setIdRegion(regionObject.getInt("idRegion"));
+            region.setNombreEs(regionObject.getString("nombreEs"));
+            region.setNombreEu(regionObject.getString("nombreEu"));
+
+            camara.setRegion(region);
+        } else {
+            camara.setRegion(null);
+        }
 
         return camara;
     }
+
 
 
 
@@ -105,15 +119,7 @@ public class PeticionesCamaras {
             return camaras; // Retorna la lista de incidencias
         }
 
-        @Override
-        protected void onPostExecute(List<Camara> camaras) {
-            if (camaras != null) {
-                for (Camara camara : camaras) {
-                    Log.d("Camara", camara.toString());
-                }
-            }
 
-        }
 
 
     }

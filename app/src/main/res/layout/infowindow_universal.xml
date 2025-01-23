@@ -56,7 +56,6 @@
         android:layout_below="@+id/info_window_ciudad"
         android:layout_toRightOf="@id/favoritos"
         android:paddingLeft="8dp"
-        android:text="Estado: Activo"
         android:textStyle="bold"
         android:textSize="16sp"
         android:maxWidth="200dp" />

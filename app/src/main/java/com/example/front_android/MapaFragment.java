@@ -19,7 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.front_android.Modelos.Camara;
 import com.example.front_android.Modelos.Incidencia;
+import com.example.front_android.PETICIONES_API.PeticionesCamaras;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,6 +42,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap map;
     private FusedLocationProviderClient fs;
     private List<Incidencia> miListaIncidencias = new ArrayList<>();
+    private List<Camara> miListaCamaras = new ArrayList<>();
 
     public MapaFragment() {
         // Constructor requerido vacío
@@ -108,7 +111,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
                         return;
                     }
-                    map.setMyLocationEnabled(true); // Habilitar el botón de "Mi ubicación"
+                    map.setMyLocationEnabled(true);
                     obtenerGeolocalizacion();
                 }
             } else {
@@ -120,8 +123,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     @SuppressLint("StaticFieldLeak")
     public void pintarIncidencias() {
 
-
-        // Obtener las incidencias de la API
         new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
             @Override
             protected void onPostExecute(List<Incidencia> incidencias) {
@@ -146,10 +147,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                             Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
 
 
-                            map.setInfoWindowAdapter(new WindowAdapterIncidencias(getLayoutInflater()));
+                            map.setInfoWindowAdapter(new WindowAdapterUniversal(getLayoutInflater()));
                             Marker marker = map.addMarker(new MarkerOptions()
                                     .position(punto)
-                                    .title("Ciudad: " + incidencia.getId())
                                     .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
 
 
@@ -164,11 +164,59 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         }.execute();
         }
+
+    @SuppressLint("StaticFieldLeak")
+    public void pintarCamaras() {
+
+
+        new PeticionesCamaras.ObtenerTodasLasCamaras(){
+
+            protected void onPostExecute(List<Camara> camaras) {
+                super.onPostExecute(camaras);
+
+                if (map == null) {
+                    Log.e("Error", "Mapa no inicializado en onPostExecute.");
+                    return;
+                }
+
+                if (camaras != null && !camaras.isEmpty()) {
+                    miListaCamaras.clear();
+                    miListaCamaras.addAll(camaras);
+
+                    for (Camara camara : miListaCamaras) {
+                        Log.i("Camara",camara.toString());
+                        try {
+                            double lat = Double.parseDouble(camara.getLatitud());
+                            double lng = Double.parseDouble(camara.getLongitud());
+                            LatLng punto = new LatLng(lat, lng);
+                            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.camaras);
+
+                            Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
+
+
+                            map.setInfoWindowAdapter(new WindowAdapterUniversal(getLayoutInflater()));
+                            Marker marker = map.addMarker(new MarkerOptions()
+                                    .position(punto)
+                                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+
+
+                            marker.setTag(camara);
+                        } catch (NumberFormatException e) {
+                            Log.e("Error", "Coordenadas inválidas para la incidencia: " + camara.getId(), e);
+                        }
+                    }
+                } else {
+                    Log.d("Incidencia", "No hay incidencias para pintar.");
+                }
+            }
+        }.execute();
+    }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
 
         pintarIncidencias();
+        pintarCamaras();
 
 
         map.getUiSettings().setZoomControlsEnabled(true);
