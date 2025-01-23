@@ -99,7 +99,7 @@ public class PeticionesUsuarios {
         }
 
         @Override
-        protected String doInBackground(String... params) {
+        protected String doInBackground(String... strings) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             StringBuilder jsonResult = new StringBuilder();
@@ -112,8 +112,8 @@ public class PeticionesUsuarios {
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setDoOutput(true);
 
-                String nombre = params[0];
-                String contraseña = params[1];
+                String nombre = strings[0];
+                String contraseña = strings[1];
 
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("nombre", nombre);
@@ -159,10 +159,9 @@ public class PeticionesUsuarios {
                     String rol = responseJson.optString("rol");
 
                     if (rol != null && !rol.isEmpty()) {
-                        Toast.makeText(context, "Bienvenido, " + rol, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(context, "Error: No se pudo determinar el rol", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, rol, Toast.LENGTH_SHORT).show();
                     }
+
                 } catch (JSONException e) {
                     Log.e("LoguearUsuario", "Error al parsear la respuesta JSON: " + e.getMessage());
                     Toast.makeText(context, "Error al procesar la respuesta del servidor", Toast.LENGTH_SHORT).show();
@@ -184,22 +183,23 @@ public class PeticionesUsuarios {
             StringBuilder jsonResult = new StringBuilder();
 
             try {
-                URL url = new URL("http://10.10.13.251:8080/registro");
+                URL url = new URL("http://10.10.13.251:8080/registroAndroid");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setDoOutput(true);
 
-                JSONObject rolJson = new JSONObject();
-                rolJson.put("id", 2);
-                rolJson.put("nombre", "usuario");
+                String nombre = strings[0];
+                String contrasena = strings[1];
+                String correo = strings[2];
+
 
                 JSONObject jsonParam = new JSONObject();
-                jsonParam.put("nombre", "a");
-                jsonParam.put("correo", "a@3.com");
-                jsonParam.put("contraseña", "contraseña");
-                jsonParam.put("rol", rolJson);
+                jsonParam.put("nombre", nombre);
+                jsonParam.put("contraseña", contrasena);
+                jsonParam.put("correo", correo);
+
 
                 Log.d("RegistrarUsuario", "JSON enviado: " + jsonParam.toString());
 
@@ -219,18 +219,10 @@ public class PeticionesUsuarios {
                     Log.e("RegistrarUsuario", "Error: Código de respuesta " + responseCode);
                     return null;
                 }
-
             } catch (Exception e) {
                 Log.e("RegistrarUsuario", "Error en la conexión: " + e.getMessage(), e);
                 return null;
             } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        Log.e("RegistrarUsuario", "Error al cerrar el reader: " + e.getMessage());
-                    }
-                }
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }

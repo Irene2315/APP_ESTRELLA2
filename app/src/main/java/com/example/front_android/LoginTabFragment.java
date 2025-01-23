@@ -28,7 +28,6 @@ public class LoginTabFragment extends Fragment {
 
         text_usuario =view.findViewById(R.id.text_usuario);
         text_contraseña = view.findViewById(R.id.text_contraseña);
-        forget = view.findViewById(R.id.texto);
         btn_entrar = view.findViewById(R.id.btn_entrar);
 
         btn_entrar.setOnClickListener(new View.OnClickListener() {

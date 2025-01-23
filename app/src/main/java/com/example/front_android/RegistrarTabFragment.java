@@ -38,32 +38,25 @@ public class RegistrarTabFragment extends Fragment {
                 String correo = text_correo.getText().toString().trim();
 
                 if (usuario.isEmpty() || contraseña.isEmpty() || correo.isEmpty()) {
-                    // Validación: Mostrar error si algún campo está vacío
-                    Toast.makeText(getContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // Llamar a la tarea asíncrona para registrar al usuario
-                PeticionesUsuarios.RegistrarUsuario registrarUsuarioTask = new PeticionesUsuarios.RegistrarUsuario() {
+                @SuppressLint("StaticFieldLeak") PeticionesUsuarios.RegistrarUsuario registrarUsuarioTask = new PeticionesUsuarios.RegistrarUsuario() {
                     @Override
                     protected void onPostExecute(String result) {
                         super.onPostExecute(result);
                         if (result != null) {
-                            // Mostrar mensaje de éxito
                             Toast.makeText(getContext(), "Usuario registrado con éxito", Toast.LENGTH_SHORT).show();
                         } else {
-                            // Mostrar mensaje de error
                             Toast.makeText(getContext(), "Error al registrar el usuario", Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
 
-                // Ejecutar la tarea con los parámetros
                 registrarUsuarioTask.execute(usuario, contraseña, correo);
             }
         });
-
-
 
         return view;
     }
