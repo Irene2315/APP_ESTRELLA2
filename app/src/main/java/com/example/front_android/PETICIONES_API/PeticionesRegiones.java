@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.example.front_android.Modelos.Ciudad;
+import com.example.front_android.Modelos.Incidencia;
 import com.example.front_android.Modelos.Region;
 
 import org.json.JSONArray;
@@ -35,7 +36,7 @@ public class PeticionesRegiones {
 
 
 
-    public static class ObtenerTodasLasRegiones extends AsyncTask<Void, Void, List<Region>> {
+    public static abstract class ObtenerTodasLasRegiones extends AsyncTask<Void, Void, List<Region>> {
 
         @Override
         protected List<Region> doInBackground(Void... params) {
@@ -93,16 +94,6 @@ public class PeticionesRegiones {
             }
 
             return regiones; // Retorna la lista de incidencias
-        }
-
-        @Override
-        protected void onPostExecute(List<Region> regiones) {
-            if (regiones != null) {
-                for (Region region : regiones) {
-                    Log.d("Region", region.toString());
-                }
-            }
-
         }
 
 
