@@ -1,8 +1,10 @@
 package com.example.front_android.PETICIONES_API;
 
+
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.front_android.MapaFragment;
 import com.example.front_android.Modelos.Ciudad;
 import com.example.front_android.Modelos.Incidencia;
 import com.example.front_android.Modelos.Provincia;
@@ -26,6 +28,8 @@ import java.util.concurrent.Executor;
 public class PeticionesIncidencias {
 
 
+
+
     private static Incidencia parseIncidencia(JSONObject incidenciaObject) throws JSONException {
         Incidencia incidencia = new Incidencia();
 
@@ -37,113 +41,108 @@ public class PeticionesIncidencias {
         incidencia.setCarretera(incidenciaObject.getString("carretera"));
         incidencia.setFechaInicio(incidenciaObject.getString("fechaInicio"));
 
-        // Parsear Ciudad
-        JSONObject ciudadObject = incidenciaObject.getJSONObject("ciudad");
-        Ciudad ciudad = new Ciudad();
-        ciudad.setId(ciudadObject.getInt("id"));
-        ciudad.setNombre(ciudadObject.getString("nombre"));
-        ciudad.setLatitud(ciudadObject.getString("latitud"));
-        ciudad.setLongitud(ciudadObject.getString("longitud"));
-        incidencia.setCiudad(ciudad);
+        // Parsear Ciudad (verificar si no es null)
+        if (!incidenciaObject.isNull("ciudad")) {
+            JSONObject ciudadObject = incidenciaObject.getJSONObject("ciudad");
+            Ciudad ciudad = new Ciudad();
+            ciudad.setId(ciudadObject.getInt("id"));
+            ciudad.setNombre(ciudadObject.getString("nombre"));
+            ciudad.setLatitud(ciudadObject.getString("latitud"));
+            ciudad.setLongitud(ciudadObject.getString("longitud"));
+            incidencia.setCiudad(ciudad);
+        } else {
+            Log.d("parseIncidencia", "Campo 'ciudad' es null");
+            incidencia.setCiudad(null); // Si no existe, asignar null
+        }
 
         // Parsear Provincia
-        JSONObject provinciaObject = incidenciaObject.getJSONObject("provincia");
-        Provincia provincia = new Provincia();
-        provincia.setId(provinciaObject.getInt("id"));
-        provincia.setNombre(provinciaObject.getString("nombre"));
-        provincia.setLatitud(provinciaObject.getString("latitud"));
-        provincia.setLongitud(provinciaObject.getString("longitud"));
-        incidencia.setProvincia(provincia);
+        if (!incidenciaObject.isNull("provincia")) {
+            JSONObject provinciaObject = incidenciaObject.getJSONObject("provincia");
+            Provincia provincia = new Provincia();
+            provincia.setId(provinciaObject.getInt("id"));
+            provincia.setNombre(provinciaObject.getString("nombre"));
+            provincia.setLatitud(provinciaObject.getString("latitud"));
+            provincia.setLongitud(provinciaObject.getString("longitud"));
+            incidencia.setProvincia(provincia);
+        } else {
+            Log.d("parseIncidencia", "Campo 'provincia' es null");
+            incidencia.setProvincia(null);
+        }
 
         // Parsear Región
-        JSONObject regionObject = incidenciaObject.getJSONObject("region");
-        Region region = new Region();
-        region.setId(regionObject.getInt("id"));
-        region.setIdRegion(regionObject.getInt("idRegion"));
-        region.setNombreEs(regionObject.getString("nombreEs"));
-        region.setNombreEu(regionObject.getString("nombreEu"));
-        incidencia.setRegion(region);
+        if (!incidenciaObject.isNull("region")) {
+            JSONObject regionObject = incidenciaObject.getJSONObject("region");
+            Region region = new Region();
+            region.setId(regionObject.getInt("id"));
+            region.setIdRegion(regionObject.getInt("idRegion"));
+            region.setNombreEs(regionObject.getString("nombreEs"));
+            region.setNombreEu(regionObject.getString("nombreEu"));
+            incidencia.setRegion(region);
+        } else {
+            Log.d("parseIncidencia", "Campo 'region' es null");
+            incidencia.setRegion(null);
+        }
 
         // Parsear TipoIncidencia
-        JSONObject tipoIncidenciaObject = incidenciaObject.getJSONObject("tipoIncidencia");
-        TipoIncidencia tipoIncidencia = new TipoIncidencia();
-        tipoIncidencia.setId(tipoIncidenciaObject.getInt("id"));
-        tipoIncidencia.setNombre(tipoIncidenciaObject.getString("nombre"));
-        incidencia.setTipoIncidencia(tipoIncidencia);
+        if (!incidenciaObject.isNull("tipoIncidencia")) {
+            JSONObject tipoIncidenciaObject = incidenciaObject.getJSONObject("tipoIncidencia");
+            TipoIncidencia tipoIncidencia = new TipoIncidencia();
+            tipoIncidencia.setId(tipoIncidenciaObject.getInt("id"));
+            tipoIncidencia.setNombre(tipoIncidenciaObject.getString("nombre"));
+            incidencia.setTipoIncidencia(tipoIncidencia);
+        } else {
+            Log.d("parseIncidencia", "Campo 'tipoIncidencia' es null");
+            incidencia.setTipoIncidencia(null);
+        }
 
         return incidencia;
     }
+
 
 
     public static class ObtenerTodasLasIncidencias extends AsyncTask<Void, Void, List<Incidencia>> {
 
         @Override
         protected List<Incidencia> doInBackground(Void... params) {
+            Log.d("doInBackground", "Iniciando tarea asíncrona");
+            List<Incidencia> incidencias = new ArrayList<>();
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             StringBuilder jsonResult = new StringBuilder();
-            List<Incidencia> incidencias = new ArrayList<>();
 
             try {
-                // URL de las incidencias
                 URL url = new URL("http://10.10.13.251:8080/incidencias");
                 urlConnection = (HttpURLConnection) url.openConnection();
-
-                // Verificar código de respuesta
-                int code = urlConnection.getResponseCode();
-                if (code != HttpURLConnection.HTTP_OK) {
-                    throw new IOException("Respuesta inválida del servidor: " + code);
+                if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    throw new IOException("Respuesta inválida del servidor: " + urlConnection.getResponseCode());
                 }
 
-                // Leer la respuesta del servidor
                 reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     jsonResult.append(line).append("\n");
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            } finally {
-
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-            }
-
-            // Parsear el JSON
-            try {
                 JSONArray jsonArray = new JSONArray(jsonResult.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject incidenciaObject = jsonArray.getJSONObject(i);
                     Incidencia incidencia = parseIncidencia(incidenciaObject);
                     incidencias.add(incidencia);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+            } catch (Exception e) {
+                Log.e("doInBackground", "Error al procesar la solicitud", e);
                 return null;
-            }
-
-            return incidencias; // Retorna la lista de incidencias
-        }
-
-        @Override
-        protected void onPostExecute(List<Incidencia> incidencias) {
-            if (incidencias != null) {
-                for (Incidencia incidencia : incidencias) {
-                    Log.d("Incidencia", incidencia.toString());
+            } finally {
+                try {
+                    if (reader != null) reader.close();
+                    if (urlConnection != null) urlConnection.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
+            return incidencias;
         }
-
 
     }
 
@@ -227,11 +226,14 @@ public class PeticionesIncidencias {
 
         @Override
         protected void onPostExecute(List<Incidencia> incidencias) {
+
             if (incidencias != null) {
+
                 for (Incidencia incidencia : incidencias) {
                     Log.d("Incidencia", incidencia.toString());
                 }
             }
+
         }
 
 
@@ -320,8 +322,11 @@ public class PeticionesIncidencias {
             if (incidencias != null) {
                 for (Incidencia incidencia : incidencias) {
                     Log.d("Incidencia", incidencia.toString());
+
                 }
             }
+
+
         }
 
 
@@ -412,6 +417,7 @@ public class PeticionesIncidencias {
                     Log.d("Incidencia", incidencia.toString());
                 }
             }
+
         }
 
 
@@ -497,11 +503,14 @@ public class PeticionesIncidencias {
 
         @Override
         protected void onPostExecute(List<Incidencia> incidencias) {
-            if (incidencias != null) {
-                for (Incidencia incidencia : incidencias) {
-                    Log.d("Incidencia", incidencia.toString());
+
+                if (incidencias != null) {
+                    for (Incidencia incidencia : incidencias) {
+                        Log.d("Incidencia", incidencia.toString());
+                    }
                 }
-            }
+
+
         }
 
 

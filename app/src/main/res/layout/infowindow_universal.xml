@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp" >
+
+    <ImageView
+        android:id="@+id/favoritos"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/estrella_check"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+    <ImageView
+        android:id="@+id/mas_info"
+        android:layout_marginTop="10dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/mas_info"
+        android:layout_below="@id/favoritos"
+        android:layout_centerVertical="true" />
+
+    <!-- Nombre -->
+    <TextView
+        android:id="@+id/info_window_carretera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/favoritos"
+        android:paddingLeft="8dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:maxWidth="200dp" />
+
+    <!-- Placas -->
+    <TextView
+        android:id="@+id/info_window_ciudad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_below="@id/info_window_carretera"
+        android:layout_toRightOf="@id/favoritos"
+        android:paddingLeft="8dp"
+        android:text="Placas: SX5487"
+        android:maxWidth="200dp" />
+
+    <!-- Estado -->
+    <TextView
+        android:id="@+id/info_window_tipoI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_window_ciudad"
+        android:layout_toRightOf="@id/favoritos"
+        android:paddingLeft="8dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:maxWidth="200dp" />
+
+</RelativeLayout>
