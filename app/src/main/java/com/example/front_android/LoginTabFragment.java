@@ -37,7 +37,7 @@ public class LoginTabFragment extends Fragment {
                 String contraseña = text_contraseña.getText().toString();
 
                 if (usuario.isEmpty() || contraseña.isEmpty()) {
-                    Toast.makeText(getActivity(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
                 } else {
                     new PeticionesUsuarios.LoguearUsuario(getActivity()).execute(usuario, contraseña);
                 }
