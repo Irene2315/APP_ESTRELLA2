@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+
+import android.view.View;
 import android.widget.Toast;
 
 public class PeticionesUsuarios {
@@ -182,6 +184,7 @@ public class PeticionesUsuarios {
 
                     if (rol != null && !rol.isEmpty()) {
                         Toast.makeText(context, rol, Toast.LENGTH_SHORT).show();
+
                     }
 
                 } catch (JSONException e) {

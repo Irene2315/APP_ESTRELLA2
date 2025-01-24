@@ -1,5 +1,6 @@
 package com.example.front_android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,9 +41,13 @@ public class LoginTabFragment extends Fragment {
                     Toast.makeText(getActivity(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
                 } else {
                     new PeticionesUsuarios.LoguearUsuario(getActivity()).execute(usuario, contraseña);
+
+                    Intent i = new Intent(getActivity(), MainActivity.class);
+                    startActivity(i);
                 }
             }
         });
+
 
 
         return view;

@@ -1,6 +1,7 @@
 package com.example.front_android;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -141,8 +142,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 break;
             case R.id.nav_cerrar_sesion:
-                message = "Cerrar sesión seleccionado";
+                Intent i = new Intent(this, LoginActivity.class);
+                startActivity(i);
                 break;
+
             default:
                 message = "Opción no reconocida";
         }
