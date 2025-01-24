@@ -104,7 +104,6 @@ public class PeticionesIncidencias {
 
         @Override
         protected List<Incidencia> doInBackground(Void... params) {
-
             Log.d("doInBackground", "Iniciando tarea asíncrona");
             List<Incidencia> incidencias = new ArrayList<>();
             HttpURLConnection urlConnection = null;
@@ -254,7 +253,9 @@ public class PeticionesIncidencias {
                 URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/provincia?idProvincia=1");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
+
                 urlConnection.setRequestMethod("POST");
+
 
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
@@ -324,7 +325,11 @@ public class PeticionesIncidencias {
 
                 }
             }
+
+
         }
+
+
     }
 
     public static class ObtenerIncidenciasCiudad extends AsyncTask<Void, Void, List<Incidencia>> {
@@ -498,17 +503,16 @@ public class PeticionesIncidencias {
 
         @Override
         protected void onPostExecute(List<Incidencia> incidencias) {
+
             if (incidencias != null) {
                 for (Incidencia incidencia : incidencias) {
                     Log.d("Incidencia", incidencia.toString());
                 }
             }
 
+
         }
 
 
     }
 }
-
-
-
