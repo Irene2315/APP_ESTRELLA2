@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".IncidenciasFragment">
 
+
     <ListView
         android:id="@+id/list_listaIncidencias"
         android:layout_width="match_parent"
-        android:layout_height="583dp"
-        android:layout_marginTop="20dp" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"/>
 
 </FrameLayout>

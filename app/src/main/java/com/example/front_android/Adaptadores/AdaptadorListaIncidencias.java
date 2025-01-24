@@ -38,7 +38,7 @@ public class AdaptadorListaIncidencias extends ArrayAdapter<Incidencia> {
         this.recursosLayout = resource;
     }
 
-    public void setOnContactoClickListener(OnIncidenciaClickListener listener) {
+    public void setOnIncidenciaClickListener(OnIncidenciaClickListener listener) {
         this.listener = listener;
     }
 
@@ -57,19 +57,22 @@ public class AdaptadorListaIncidencias extends ArrayAdapter<Incidencia> {
         Incidencia incidencia = miListaIncidencias.get(position);
 
 
+
         TextView provincia = miVista.findViewById(R.id.texto_provincia);
-        provincia.setText(incidencia.getProvincia().getNombre());
+        provincia.setText(incidencia.getProvincia() != null ? incidencia.getProvincia().getNombre() : "No disponible");
+
 
         TextView ciudad = miVista.findViewById(R.id.texto_ciudad);
-        ciudad.setText(incidencia.getCiudad().getNombre());
+        ciudad.setText(incidencia.getCiudad() != null ? incidencia.getCiudad().getNombre() : "No disponible");
+
 
         TextView tipoIncidencia = miVista.findViewById(R.id.texto_tipo_incidencia);
-        ciudad.setText(incidencia.getCiudad().getNombre());
+        tipoIncidencia.setText(incidencia.getTipoIncidencia() != null ? incidencia.getTipoIncidencia().getNombre() : "No disponible");
+
 
 
         ImageButton imagen = miVista.findViewById(R.id.img);
         imagen.setImageResource(incidencia.getImagen());
-
 
         imagen.setOnClickListener(v -> {
             if (listener != null) {

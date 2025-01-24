@@ -395,7 +395,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         map.getUiSettings().setZoomControlsEnabled(true);
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
-            //obtenerGeolocalizacion();
+            obtenerGeolocalizacion();
 
 
 
