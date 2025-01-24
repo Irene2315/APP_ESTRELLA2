@@ -2,6 +2,7 @@ package com.example.front_android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginTabFragment extends Fragment {
 
@@ -41,13 +45,9 @@ public class LoginTabFragment extends Fragment {
                     Toast.makeText(getActivity(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
                 } else {
                     new PeticionesUsuarios.LoguearUsuario(getActivity()).execute(usuario, contraseña);
-
-                    Intent i = new Intent(getActivity(), MainActivity.class);
-                    startActivity(i);
                 }
             }
         });
-
 
 
         return view;

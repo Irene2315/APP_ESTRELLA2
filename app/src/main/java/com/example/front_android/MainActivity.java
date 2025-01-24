@@ -22,6 +22,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.front_android.Modelos.Usuario;
+import com.example.front_android.PETICIONES_API.PeticionesCamaras;
+import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
 import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 import com.google.android.material.navigation.NavigationView;
 
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_mapa:
                 message = "Mapa seleccionado";
 //                new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
-                // new PeticionesIncidencias.ObtenerIncidenciasRegion().execute();
+                new PeticionesIncidencias.ObtenerIncidenciasRegion().execute();
                 //new PeticionesIncidencias.ObtenerIncidenciasProvincia().execute();
                 //new PeticionesIncidencias.ObtenerIncidenciasCiudad().execute();
                 //new PeticionesIncidencias.ObtenerIncidenciasTipoIncidencia().execute();
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //  new PeticionesRegiones.ObtenerTodasLasRegiones().execute();
                 //new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia().execute();
 
-                //new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
+                new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
 
                 fragmentTransaction.replace(R.id.fragment_container,mapaFragment);
 

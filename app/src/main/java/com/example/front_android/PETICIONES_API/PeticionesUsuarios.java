@@ -1,12 +1,15 @@
 package com.example.front_android.PETICIONES_API;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.front_android.MainActivity;
 import com.example.front_android.Modelos.Rol;
 import com.example.front_android.Modelos.Usuario;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +23,8 @@ import java.nio.charset.StandardCharsets;
 
 import android.view.View;
 import android.widget.Toast;
+import org.apache.commons.codec.binary.Hex;
+
 
 public class PeticionesUsuarios {
 
@@ -139,6 +144,8 @@ public class PeticionesUsuarios {
                 String nombre = strings[0];
                 String contraseña = strings[1];
 
+                //String hash = HasherPass.calcularSHA256(contraseña);
+
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("nombre", nombre);
                 jsonParam.put("contraseña", contraseña);
@@ -183,7 +190,8 @@ public class PeticionesUsuarios {
                     String rol = responseJson.optString("rol");
 
                     if (rol != null && !rol.isEmpty()) {
-                        Toast.makeText(context, rol, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
 
                     }
 
@@ -192,7 +200,7 @@ public class PeticionesUsuarios {
                     Toast.makeText(context, "Error al procesar la respuesta del servidor", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(context, "Error de conexión con el servidor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"El usuario no existe o la contraseña es incorrecta", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -223,6 +231,7 @@ public class PeticionesUsuarios {
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("nombre", nombre);
                 jsonParam.put("contraseña", contrasena);
+                //jsonParam.put("contraseña", HasherPass.hasherContraseña(contrasena));
                 jsonParam.put("correo", correo);
 
 
