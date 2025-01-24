@@ -30,7 +30,7 @@ public class PeticionesProvincias {
         provincia.setLongitud(provinciaObject.getString("longitud"));
 
         // Obtener el JSONArray de las ciudades
-        JSONArray ciudadesArray = provinciaObject.getJSONArray("ciudades");
+        JSONArray ciudadesArray = provinciaObject.getJSONArray("ciudad");
 
         // Crear una lista de ciudades
         List<Ciudad> ciudades = new ArrayList<>();
@@ -118,15 +118,6 @@ public class PeticionesProvincias {
             return provincias; // Retorna la lista de incidencias
         }
 
-        @Override
-        protected void onPostExecute(List<Provincia> provincias) {
-            if (provincias != null) {
-                for (Provincia provincia : provincias) {
-                    Log.d("Provincia", provincia.toString());
-                }
-            }
-
-        }
 
 
     }

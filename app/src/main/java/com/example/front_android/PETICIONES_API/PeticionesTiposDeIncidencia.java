@@ -91,15 +91,7 @@ public class PeticionesTiposDeIncidencia {
             return tiposIncidencias; // Retorna la lista de incidencias
         }
 
-        @Override
-        protected void onPostExecute(List<TipoIncidencia> tipoIncidencias) {
-            if (tipoIncidencias != null) {
-                for (TipoIncidencia tipoIncidencia : tipoIncidencias) {
-                    Log.d("TipoIncidencia", tipoIncidencia.toString());
-                }
-            }
 
-        }
 
 
     }

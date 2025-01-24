@@ -93,15 +93,7 @@ public class PeticionesCiudades {
             return ciudades; // Retorna la lista de incidencias
         }
 
-        @Override
-        protected void onPostExecute(List<Ciudad> ciudades) {
-            if (ciudades != null) {
-                for (Ciudad ciudad : ciudades) {
-                    Log.d("Ciudad", ciudad.toString());
-                }
-            }
 
-        }
 
 
     }
