@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.front_android.Adaptadores.WindowAdapterUniversal;
 import com.example.front_android.Modelos.Camara;
 import com.example.front_android.Modelos.Ciudad;
 import com.example.front_android.Modelos.Incidencia;

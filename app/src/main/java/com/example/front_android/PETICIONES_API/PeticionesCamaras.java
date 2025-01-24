@@ -123,4 +123,69 @@ public class PeticionesCamaras {
 
 
     }
+
+    public static class ObtenerCamarasRegion extends AsyncTask<Void, Void, List<Camara>> {
+
+        @Override
+        protected List<Camara> doInBackground(Void... params) {
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            StringBuilder jsonResult = new StringBuilder();
+            List<Camara> camaras = new ArrayList<>();
+
+            try {
+                // URL de las incidencias
+                URL url = new URL("http://10.10.13.251:8080/privateCameras/region/1");
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                // Verificar código de respuesta
+                int code = urlConnection.getResponseCode();
+                if (code != HttpURLConnection.HTTP_OK) {
+                    throw new IOException("Respuesta inválida del servidor: " + code);
+                }
+
+                // Leer la respuesta del servidor
+                reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    jsonResult.append(line).append("\n");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } finally {
+
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+            // Parsear el JSON
+            try {
+                JSONArray jsonArray = new JSONArray(jsonResult.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject camaraObjet = jsonArray.getJSONObject(i);
+                    Camara camara = parseCamara(camaraObjet);
+                    camaras.add(camara);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return camaras; // Retorna la lista de incidencias
+        }
+
+
+
+
+    }
 }
