@@ -1,18 +1,13 @@
 package com.example.front_android;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.widget.Toolbar;
 
@@ -21,7 +16,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.front_android.Modelos.Usuario;
-import com.example.front_android.PETICIONES_API.PeticionesCamaras;
 import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 import com.google.android.material.navigation.NavigationView;
 
@@ -35,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MapaFragment mapaFragment = new MapaFragment();
     CamarasFragment camarasFragment = new CamarasFragment();
     IncidenciasFragment incidenciasFragment = new IncidenciasFragment();
-    FavoritosFragment favoritosFragment = new FavoritosFragment();
+    FavoritosCamarasFragment favoritosCamarasFragment = new FavoritosCamarasFragment();
+    FavoritosIncidenciasFragment favoritosIncidenciasFragment = new FavoritosIncidenciasFragment();
     InfoAppFragment infoAppFragment = new InfoAppFragment();
     PerfilFragment perfilFragment = new PerfilFragment();
 
@@ -127,9 +122,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
                 fragmentTransaction.replace(R.id.fragment_container,incidenciasFragment);
                 break;
-            case R.id.nav_favoritos:
+            case R.id.nav_favoritos_camaras:
                 message = "Favoritos seleccionado";
-                fragmentTransaction.replace(R.id.fragment_container,favoritosFragment);
+                fragmentTransaction.replace(R.id.fragment_container, favoritosCamarasFragment);
+                break;
+            case R.id.nav_favoritos_incidencias:
+                message = "Favoritos seleccionado";
+                fragmentTransaction.replace(R.id.fragment_container,favoritosIncidenciasFragment );
                 break;
             case R.id.nav_infoApp:
                 message = "Información de la app seleccionada";

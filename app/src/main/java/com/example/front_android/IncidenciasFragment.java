@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.front_android.Adaptadores.AdaptadorListaIncidencias;
 import com.example.front_android.Adaptadores.WindowAdapterUniversal;
+import com.example.front_android.Modelos.FavoritoIncidencia;
 import com.example.front_android.Modelos.Incidencia;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
 import com.example.front_android.bdd.GestorBDD;
@@ -39,7 +40,7 @@ public class IncidenciasFragment extends Fragment {
     private static ArrayList<Incidencia> miListaIncidencias = new ArrayList<>();
     private static AdaptadorListaIncidencias adaptadorListaIncidencias;
     private GestorBDD gestorBDD;
-    private GestorIncidenciasFavoritas gestorIncidenciasFavoritas;
+    private List<FavoritoIncidencia> miListaFavoritosIncidencias = new ArrayList<>();
 
 
     public IncidenciasFragment() {
@@ -80,6 +81,8 @@ public class IncidenciasFragment extends Fragment {
                     for (Incidencia incidencia : incidencias) {
 
                         incidencia.setImagen(R.drawable.estrella_check_blanco);
+
+
                     }
 
 
@@ -94,6 +97,14 @@ public class IncidenciasFragment extends Fragment {
         }.execute();
 
 
+        miListaFavoritosIncidencias = gestorBDD.getGestorIncidenciasFavoritas().seleccionarTodasLasIncidenciasFavoritas();
+        for (Incidencia incidencia : miListaIncidencias) {
+            for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
+                if (incidencia.getId() == favorito.getIdIncidencia()) {
+                    incidencia.setImagen(R.drawable.estrella_favorito_blanco);
+                }
+            }
+        }
 
         //Gestionamos los dos eventos al clicar en favoritos y al selecionar un contacto
         adaptadorListaIncidencias.setOnIncidenciaClickListener(new AdaptadorListaIncidencias.OnIncidenciaClickListener() {
@@ -106,8 +117,10 @@ public class IncidenciasFragment extends Fragment {
             public void onFavoritoClick(Incidencia incidencia) {
                 if (incidencia.getImagen() == R.drawable.estrella_check_blanco) {
                     incidencia.setImagen(R.drawable.estrella_favorito_blanco);
+                    gestorBDD.getGestorIncidenciasFavoritas().insertarFavoritosIncidencias(String.valueOf(incidencia.getId()));
                 } else {
                     incidencia.setImagen(R.drawable.estrella_check_blanco);
+                    gestorBDD.getGestorIncidenciasFavoritas().eliminarFavoritosIncidencias(String.valueOf(incidencia.getId()));
                 }
                 adaptadorListaIncidencias.notifyDataSetChanged(); // Refresca la lista para reflejar los cambios.
                 Toast.makeText(getContext(), "Favorito actualizado: " + incidencia.getCiudad().getNombre(), Toast.LENGTH_SHORT).show();

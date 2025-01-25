@@ -15,9 +15,13 @@ import android.widget.Toast;
 import com.example.front_android.Adaptadores.AdaptadorListaCamaras;
 import com.example.front_android.Adaptadores.AdaptadorListaIncidencias;
 import com.example.front_android.Modelos.Camara;
+import com.example.front_android.Modelos.FavoritoCamara;
+import com.example.front_android.Modelos.FavoritoIncidencia;
 import com.example.front_android.Modelos.Incidencia;
 import com.example.front_android.PETICIONES_API.PeticionesCamaras;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
+import com.example.front_android.bdd.GestorBDD;
+import com.example.front_android.bdd.GestorIncidenciasFavoritas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,9 @@ public class CamarasFragment extends Fragment {
     private static ListView listaCamaras;
     private static ArrayList<Camara> miListaCamaras = new ArrayList<>();
     private static AdaptadorListaCamaras adaptadorListaCamaras;
+    private GestorBDD gestorBDD;
+    private List<FavoritoCamara> miListaFavoritosCamaras = new ArrayList<>();
+
 
 
 
@@ -42,6 +49,10 @@ public class CamarasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_camaras, container,false);
 
         listaCamaras = view.findViewById(R.id.list_listaCamaras);
+
+        gestorBDD = new GestorBDD(this.getContext());
+
+        gestorBDD.conectar();
 
         adaptadorListaCamaras = new AdaptadorListaCamaras(getContext(),R.layout.fila_lista_camaras,miListaCamaras);
         listaCamaras.setAdapter(adaptadorListaCamaras);
@@ -75,6 +86,14 @@ public class CamarasFragment extends Fragment {
         }.execute();
 
 
+        miListaFavoritosCamaras = gestorBDD.getGestorCamarasFavoritas().seleccionarTodasLasCamarasFavoritas();
+        for (Camara camara : miListaCamaras) {
+            for (FavoritoCamara favorito : miListaFavoritosCamaras) {
+                if (camara.getId() == favorito.getIdCamara()) {
+                    camara.setImagen(R.drawable.estrella_favorito_blanco);
+                }
+            }
+        }
 
         //Gestionamos los dos eventos al clicar en favoritos y al selecionar un contacto
         adaptadorListaCamaras.setOnIncidenciaClickListener(new AdaptadorListaCamaras.OnCamaraClickListener() {
@@ -87,8 +106,10 @@ public class CamarasFragment extends Fragment {
             public void onFavoritoClick(Camara camara) {
                 if (camara.getImagen() == R.drawable.estrella_check_blanco) {
                     camara.setImagen(R.drawable.estrella_favorito_blanco);
+                    gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId()));
                 } else {
                     camara.setImagen(R.drawable.estrella_check_blanco);
+                    gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId()));
                 }
                 adaptadorListaCamaras.notifyDataSetChanged(); // Refresca la lista para reflejar los cambios.
                 Toast.makeText(getContext(), "Favorito actualizado: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
