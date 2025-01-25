@@ -8,4 +8,18 @@
     <string name="incidencias_text">Incidencias</string>
     <string name="favoritos">Favoritos</string>
 
+    <string name="titulo_provincia">Provincia:</string>
+    <string name="provincia_text_prueba">Nombre de Provincia</string>
+    <string name="titulo_ciudad">Ciudad:</string>
+    <string name="ciudad_text_prueba">Nombre de Ciudad</string>
+    <string name="titulo_tipo_incidencia">Tipo de Incidencia:</string>
+    <string name="tipo_i_text_prueba">Nombre de tipo Incidencia</string>
+
+    <string name="titulo_nombre_cam">Nombre Cam:</string>
+    <string name="nombre_cam_text_prueba">Nombre Cam</string>
+    <string name="titulo_region">Region:</string>
+    <string name="nombre_region_text_prueba">Nombre de region</string>
+
+
+
 </resources>
