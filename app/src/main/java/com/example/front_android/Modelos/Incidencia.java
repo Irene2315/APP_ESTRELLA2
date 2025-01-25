@@ -10,6 +10,7 @@ public class Incidencia implements Serializable {
     private String nivelIncidencia;
     private String carretera;
     private String fechaInicio;
+    private int imagen;
 
     private Region region;
     private Ciudad ciudad;
@@ -34,6 +35,20 @@ public class Incidencia implements Serializable {
         this.provincia = provincia;
     }
 
+    public Incidencia(int id, String latitud, String longitud, String causa, String nivelIncidencia, String carretera, String fechaInicio, int imagen, Region region, Ciudad ciudad, TipoIncidencia tipoIncidencia, Provincia provincia) {
+        this.id = id;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.causa = causa;
+        this.nivelIncidencia = nivelIncidencia;
+        this.carretera = carretera;
+        this.fechaInicio = fechaInicio;
+        this.imagen = imagen;
+        this.region = region;
+        this.ciudad = ciudad;
+        this.tipoIncidencia = tipoIncidencia;
+        this.provincia = provincia;
+    }
 
     public int getId() {
         return id;
@@ -121,6 +136,14 @@ public class Incidencia implements Serializable {
 
     public void setProvincia(Provincia provincia) {
         this.provincia = provincia;
+    }
+
+    public int getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(int imagen) {
+        this.imagen = imagen;
     }
 
     @Override

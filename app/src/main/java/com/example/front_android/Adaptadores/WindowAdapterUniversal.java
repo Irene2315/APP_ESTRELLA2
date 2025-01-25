@@ -1,4 +1,4 @@
-package com.example.front_android;
+package com.example.front_android.Adaptadores;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.example.front_android.Modelos.Camara;
 import com.example.front_android.Modelos.Incidencia;
+import com.example.front_android.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 

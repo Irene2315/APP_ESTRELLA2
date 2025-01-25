@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.front_android.Adaptadores.WindowAdapterUniversal;
 import com.example.front_android.Modelos.Camara;
 import com.example.front_android.Modelos.Ciudad;
 import com.example.front_android.Modelos.Incidencia;
@@ -394,7 +395,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         map.getUiSettings().setZoomControlsEnabled(true);
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
-            //obtenerGeolocalizacion();
+            obtenerGeolocalizacion();
 
 
 

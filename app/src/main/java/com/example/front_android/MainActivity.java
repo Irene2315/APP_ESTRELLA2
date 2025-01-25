@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.front_android.Modelos.Usuario;
 import com.example.front_android.PETICIONES_API.PeticionesCamaras;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
+
 import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 import com.google.android.material.navigation.NavigationView;
 
@@ -106,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia().execute();
 
                 new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
+
+                //new PeticionesCamaras.ObtenerCamarasRegion().execute();
 
                 fragmentTransaction.replace(R.id.fragment_container,mapaFragment);
 
