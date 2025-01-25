@@ -6,6 +6,19 @@
     tools:context=".FavoritosCamarasFragment">
 
 
+    <TextView
+        android:id="@+id/text_no_favoritos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="No hay ninguna incidencia favorita en este momento"
+        android:textSize="18sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="80dp"
+        android:textColor="@android:color/black"
+        android:visibility="gone" />
     <ListView
         android:id="@+id/list_listaCamaras"
         android:layout_width="match_parent"

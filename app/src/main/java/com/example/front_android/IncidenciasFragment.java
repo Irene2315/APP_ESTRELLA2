@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.front_android.Adaptadores.AdaptadorListaIncidencias;
 import com.example.front_android.Adaptadores.WindowAdapterUniversal;
+import com.example.front_android.Modelos.FavoritoCamara;
 import com.example.front_android.Modelos.FavoritoIncidencia;
 import com.example.front_android.Modelos.Incidencia;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
@@ -66,6 +67,8 @@ public class IncidenciasFragment extends Fragment {
         adaptadorListaIncidencias = new AdaptadorListaIncidencias(getContext(),R.layout.fila_lista_incidencias,miListaIncidencias);
         listaIncidencias.setAdapter(adaptadorListaIncidencias);
 
+        miListaFavoritosIncidencias = gestorBDD.getGestorIncidenciasFavoritas().seleccionarTodasLasIncidenciasFavoritas();
+
         new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
             @Override
             protected void onPostExecute(List<Incidencia> incidencias) {
@@ -80,15 +83,22 @@ public class IncidenciasFragment extends Fragment {
 
                     for (Incidencia incidencia : incidencias) {
 
-                        incidencia.setImagen(R.drawable.estrella_check_blanco);
+                        boolean esFavorito = false;
+                        for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
+                            if (incidencia.getId() == favorito.getIdIncidencia()) {
+                                esFavorito = true;
+                                break;
+                            }
+                        }
+                        if (esFavorito) {
+                            incidencia.setImagen(R.drawable.estrella_favorito_blanco);
+                        } else {
+                            incidencia.setImagen(R.drawable.estrella_check_blanco);
+                        }
 
-
+                        miListaIncidencias.add(incidencia);
                     }
 
-
-                    miListaIncidencias.addAll(incidencias);
-
-                    // Notificar al adaptador que los datos han cambiado
                     adaptadorListaIncidencias.notifyDataSetChanged();
                 } else {
                     Log.d("Incidencia", "No hay incidencias para pintar o la lista es nula.");
@@ -97,14 +107,7 @@ public class IncidenciasFragment extends Fragment {
         }.execute();
 
 
-        miListaFavoritosIncidencias = gestorBDD.getGestorIncidenciasFavoritas().seleccionarTodasLasIncidenciasFavoritas();
-        for (Incidencia incidencia : miListaIncidencias) {
-            for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
-                if (incidencia.getId() == favorito.getIdIncidencia()) {
-                    incidencia.setImagen(R.drawable.estrella_favorito_blanco);
-                }
-            }
-        }
+
 
         //Gestionamos los dos eventos al clicar en favoritos y al selecionar un contacto
         adaptadorListaIncidencias.setOnIncidenciaClickListener(new AdaptadorListaIncidencias.OnIncidenciaClickListener() {

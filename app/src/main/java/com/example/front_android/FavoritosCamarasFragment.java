@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.front_android.Adaptadores.AdaptadorListaCamFavoritas;
@@ -31,7 +32,7 @@ public class FavoritosCamarasFragment extends Fragment {
     private GestorBDD gestorBDD;
     private List<FavoritoCamara> miListaFavoritosCamaras = new ArrayList<>();
     private List <Camara> camarasFavoritas = new ArrayList<>();
-
+    TextView mensajeSinFavoritos;
 
 
 
@@ -48,6 +49,8 @@ public class FavoritosCamarasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_camaras, container, false);
 
         listaCamarasFavoritas = view.findViewById(R.id.list_listaCamaras);
+        mensajeSinFavoritos = view.findViewById(R.id.text_no_favoritos);
+
         gestorBDD = new GestorBDD(this.getContext());
         gestorBDD.conectar();
 
@@ -83,6 +86,14 @@ public class FavoritosCamarasFragment extends Fragment {
                     adaptadorListaCamaras.notifyDataSetChanged();
                 } else {
                     Log.d("Incidencia", "No hay cámaras disponibles o la lista es nula.");
+                }
+
+                if (camarasFavoritas.isEmpty()) {
+                    mensajeSinFavoritos.setVisibility(View.VISIBLE);
+                    listaCamarasFavoritas.setVisibility(View.GONE);
+                } else {
+                    mensajeSinFavoritos.setVisibility(View.GONE);
+                    listaCamarasFavoritas.setVisibility(View.VISIBLE);
                 }
             }
         }.execute();

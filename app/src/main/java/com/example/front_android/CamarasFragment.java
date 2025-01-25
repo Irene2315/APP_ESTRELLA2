@@ -107,6 +107,7 @@ public class CamarasFragment extends Fragment {
                     gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId()));
                 }
                 adaptadorListaCamaras.notifyDataSetChanged();
+                Toast.makeText(getContext(), "Favorito actualizado: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
             }
         });
 

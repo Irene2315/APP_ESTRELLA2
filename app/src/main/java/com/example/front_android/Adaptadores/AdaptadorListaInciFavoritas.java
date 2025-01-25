@@ -47,7 +47,7 @@ public class AdaptadorListaInciFavoritas extends ArrayAdapter<Incidencia> {
         View miVista = convertView;
 
         if(miVista == null){
-            miVista = LayoutInflater.from(miContexto).inflate(R.layout.fila_lista_incidencias,null);
+            miVista = LayoutInflater.from(miContexto).inflate(R.layout.fila_lista_inci_favoritas,null);
 
         }
 
