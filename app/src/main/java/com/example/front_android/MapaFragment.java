@@ -311,6 +311,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     miListaIncidencias.addAll(incidencias);
 
                     for (Incidencia incidencia : miListaIncidencias) {
+                        Log.i("Incidencia",incidencia.toString());
                         try {
                             double lat = Double.parseDouble(incidencia.getLatitud());
                             double lng = Double.parseDouble(incidencia.getLongitud());

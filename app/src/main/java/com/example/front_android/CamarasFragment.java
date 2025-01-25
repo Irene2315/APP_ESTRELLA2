@@ -13,15 +13,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.front_android.Adaptadores.AdaptadorListaCamaras;
-import com.example.front_android.Adaptadores.AdaptadorListaIncidencias;
 import com.example.front_android.Modelos.Camara;
 import com.example.front_android.Modelos.FavoritoCamara;
-import com.example.front_android.Modelos.FavoritoIncidencia;
-import com.example.front_android.Modelos.Incidencia;
 import com.example.front_android.PETICIONES_API.PeticionesCamaras;
-import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
 import com.example.front_android.bdd.GestorBDD;
-import com.example.front_android.bdd.GestorIncidenciasFavoritas;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,18 +39,20 @@ public class CamarasFragment extends Fragment {
 
     @SuppressLint("StaticFieldLeak")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_camaras, container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_camaras, container, false);
 
         listaCamaras = view.findViewById(R.id.list_listaCamaras);
-
         gestorBDD = new GestorBDD(this.getContext());
-
         gestorBDD.conectar();
 
-        adaptadorListaCamaras = new AdaptadorListaCamaras(getContext(),R.layout.fila_lista_camaras,miListaCamaras);
+
+        adaptadorListaCamaras = new AdaptadorListaCamaras(getContext(), R.layout.fila_lista_camaras, miListaCamaras);
         listaCamaras.setAdapter(adaptadorListaCamaras);
+
+
+        miListaFavoritosCamaras = gestorBDD.getGestorCamarasFavoritas().seleccionarTodasLasCamarasFavoritas();
+
 
         new PeticionesCamaras.ObtenerTodasLasCamaras() {
             @Override
@@ -63,43 +60,41 @@ public class CamarasFragment extends Fragment {
                 super.onPostExecute(camaras);
 
                 if (camaras != null && !camaras.isEmpty()) {
-                    Log.d("Camara", "Cargando " + camaras.size() + " camaras.");
-
+                    Log.d("Camara", "Cargando " + camaras.size() + " cámaras.");
 
                     miListaCamaras.clear();
-
-
                     for (Camara camara : camaras) {
 
-                        camara.setImagen(R.drawable.estrella_check_blanco);
+                        boolean esFavorito = false;
+                        for (FavoritoCamara favorito : miListaFavoritosCamaras) {
+                            if (camara.getId() == favorito.getIdCamara()) {
+                                esFavorito = true;
+                                break;
+                            }
+                        }
+
+
+                        if (esFavorito) {
+                            camara.setImagen(R.drawable.estrella_favorito_blanco);
+                        } else {
+                            camara.setImagen(R.drawable.estrella_check_blanco);
+                        }
+
+                        miListaCamaras.add(camara);
                     }
 
-
-                    miListaCamaras.addAll(camaras);
-
-                    // Notificar al adaptador que los datos han cambiado
                     adaptadorListaCamaras.notifyDataSetChanged();
                 } else {
-                    Log.d("Incidencia", "No hay incidencias para pintar o la lista es nula.");
+                    Log.d("Camara", "No se obtuvieron cámaras de la API.");
                 }
             }
         }.execute();
 
 
-        miListaFavoritosCamaras = gestorBDD.getGestorCamarasFavoritas().seleccionarTodasLasCamarasFavoritas();
-        for (Camara camara : miListaCamaras) {
-            for (FavoritoCamara favorito : miListaFavoritosCamaras) {
-                if (camara.getId() == favorito.getIdCamara()) {
-                    camara.setImagen(R.drawable.estrella_favorito_blanco);
-                }
-            }
-        }
-
-        //Gestionamos los dos eventos al clicar en favoritos y al selecionar un contacto
-        adaptadorListaCamaras.setOnIncidenciaClickListener(new AdaptadorListaCamaras.OnCamaraClickListener() {
+        adaptadorListaCamaras.setOnCamaraClickListener(new AdaptadorListaCamaras.OnCamaraClickListener() {
             @Override
             public void onCamaraClick(Camara camara) {
-                Toast.makeText(getContext(), "Camara selecionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Cámara seleccionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -111,20 +106,9 @@ public class CamarasFragment extends Fragment {
                     camara.setImagen(R.drawable.estrella_check_blanco);
                     gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId()));
                 }
-                adaptadorListaCamaras.notifyDataSetChanged(); // Refresca la lista para reflejar los cambios.
-                Toast.makeText(getContext(), "Favorito actualizado: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
+                adaptadorListaCamaras.notifyDataSetChanged();
             }
         });
-
-
-
-
-
-
-        listaCamaras.setAdapter(adaptadorListaCamaras);
-
-
-
 
         return view;
     }

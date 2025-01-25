@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,29 +15,27 @@ import com.example.front_android.R;
 
 import java.util.List;
 
-public class AdaptadorListaCamaras extends ArrayAdapter<Camara> {
+public class AdaptadorListaCamFavoritas extends ArrayAdapter<Camara> {
 
     public interface OnCamaraClickListener {
         void onCamaraClick(Camara camara);
-        void onFavoritoClick(Camara camara);
     }
 
-
     private List<Camara> miListaCamaras;
-    //Definimos el contexto y recurso a utilizar
     private Context miContexto;
     private int recursosLayout;
-    private AdaptadorListaCamaras.OnCamaraClickListener listener;
+    private AdaptadorListaCamFavoritas.OnCamaraClickListener listener;
 
-    public AdaptadorListaCamaras(@NonNull Context context, int resource, List<Camara> objects) {
+    //Creamos un constructor
+    public AdaptadorListaCamFavoritas(@NonNull Context context, int resource, List<Camara> objects) {
         super(context, resource, objects);
+
         this.miListaCamaras = objects;
         this.miContexto = context;
         this.recursosLayout = resource;
     }
 
-
-    public void setOnCamaraClickListener(AdaptadorListaCamaras.OnCamaraClickListener listener) {
+    public void setOnCamaraClickListener(AdaptadorListaCamFavoritas.OnCamaraClickListener listener) {
         this.listener = listener;
     }
 
@@ -49,11 +46,12 @@ public class AdaptadorListaCamaras extends ArrayAdapter<Camara> {
         View miVista = convertView;
 
         if(miVista == null){
-            miVista = LayoutInflater.from(miContexto).inflate(R.layout.fila_lista_camaras,null);
+            miVista = LayoutInflater.from(miContexto).inflate(R.layout.fila_lista_cam_favoritas,null);
 
         }
 
         // Definimos como se va a construir el objeto en este adaptador
+
         Camara camara = miListaCamaras.get(position);
 
 
@@ -66,22 +64,13 @@ public class AdaptadorListaCamaras extends ArrayAdapter<Camara> {
         region.setText(camara.getRegion() != null ? camara.getRegion().getNombreEs() : "No disponible");
 
 
-
-        ImageButton imagen = miVista.findViewById(R.id.img);
-        imagen.setImageResource(camara.getImagen());
-
-        imagen.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onFavoritoClick(camara);
-            }
-        });
-
-        // Manejar el clic en el elemento completo
         miVista.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onCamaraClick(camara);
             }
         });
+
+
 
         return miVista;
     }
