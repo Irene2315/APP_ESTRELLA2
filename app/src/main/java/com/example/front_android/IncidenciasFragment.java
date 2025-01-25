@@ -21,6 +21,8 @@ import com.example.front_android.Adaptadores.AdaptadorListaIncidencias;
 import com.example.front_android.Adaptadores.WindowAdapterUniversal;
 import com.example.front_android.Modelos.Incidencia;
 import com.example.front_android.PETICIONES_API.PeticionesIncidencias;
+import com.example.front_android.bdd.GestorBDD;
+import com.example.front_android.bdd.GestorIncidenciasFavoritas;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -36,6 +38,8 @@ public class IncidenciasFragment extends Fragment {
     private static ListView listaIncidencias;
     private static ArrayList<Incidencia> miListaIncidencias = new ArrayList<>();
     private static AdaptadorListaIncidencias adaptadorListaIncidencias;
+    private GestorBDD gestorBDD;
+    private GestorIncidenciasFavoritas gestorIncidenciasFavoritas;
 
 
     public IncidenciasFragment() {
@@ -53,6 +57,10 @@ public class IncidenciasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_incidencias, container,false);
 
         listaIncidencias = view.findViewById(R.id.list_listaIncidencias);
+
+        gestorBDD = new GestorBDD(this.getContext());
+
+        gestorBDD.conectar();
 
         adaptadorListaIncidencias = new AdaptadorListaIncidencias(getContext(),R.layout.fila_lista_incidencias,miListaIncidencias);
         listaIncidencias.setAdapter(adaptadorListaIncidencias);
