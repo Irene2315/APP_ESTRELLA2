@@ -4,61 +4,113 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link IncidenciaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.front_android.Modelos.Incidencia;
+
+
 public class IncidenciaFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private Incidencia incidenciaSelect;
+    private TextView carreteraIncidencia;
+    private TextView inicioIncidencia;
+    private TextView causaIncidencia;
+    private TextView tipoIncidencia;
+    private TextView nivelIncidencia;
+    private TextView regionIncidencia;
+    private TextView provinciaIncidencia;
+    private TextView ciudadIncidencia;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public IncidenciaFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment IncidenciaFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static IncidenciaFragment newInstance(String param1, String param2) {
+
+
+    public static IncidenciaFragment newInstance(Incidencia incidencia) {
         IncidenciaFragment fragment = new IncidenciaFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putSerializable("incidencia", incidencia);
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_incidencia, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_incidencia, container, false);
+
+        carreteraIncidencia = view.findViewById(R.id.nombre_carretera);
+        inicioIncidencia = view.findViewById(R.id.inicio_incidencia);
+        causaIncidencia = view.findViewById(R.id.causa_incidencia);
+        tipoIncidencia = view.findViewById(R.id.tipo_incidencia);
+        nivelIncidencia = view.findViewById(R.id.nivel_incidencia);
+        regionIncidencia = view.findViewById(R.id.region_incidencia);
+        provinciaIncidencia = view.findViewById(R.id.provincia_incidencia);
+        ciudadIncidencia = view.findViewById(R.id.ciudad_incidencia);
+
+        incidenciaSelect = (Incidencia) getArguments().getSerializable("incidencia");
+
+        Log.d("incidenciaFragment", "Incidencia seleccionada: " + incidenciaSelect.toString());
+
+
+        if (incidenciaSelect.getCarretera() != null) {
+            carreteraIncidencia.setText(incidenciaSelect.getCarretera());
+        } else {
+            carreteraIncidencia.setText("Carretera no disponible");
+        }
+
+        if(incidenciaSelect.getFechaInicio() !=null){
+            inicioIncidencia.setText(incidenciaSelect.getFechaInicio());
+        } else{
+            inicioIncidencia.setText("Inicio incidencia no disponible");
+        }
+
+        if(incidenciaSelect.getCausa() != null){
+            causaIncidencia.setText(incidenciaSelect.getCausa());
+        } else{
+            causaIncidencia.setText("Causa incidencia no disponible");
+        }
+
+        if(incidenciaSelect.getTipoIncidencia() !=null && incidenciaSelect.getTipoIncidencia().getNombre() !=null){
+            tipoIncidencia.setText(incidenciaSelect.getTipoIncidencia().getNombre());
+        } else{
+            tipoIncidencia.setText("Tipo de incidencia no disponible");
+        }
+        if (incidenciaSelect.getNivelIncidencia() != null) {
+            nivelIncidencia.setText(incidenciaSelect.getNivelIncidencia());
+        } else {
+            nivelIncidencia.setText("Nivel de incidencia no disponible");
+        }
+
+        if (incidenciaSelect.getRegion() != null && incidenciaSelect.getRegion().getNombreEs() != null) {
+            regionIncidencia.setText(incidenciaSelect.getRegion().getNombreEs());
+        } else {
+            regionIncidencia.setText("Región no disponible");
+        }
+
+        if (incidenciaSelect.getProvincia() != null && incidenciaSelect.getProvincia().getNombre() != null) {
+            provinciaIncidencia.setText(incidenciaSelect.getProvincia().getNombre());
+        } else {
+            provinciaIncidencia.setText("Provincia no disponible");
+        }
+
+        if (incidenciaSelect.getCiudad() != null && incidenciaSelect.getCiudad().getNombre() != null) {
+            ciudadIncidencia.setText(incidenciaSelect.getCiudad().getNombre());
+        } else {
+            ciudadIncidencia.setText("Ciudad no disponible");
+        }
+
+
+
+
+        return view;
     }
 }

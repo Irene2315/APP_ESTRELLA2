@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -114,6 +115,14 @@ public class IncidenciasFragment extends Fragment {
             @Override
             public void onIncidenciaClick(Incidencia incidencia) {
                 Toast.makeText(getContext(), "Incidencia selecionada: " + incidencia.getCiudad().getNombre(), Toast.LENGTH_SHORT).show();
+
+
+                IncidenciaFragment incidenciaFragment = IncidenciaFragment.newInstance(incidencia);
+
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, incidenciaFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
 
             @Override

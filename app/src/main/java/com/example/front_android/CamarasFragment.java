@@ -99,10 +99,8 @@ public class CamarasFragment extends Fragment {
             public void onCamaraClick(Camara camara) {
                 Toast.makeText(getContext(), "Cámara seleccionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
 
-                // Crear el nuevo fragmento con la cámara seleccionada
                 CamaraFragment camaraFragment = CamaraFragment.newInstance(camara);
 
-                // Reemplazar el fragmento actual con el nuevo fragmento
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, camaraFragment);
                 transaction.addToBackStack(null);
@@ -111,12 +109,12 @@ public class CamarasFragment extends Fragment {
 
             @Override
             public void onFavoritoClick(Camara camara) {
-                // Cambia el estado del favorito y actualiza la base de datos
+
                 if (camara.getImagen() == R.drawable.estrella_check_blanco) {
-                    camara.setImagen(R.drawable.estrella_favorito_blanco); // Cambia a favorito
+                    camara.setImagen(R.drawable.estrella_favorito_blanco);
                     gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId())); // Inserta en la base de datos
                 } else {
-                    camara.setImagen(R.drawable.estrella_check_blanco); // Cambia a no favorito
+                    camara.setImagen(R.drawable.estrella_check_blanco);
                     gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId())); // Elimina de la base de datos
                 }
 

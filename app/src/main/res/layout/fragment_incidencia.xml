@@ -1,14 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".IncidenciaFragment">
+    android:background="#072942"
+    android:layout_marginTop="60dp"
+    tools:context=".IncidenciaFragment"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:padding="16dp">
 
-</FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <!-- Título centrado -->
+    <TextView
+        android:id="@+id/titulo_Incidencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DATOS INCIDENCIA"
+        android:textSize="35sp"
+        android:fontFamily="sans-serif-black"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp" />
+
+    <!-- Carretera -->
+    <TextView
+        android:id="@+id/titulo_carretera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Carretera:"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/titulo_Incidencia"
+        app:layout_constraintStart_toStartOf="@id/titulo_Incidencia"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/nombre_carretera"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="[Nombre de la carretera]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_carretera"
+        app:layout_constraintStart_toStartOf="@id/titulo_carretera"
+        android:layout_marginTop="8dp" />
+
+    <!-- Inicio -->
+    <TextView
+        android:id="@+id/titulo_inicio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inicio:"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/nombre_carretera"
+        app:layout_constraintStart_toStartOf="@id/titulo_Incidencia"
+        android:layout_marginTop="30dp" />
+
+            <!-- Causa -->
+            <TextView
+                android:id="@+id/inicio_incidencia"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif"
+                android:text="[Nombre del inicio Incidencia]"
+                android:textColor="#F9FCF5"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@id/titulo_inicio"
+                app:layout_constraintTop_toBottomOf="@id/titulo_inicio" />
+
+            <TextView
+        android:id="@+id/titulo_causa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Causa:"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/inicio_incidencia"
+        app:layout_constraintStart_toStartOf="@id/titulo_Incidencia"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/causa_incidencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="[Causa de la incidencia]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_causa"
+        app:layout_constraintStart_toStartOf="@id/titulo_causa"
+        android:layout_marginTop="8dp" />
+
+    <!-- Tipo -->
+    <TextView
+        android:id="@+id/titulo_tipo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tipo:"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/causa_incidencia"
+        app:layout_constraintStart_toStartOf="@id/titulo_Incidencia"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/tipo_incidencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="[Tipo de la incidencia]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_tipo"
+        app:layout_constraintStart_toStartOf="@id/titulo_tipo"
+        android:layout_marginTop="8dp" />
+
+    <!-- Nivel -->
+    <TextView
+        android:id="@+id/titulo_nivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nivel:"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/tipo_incidencia"
+        app:layout_constraintStart_toStartOf="@id/titulo_Incidencia"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/nivel_incidencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="[Nivel de la incidencia]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_nivel"
+        app:layout_constraintStart_toStartOf="@id/titulo_nivel"
+        android:layout_marginTop="8dp" />
+
+    <!-- Región -->
+    <TextView
+        android:id="@+id/titulo_region"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Región:"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/nivel_incidencia"
+        app:layout_constraintStart_toStartOf="@id/titulo_Incidencia"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/region_incidencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="[Región de la incidencia]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_region"
+        app:layout_constraintStart_toStartOf="@id/titulo_region"
+        android:layout_marginTop="8dp" />
+
+    <!-- Provincia -->
+    <TextView
+        android:id="@+id/titulo_provincia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Provincia:"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/region_incidencia"
+        app:layout_constraintStart_toStartOf="@id/titulo_Incidencia"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/provincia_incidencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="[Provincia de la incidencia]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_provincia"
+        app:layout_constraintStart_toStartOf="@id/titulo_provincia"
+        android:layout_marginTop="8dp" />
+
+    <!-- Ciudad -->
+    <TextView
+        android:id="@+id/titulo_ciudad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ciudad:"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/provincia_incidencia"
+        app:layout_constraintStart_toStartOf="@id/titulo_Incidencia"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/ciudad_incidencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="[Ciudad de la incidencia]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_ciudad"
+        app:layout_constraintStart_toStartOf="@id/titulo_ciudad"
+        android:layout_marginTop="8dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
