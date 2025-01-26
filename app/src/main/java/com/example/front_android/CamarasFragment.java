@@ -1,9 +1,11 @@
 package com.example.front_android;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ public class CamarasFragment extends Fragment {
     private static AdaptadorListaCamaras adaptadorListaCamaras;
     private GestorBDD gestorBDD;
     private List<FavoritoCamara> miListaFavoritosCamaras = new ArrayList<>();
+    private CamaraFragment camaraFragment;
 
 
 
@@ -95,21 +98,36 @@ public class CamarasFragment extends Fragment {
             @Override
             public void onCamaraClick(Camara camara) {
                 Toast.makeText(getContext(), "Cámara seleccionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
+
+                // Crear el nuevo fragmento con la cámara seleccionada
+                CamaraFragment camaraFragment = CamaraFragment.newInstance(camara);
+
+                // Reemplazar el fragmento actual con el nuevo fragmento
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, camaraFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
 
             @Override
             public void onFavoritoClick(Camara camara) {
+                // Cambia el estado del favorito y actualiza la base de datos
                 if (camara.getImagen() == R.drawable.estrella_check_blanco) {
-                    camara.setImagen(R.drawable.estrella_favorito_blanco);
-                    gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId()));
+                    camara.setImagen(R.drawable.estrella_favorito_blanco); // Cambia a favorito
+                    gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId())); // Inserta en la base de datos
                 } else {
-                    camara.setImagen(R.drawable.estrella_check_blanco);
-                    gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId()));
+                    camara.setImagen(R.drawable.estrella_check_blanco); // Cambia a no favorito
+                    gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId())); // Elimina de la base de datos
                 }
+
+                // Notifica al adaptador para refrescar la lista
                 adaptadorListaCamaras.notifyDataSetChanged();
+
+                // Muestra un mensaje para confirmar el cambio
                 Toast.makeText(getContext(), "Favorito actualizado: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
             }
         });
+
 
         return view;
     }

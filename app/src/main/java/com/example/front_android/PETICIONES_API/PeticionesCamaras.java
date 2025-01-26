@@ -31,8 +31,8 @@ public class PeticionesCamaras {
         camara.setLongitud(camaraObject.getString("longitud"));
 
 
-        if (!camaraObject.isNull("urlImagen")) {
-            camara.setUrlImagen(camaraObject.getString("urlImagen"));
+        if (!camaraObject.isNull("urlImage")) {
+            camara.setUrlImagen(camaraObject.getString("urlImage"));
         } else {
             camara.setUrlImagen(null);
         }
