@@ -1,10 +1,7 @@
 package com.example.front_android;
 
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -75,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -149,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 fragmentTransaction.replace(R.id.fragment_container,perfilFragment);
 
-                new PeticionesUsuarios.ObtenerUnUsuario().execute();
+                //new PeticionesUsuarios.ObtenerUsuarios().execute();
 
                 break;
             case R.id.nav_cerrar_sesion:
