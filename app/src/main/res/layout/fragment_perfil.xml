@@ -9,12 +9,12 @@
     tools:context=".PerfilFragment"
     android:padding="16dp">
 
-    <!-- Título centrado -->
+
     <TextView
         android:id="@+id/titulo_Perfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DATOS PERFIL"
+        android:text="@string/titulo_perfil"
         android:textSize="35sp"
         android:fontFamily="sans-serif-black"
         android:textColor="#F9FCF5"
@@ -23,7 +23,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp" />
 
-    <!-- Imagen de perfil -->
     <ImageView
         android:id="@+id/imagen_perfil"
         android:layout_width="250dp"
@@ -35,12 +34,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="50dp" />
 
-    <!-- Contenedor para el nombre del usuario -->
+
     <TextView
         android:id="@+id/titulo_nombre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nombre:"
+        android:text="@string/titulo_nombre_user"
         android:textSize="23sp"
         android:fontFamily="sans-serif"
         android:textColor="#F9FCF5"
@@ -53,7 +52,7 @@
         android:id="@+id/nombre_usuario"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="[Nombre del usuario]"
+        android:text="@string/texto_al_nombre_user"
         android:textSize="20sp"
         android:fontFamily="sans-serif"
         android:textColor="#F9FCF5"
@@ -61,12 +60,11 @@
         app:layout_constraintStart_toStartOf="@id/titulo_nombre"
         android:layout_marginTop="8dp" />
 
-    <!-- Contenedor para el correo del usuario -->
     <TextView
         android:id="@+id/titulo_correo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Correo:"
+        android:text="@string/titulo_correo_user"
         android:textSize="23sp"
         android:fontFamily="sans-serif"
         android:textColor="#F9FCF5"
@@ -79,7 +77,7 @@
         android:id="@+id/correo_usuario"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="[Correo del usuario]"
+        android:text="@string/texto_al_correo_user"
         android:textSize="20sp"
         android:fontFamily="sans-serif"
         android:textColor="#F9FCF5"

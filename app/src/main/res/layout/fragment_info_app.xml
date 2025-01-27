@@ -14,7 +14,7 @@
         android:id="@+id/titulo_InfoApp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="INFORMACIÓN APP"
+        android:text="@string/titulo_informacion_app"
         android:textSize="35sp"
         android:fontFamily="sans-serif-black"
         android:textColor="#F9FCF5"
@@ -37,10 +37,10 @@
 
 
     <TextView
-        android:id="@+id/titulo_nombre"
+        android:id="@+id/titulo_creadoPor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Creado por CODETECH"
+        android:text="@string/titulo_creado_por"
         android:textSize="23sp"
         android:fontFamily="sans-serif"
         android:textColor="#F9FCF5"
@@ -55,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/titulo_nombre"
+        app:layout_constraintTop_toBottomOf="@id/titulo_creadoPor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="50dp">
@@ -68,7 +68,6 @@
             android:layout_marginEnd="20dp"
             android:src="@drawable/facebook"
             android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="Facebook"
             android:onClick="abrirFacebook" />
 
         <ImageButton
@@ -78,7 +77,6 @@
             android:layout_marginEnd="20dp"
             android:src="@drawable/instagram"
             android:background="?android:attr/selectableItemBackground"
-            android:contentDescription="Instagram"
             android:onClick="abrirInstagram" />
 
 

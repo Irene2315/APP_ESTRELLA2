@@ -17,12 +17,12 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-    <!-- Título centrado -->
+
     <TextView
         android:id="@+id/titulo_Incidencia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="DATOS INCIDENCIA"
+        android:text="@string/titulo_incidencia"
         android:textSize="35sp"
         android:fontFamily="sans-serif-black"
         android:textColor="#F9FCF5"
@@ -31,12 +31,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp" />
 
-    <!-- Carretera -->
     <TextView
         android:id="@+id/titulo_carretera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Carretera:"
+        android:text="@string/titulo_carretera"
         android:textSize="23sp"
         android:fontFamily="sans-serif"
         android:textColor="#F9FCF5"
@@ -49,7 +48,7 @@
         android:id="@+id/nombre_carretera"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="[Nombre de la carretera]"
+        android:text="@string/texto_al_carretera"
         android:textSize="20sp"
         android:fontFamily="sans-serif"
         android:textColor="#F9FCF5"
