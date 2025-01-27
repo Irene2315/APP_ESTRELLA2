@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
+import com.example.front_android.PETICIONES_API.PeticionesCamaras.ObtenerCamarasRegion;
 
 import com.example.front_android.Adaptadores.WindowAdapterUniversal;
 import com.example.front_android.Modelos.Camara;
@@ -63,6 +64,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<String> miListaProvincias = new ArrayList<>();
     private ArrayList<String> miListaCiudades = new ArrayList<>();
     private ArrayList<String> miListaTipoIncidencias = new ArrayList<>();
+    private List<Region> regiones;
 
     public MapaFragment() {
         // Constructor requerido vacío
@@ -94,14 +96,40 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         selectRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                String item = adapterView.getItemAtPosition(position).toString();
-                Toast.makeText(getContext(), "Región seleccionada: " + item, Toast.LENGTH_SHORT).show();
+                Log.d("MapaFragment", "Region selcted: " + position);
+
+                if (regiones != null && !regiones.isEmpty() && position > 0) {
+                    Region regionSeleccionada = regiones.get(position - 1);
+                    int regionId = regionSeleccionada.getIdRegion();
+                    Log.d("MapaFragment", "ID de region selected: " + regionId);
+
+                    new ObtenerCamarasRegion() {
+                        @Override
+                        protected void onPostExecute(List<Camara> camaras) {
+                            super.onPostExecute(camaras);
+                            Log.d("MapaFragment", "camaras : " + (camaras != null ? camaras.size() : 0));
+                            if (camaras != null && !camaras.isEmpty()) {
+                                pintarCamaras(camaras);
+                            } else {
+                                Toast.makeText(getContext(), "No hay cámaras para  regioon", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }.execute(regionId);
+                } else {
+                    pintarCamaras();
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                pintarCamaras();
             }
         });
+
+
+
+
+
 
         selectProvincia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -161,26 +189,25 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
 
 
-
         new PeticionesRegiones.ObtenerTodasLasRegiones() {
             @Override
             protected void onPostExecute(List<Region> regiones) {
                 super.onPostExecute(regiones);
 
                 if (regiones != null && !regiones.isEmpty()) {
-                    miListaRegiones.clear();
+                    Log.d("MapaFragment", "Regiones obtenidas: " + regiones.size());
+                    MapaFragment.this.regiones = regiones;
+
                     miListaRegiones.add("Regiones");
                     for (Region region : regiones) {
                         miListaRegiones.add(region.getNombreEs());
                     }
 
-
                     adapterRegion.notifyDataSetChanged();
-                } else {
-                    Log.d("Región", "No hay regiones disponibles.");
                 }
             }
         }.execute();
+
 
 
         new PeticionesProvincias.ObtenerTodasLasProvincias() {
@@ -339,7 +366,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }.execute();
         }
 
-    @SuppressLint("StaticFieldLeak")
+    /*@SuppressLint("StaticFieldLeak")
     public void pintarCamaras() {
 
 
@@ -384,7 +411,57 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         }.execute();
+    }*/
+
+    public void pintarCamaras(List<Camara> camaras) {
+        if (map == null) {
+            Log.e("MapaFragment", "Mapa no inicializado.");
+            return;
+        }
+
+        map.clear();
+
+        if (camaras != null && !camaras.isEmpty()) {
+            for (Camara camara : camaras) {
+                try {
+                    double lat = Double.parseDouble(camara.getLatitud());
+                    double lng = Double.parseDouble(camara.getLongitud());
+                    LatLng punto = new LatLng(lat, lng);
+
+                    Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.camaras);
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
+
+                    map.setInfoWindowAdapter(new WindowAdapterUniversal(getLayoutInflater()));
+                    Marker marker = map.addMarker(new MarkerOptions()
+                            .position(punto)
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+
+                    marker.setTag(camara);
+                } catch (NumberFormatException e) {
+                    Log.e("MapaFragment", "Coordenadas inválidas para la cámara: " + camara.getId(), e);
+                }
+            }
+        } else {
+            Log.d("MapaFragment", "No hay cámaras para pintar.");
+        }
     }
+
+
+
+    @SuppressLint("StaticFieldLeak")
+    public void pintarCamaras() {
+        new PeticionesCamaras.ObtenerTodasLasCamaras() {
+            @Override
+            protected void onPostExecute(List<Camara> camaras) {
+                super.onPostExecute(camaras);
+                if (camaras != null && !camaras.isEmpty()) {
+                    pintarCamaras(camaras);
+                }
+            }
+        }.execute();
+    }
+
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
@@ -396,7 +473,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         map.getUiSettings().setZoomControlsEnabled(true);
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
-            obtenerGeolocalizacion();
 
 
 
