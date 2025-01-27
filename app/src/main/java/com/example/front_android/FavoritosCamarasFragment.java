@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,6 +98,22 @@ public class FavoritosCamarasFragment extends Fragment {
                 }
             }
         }.execute();
+
+        adaptadorListaCamaras.setOnCamaraClickListener(new AdaptadorListaCamFavoritas.OnCamaraClickListener() {
+            @Override
+            public void onCamaraClick(Camara camara) {
+                Toast.makeText(getContext(), "Cámara seleccionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
+
+                CamaraFragment camaraFragment = CamaraFragment.newInstance(camara);
+
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, camaraFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+
+
+        });
 
         return view;
     }
