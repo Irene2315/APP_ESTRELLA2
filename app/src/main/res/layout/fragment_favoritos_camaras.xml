@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".FavoritosCamarasFragment">
 
 
@@ -20,6 +21,7 @@
         android:textColor="@android:color/black"
         android:visibility="gone" />
     <ListView
+        android:background="@android:color/black"
         android:id="@+id/list_listaCamaras"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
