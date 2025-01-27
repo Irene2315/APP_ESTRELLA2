@@ -1,14 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InfoAppFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#072942"
+    android:layout_marginTop="60dp"
+    tools:context=".InfoAppFragment"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/titulo_InfoApp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="INFORMACIÓN APP"
+        android:textSize="35sp"
+        android:fontFamily="sans-serif-black"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp" />
 
-</FrameLayout>
+
+    <ImageView
+        android:id="@+id/imagen_estrellados"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/icono_estrellados_sin_alfa"
+        app:layout_constraintTop_toBottomOf="@id/titulo_InfoApp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp" />
+
+
+    <TextView
+        android:id="@+id/titulo_nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Creado por CODETECH"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/imagen_estrellados"
+        app:layout_constraintStart_toStartOf="@id/imagen_estrellados"
+        android:layout_marginTop="40dp" />
+
+
+    <LinearLayout
+        android:id="@+id/redes_sociales_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/titulo_nombre"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp">
+
+
+        <ImageButton
+            android:id="@+id/imagen_facebook"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/facebook"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Facebook"
+            android:onClick="abrirFacebook" />
+
+        <ImageButton
+            android:id="@+id/imagen_instagram"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/instagram"
+            android:background="?android:attr/selectableItemBackground"
+            android:contentDescription="Instagram"
+            android:onClick="abrirInstagram" />
+
+
+        <ImageButton
+            android:id="@+id/imagen_ex"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ex"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="abrirEx" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
