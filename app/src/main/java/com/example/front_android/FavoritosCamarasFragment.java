@@ -46,7 +46,7 @@ public class FavoritosCamarasFragment extends Fragment {
     @SuppressLint("StaticFieldLeak")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_camaras, container, false);
+        View view = inflater.inflate(R.layout.fragment_favoritos_camaras, container, false);
 
         listaCamarasFavoritas = view.findViewById(R.id.list_listaCamaras);
         mensajeSinFavoritos = view.findViewById(R.id.text_no_favoritos);
