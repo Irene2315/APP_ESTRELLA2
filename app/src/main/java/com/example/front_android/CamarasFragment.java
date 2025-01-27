@@ -1,64 +1,132 @@
 package com.example.front_android;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CamarasFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.front_android.Adaptadores.AdaptadorListaCamaras;
+import com.example.front_android.Modelos.Camara;
+import com.example.front_android.Modelos.FavoritoCamara;
+import com.example.front_android.PETICIONES_API.PeticionesCamaras;
+import com.example.front_android.bdd.GestorBDD;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class CamarasFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static ListView listaCamaras;
+    private static ArrayList<Camara> miListaCamaras = new ArrayList<>();
+    private static AdaptadorListaCamaras adaptadorListaCamaras;
+    private GestorBDD gestorBDD;
+    private List<FavoritoCamara> miListaFavoritosCamaras = new ArrayList<>();
+    private CamaraFragment camaraFragment;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+
 
     public CamarasFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CamarasFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CamarasFragment newInstance(String param1, String param2) {
-        CamarasFragment fragment = new CamarasFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @SuppressLint("StaticFieldLeak")
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_camaras, container, false);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_camaras, container, false);
+        listaCamaras = view.findViewById(R.id.list_listaCamaras);
+        gestorBDD = new GestorBDD(this.getContext());
+        gestorBDD.conectar();
+
+
+        adaptadorListaCamaras = new AdaptadorListaCamaras(getContext(), R.layout.fila_lista_camaras, miListaCamaras);
+        listaCamaras.setAdapter(adaptadorListaCamaras);
+
+
+        miListaFavoritosCamaras = gestorBDD.getGestorCamarasFavoritas().seleccionarTodasLasCamarasFavoritas();
+
+
+        new PeticionesCamaras.ObtenerTodasLasCamaras() {
+            @Override
+            protected void onPostExecute(List<Camara> camaras) {
+                super.onPostExecute(camaras);
+
+                if (camaras != null && !camaras.isEmpty()) {
+                    Log.d("Camara", "Cargando " + camaras.size() + " cámaras.");
+
+                    miListaCamaras.clear();
+                    for (Camara camara : camaras) {
+
+                        boolean esFavorito = false;
+                        for (FavoritoCamara favorito : miListaFavoritosCamaras) {
+                            if (camara.getId() == favorito.getIdCamara()) {
+                                esFavorito = true;
+                                break;
+                            }
+                        }
+
+
+                        if (esFavorito) {
+                            camara.setImagen(R.drawable.estrella_favorito_blanco);
+                        } else {
+                            camara.setImagen(R.drawable.estrella_check_blanco);
+                        }
+
+                        miListaCamaras.add(camara);
+                    }
+
+                    adaptadorListaCamaras.notifyDataSetChanged();
+                } else {
+                    Log.d("Camara", "No se obtuvieron cámaras de la API.");
+                }
+            }
+        }.execute();
+
+
+        adaptadorListaCamaras.setOnCamaraClickListener(new AdaptadorListaCamaras.OnCamaraClickListener() {
+            @Override
+            public void onCamaraClick(Camara camara) {
+                Toast.makeText(getContext(), "Cámara seleccionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
+
+                CamaraFragment camaraFragment = CamaraFragment.newInstance(camara);
+
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, camaraFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+
+            @Override
+            public void onFavoritoClick(Camara camara) {
+
+                if (camara.getImagen() == R.drawable.estrella_check_blanco) {
+                    camara.setImagen(R.drawable.estrella_favorito_blanco);
+                    gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId())); // Inserta en la base de datos
+                } else {
+                    camara.setImagen(R.drawable.estrella_check_blanco);
+                    gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId())); // Elimina de la base de datos
+                }
+
+                // Notifica al adaptador para refrescar la lista
+                adaptadorListaCamaras.notifyDataSetChanged();
+
+                // Muestra un mensaje para confirmar el cambio
+                Toast.makeText(getContext(), "Favorito actualizado: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        return view;
     }
 }

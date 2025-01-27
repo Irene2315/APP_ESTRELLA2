@@ -8,6 +8,7 @@ public class Camara implements Serializable {
     private String latitud;
     private String longitud;
     private String urlImagen;
+    private int imagen;
     private Region region;
 
     public Camara() {
@@ -19,6 +20,16 @@ public class Camara implements Serializable {
         this.latitud = latitud;
         this.longitud = longitud;
         this.urlImagen = urlImagen;
+        this.region = region;
+    }
+
+    public Camara(int id, String nombre, String latitud, String longitud, String urlImagen, int imagen, Region region) {
+        this.id = id;
+        this.nombre = nombre;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.urlImagen = urlImagen;
+        this.imagen = imagen;
         this.region = region;
     }
 
@@ -68,6 +79,14 @@ public class Camara implements Serializable {
 
     public void setRegion(Region region) {
         this.region = region;
+    }
+
+    public int getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(int imagen) {
+        this.imagen = imagen;
     }
 
     @Override

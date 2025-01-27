@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/adaptador_lista_incidencias"
+    android:id="@+id/adaptador_lista_camaras"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="10dp"
@@ -25,21 +25,21 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/label_provincia"
+                android:id="@+id/label_nombreCam"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/titulo_provincia"
+                android:text="@string/titulo_nombre_cam"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white" />
 
             <TextView
-                android:id="@+id/texto_provincia"
+                android:id="@+id/texto_nombreCam"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/provincia_text_prueba"
+                android:text="@string/nombre_cam_text_prueba"
                 android:textSize="16sp"
                 android:textColor="@android:color/white" />
         </LinearLayout>
@@ -51,50 +51,25 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/label_ciudad"
+                android:id="@+id/label_region"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/titulo_ciudad"
+                android:text="@string/titulo_region"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white" />
 
             <TextView
-                android:id="@+id/texto_ciudad"
+                android:id="@+id/texto_region"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/ciudad_text_prueba"
+                android:text="Nombre de region"
                 android:textSize="16sp"
                 android:textColor="@android:color/white" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/label_tipo_incidencia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/titulo_tipo_incidencia"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white" />
-
-            <TextView
-                android:id="@+id/texto_tipo_incidencia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/tipo_i_text_prueba"
-                android:textSize="16sp"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
 
         <ImageButton
             android:id="@+id/img"

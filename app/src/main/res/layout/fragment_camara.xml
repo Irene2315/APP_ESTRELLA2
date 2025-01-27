@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#072942"
+    android:layout_marginTop="60dp"
+    tools:context=".CamaraFragment"
+    android:padding="16dp">
+
+    <!-- Título centrado -->
+    <TextView
+        android:id="@+id/titulo_Camara"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DATOS CÁMARA"
+        android:textSize="35sp"
+        android:fontFamily="sans-serif-black"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp" />
+
+    <!-- Contenedor para nombre -->
+    <TextView
+        android:id="@+id/titulo_nombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre:"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/titulo_Camara"
+        app:layout_constraintStart_toStartOf="@+id/titulo_Camara"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/nombre_camara"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="[Nombre de la cámara]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_nombre"
+        app:layout_constraintStart_toStartOf="@id/titulo_nombre"
+        android:layout_marginTop="8dp" />
+
+    <!-- Contenedor para región -->
+    <TextView
+        android:id="@+id/titulo_region"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Región:"
+        android:textStyle="bold"
+        android:textSize="23sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/nombre_camara"
+        app:layout_constraintStart_toStartOf="@+id/titulo_Camara"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:id="@+id/region_camara"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="[Nombre de la región]"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#F9FCF5"
+        app:layout_constraintTop_toBottomOf="@id/titulo_region"
+        app:layout_constraintStart_toStartOf="@id/titulo_region"
+        android:layout_marginTop="8dp" />
+
+    <!-- Imagen -->
+    <ImageView
+        android:id="@+id/imagen_camara"
+        android:layout_width="350dp"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Imagen de la cámara"
+        app:layout_constraintTop_toBottomOf="@id/region_camara"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

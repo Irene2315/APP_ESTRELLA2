@@ -15,18 +15,32 @@
             android:title="Incidencias"
             android:icon="@drawable/incidencias"
             />
-        <item
-            android:id="@+id/nav_favoritos"
-            android:title="Favoritos"
-            android:icon="@drawable/estrella_favorito"
-            />
-        <item
-            android:id="@+id/nav_infoApp"
-            android:title="InfoApp"
-            android:icon="@drawable/info_icon"
-            />
+
+
 
     </group>
+
+    <item android:title="Favoritos">
+
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_favoritos_camaras"
+                    android:title="Camaras"
+                    android:icon="@drawable/estrella_favorito"
+                    />
+
+                <item
+                    android:id="@+id/nav_favoritos_incidencias"
+                    android:title="Incidencias"
+                    android:icon="@drawable/estrella_favorito"
+                    />
+
+            </group>
+        </menu>
+
+
+    </item>
 
     <item android:title="Perfil">
 
@@ -41,6 +55,23 @@
                     android:id="@+id/nav_cerrar_sesion"
                     android:icon="@drawable/logout_icon"
                     android:title="Cerrar sesion"
+                    />
+
+            </group>
+        </menu>
+
+
+    </item>
+
+    <item android:title="App">
+
+        <menu>
+            <group android:checkableBehavior="single">
+
+                <item
+                    android:id="@+id/nav_infoApp"
+                    android:title="InfoApp"
+                    android:icon="@drawable/info_icon"
                     />
 
             </group>
