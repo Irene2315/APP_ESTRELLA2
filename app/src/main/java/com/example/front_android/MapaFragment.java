@@ -96,35 +96,25 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         selectRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                Log.d("MapaFragment", "Region selcted: " + position);
+                Log.d("MapaFragment", "Region seleccionada: " + position);
 
                 if (regiones != null && !regiones.isEmpty() && position > 0) {
                     Region regionSeleccionada = regiones.get(position - 1);
                     int regionId = regionSeleccionada.getIdRegion();
-                    Log.d("MapaFragment", "ID de region selected: " + regionId);
+                    Log.d("MapaFragment", "ID de region seleccionada: " + regionId);
+
+                    final List<Camara>[] camarasResultado = new List[1];
+                    final List<Incidencia>[] incidenciasResultado = new List[1];
 
                     new ObtenerCamarasRegion() {
                         @Override
                         protected void onPostExecute(List<Camara> camaras) {
                             super.onPostExecute(camaras);
-                            Log.d("MapaFragment", "camaras : " + (camaras != null ? camaras.size() : 0));
-                            if (camaras != null && !camaras.isEmpty()) {
-                                pintarCamaras(camaras);
-                            } else {
-                                Toast.makeText(getContext(), "No hay cámaras para  regioon", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }.execute(regionId);
+                            Log.d("MapaFragment", "Cámaras: " + (camaras != null ? camaras.size() : 0));
+                            camarasResultado[0] = camaras;
 
-                    new ObtenerCamarasRegion() {
-                        @Override
-                        protected void onPostExecute(List<Camara> camaras) {
-                            super.onPostExecute(camaras);
-                            Log.d("MapaFragment", "camaras : " + (camaras != null ? camaras.size() : 0));
-                            if (camaras != null && !camaras.isEmpty()) {
-                                pintarCamaras(camaras);
-                            } else {
-                                Toast.makeText(getContext(), "No hay cámaras para  regioon", Toast.LENGTH_SHORT).show();
+                            if (incidenciasResultado[0] != null) {
+                                actualizarMapa(camaras, incidenciasResultado[0]);
                             }
                         }
                     }.execute(regionId);
@@ -133,24 +123,19 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                         @Override
                         protected void onPostExecute(List<Incidencia> incidencias) {
                             super.onPostExecute(incidencias);
-                            Log.d("MapaFragment", "incidencias : " + (incidencias != null ? incidencias.size() : 0));
-                            if (incidencias != null && !incidencias.isEmpty()) {
-                                pintarIncidencias(incidencias);
-                            } else {
-                                Toast.makeText(getContext(), "No hay incidencias para  regioon", Toast.LENGTH_SHORT).show();
+                            Log.d("MapaFragment", "Incidencias: " + (incidencias != null ? incidencias.size() : 0));
+                            incidenciasResultado[0] = incidencias;
+
+                            if (camarasResultado[0] != null) {
+                                actualizarMapa(camarasResultado[0], incidencias);
                             }
                         }
                     }.execute(regionId);
-                } else {
-                    pintarCamaras();
-                    //pintarIncidencias();
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                pintarCamaras();
-                //pintarIncidencias();
             }
         });
 
@@ -340,13 +325,28 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void pintarIncidencias(List<Incidencia> incidencias) {
+    private void actualizarMapa(List<Camara> camaras, List<Incidencia> incidencias) {
         if (map == null) {
             Log.e("MapaFragment", "Mapa no inicializado.");
             return;
         }
 
         map.clear();
+
+        if (camaras != null && !camaras.isEmpty()) {
+            pintarCamaras(camaras);
+        } else {
+            Toast.makeText(getContext(), "No hay cámaras para la región", Toast.LENGTH_SHORT).show();
+        }
+
+        if (incidencias != null && !incidencias.isEmpty()) {
+            pintarIncidencias(incidencias);
+        } else {
+            Toast.makeText(getContext(), "No hay incidencias para la región", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void pintarIncidencias(List<Incidencia> incidencias) {
 
         if (incidencias != null && !incidencias.isEmpty()) {
             for (Incidencia in : incidencias) {
@@ -391,12 +391,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void pintarCamaras(List<Camara> camaras) {
-        if (map == null) {
-            Log.e("MapaFragment", "Mapa no inicializado.");
-            return;
-        }
-
-        map.clear();
 
         if (camaras != null && !camaras.isEmpty()) {
             for (Camara camara : camaras) {
