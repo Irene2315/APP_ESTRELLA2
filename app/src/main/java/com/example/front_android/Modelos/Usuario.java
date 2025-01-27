@@ -3,6 +3,7 @@ package com.example.front_android.Modelos;
 import java.io.Serializable;
 import java.util.List;
 
+
 public class Usuario implements Serializable {
     private int id;
     private String nombre;

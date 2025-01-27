@@ -504,11 +504,11 @@ public class PeticionesIncidencias {
         @Override
         protected void onPostExecute(List<Incidencia> incidencias) {
 
-                if (incidencias != null) {
-                    for (Incidencia incidencia : incidencias) {
-                        Log.d("Incidencia", incidencia.toString());
-                    }
+            if (incidencias != null) {
+                for (Incidencia incidencia : incidencias) {
+                    Log.d("Incidencia", incidencia.toString());
                 }
+            }
 
 
         }
@@ -516,6 +516,3 @@ public class PeticionesIncidencias {
 
     }
 }
-
-
-

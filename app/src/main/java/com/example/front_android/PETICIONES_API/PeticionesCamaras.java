@@ -124,27 +124,27 @@ public class PeticionesCamaras {
 
     }
 
-    public static class ObtenerCamarasRegion extends AsyncTask<Void, Void, List<Camara>> {
+    public static class ObtenerCamarasRegion extends AsyncTask<Integer, Void, List<Camara>> {
 
         @Override
-        protected List<Camara> doInBackground(Void... params) {
+        protected List<Camara> doInBackground(Integer... params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             StringBuilder jsonResult = new StringBuilder();
             List<Camara> camaras = new ArrayList<>();
 
             try {
-                // URL de las incidencias
-                URL url = new URL("http://10.10.13.251:8080/privateCameras/region/1");
+                int regionId = params[0];
+                Log.d("ObtenerCamarasRegion", "región ID: " + regionId);
+
+                URL url = new URL("http://10.10.13.251:8080/privateCameras/region/" + regionId);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
-                // Verificar código de respuesta
                 int code = urlConnection.getResponseCode();
                 if (code != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + code);
                 }
 
-                // Leer la respuesta del servidor
                 reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -155,7 +155,6 @@ public class PeticionesCamaras {
                 e.printStackTrace();
                 return null;
             } finally {
-
                 if (reader != null) {
                     try {
                         reader.close();
@@ -172,20 +171,21 @@ public class PeticionesCamaras {
             try {
                 JSONArray jsonArray = new JSONArray(jsonResult.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject camaraObjet = jsonArray.getJSONObject(i);
-                    Camara camara = parseCamara(camaraObjet);
+                    JSONObject camaraObject = jsonArray.getJSONObject(i);
+                    Camara camara = parseCamara(camaraObject);
                     camaras.add(camara);
                 }
             } catch (JSONException e) {
+                Log.d("ObtenerCamarasRegion", "Error al parsear el JSON: " + e.getMessage());
                 e.printStackTrace();
                 return null;
             }
 
-            return camaras; // Retorna la lista de incidencias
+            return camaras;
         }
-
 
 
 
     }
 }
+
