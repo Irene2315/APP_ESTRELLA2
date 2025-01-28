@@ -23,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.Toast;
 import com.example.front_android.PETICIONES_API.PeticionesCamaras.ObtenerCamarasRegion;
 
@@ -72,6 +74,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private List<Ciudad> ciudades;
     private List<TipoIncidencia> tipoIncidencias;
     private List<Provincia> provincias;
+    private Switch incidencias_switch;
+    private Switch camaras_switch;
+    private Switch favoritos_switch;
+    final List<Camara>[] camarasResultado = new List[1];
+    final List<Incidencia>[] incidenciasResultado = new List[1];
+
     public MapaFragment() {
         // Constructor requerido vacío
     }
@@ -101,6 +109,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         selectProvincia = view.findViewById(R.id.spinnerProvincia);
         selectCiudad = view.findViewById(R.id.spinnerCiudad);
         selectTipoIncidencia = view.findViewById(R.id.spinnerTipoIncidencia);
+        incidencias_switch = view.findViewById(R.id.switch_incidencias);
+        camaras_switch = view.findViewById(R.id.switch_camaras);
+        favoritos_switch = view.findViewById(R.id.switch_fevoritos);
+
+        incidencias_switch.setChecked(true);
+        camaras_switch.setChecked(true);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -122,7 +136,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
 
         selectRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            boolean primera_carga = true;
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 Log.d("MapaFragment", "Region seleccionada: " + position);
@@ -133,11 +146,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
                     int regionId = regionSeleccionada.getIdRegion();
 
-
-                    Log.d("MapaFragment", "ID de region seleccionada: " + regionId);
-
-                    final List<Camara>[] camarasResultado = new List[1];
-                    final List<Incidencia>[] incidenciasResultado = new List[1];
+                    camaras_switch.setEnabled(true);
+                    camaras_switch.setChecked(true);
 
                     new ObtenerCamarasRegion() {
                         @Override
@@ -179,8 +189,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     Provincia provinciaSelected = provincias.get(position - 1);
                     int provinciaId = provinciaSelected.getId();
 
-                    final List<Camara>[] camarasResultado = new List[1];
-                    final List<Incidencia>[] incidenciasResultado = new List[1];
+                    camaras_switch.setEnabled(false);
+                    camaras_switch.setChecked(false);
 
                     new PeticionesIncidencias.ObtenerIncidenciasProvincia() {
                         @Override
@@ -196,7 +206,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
@@ -208,11 +217,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 if (ciudades != null && !ciudades.isEmpty() && position > 0) {
                     Ciudad ciudadSelected = ciudades.get(position - 1);
                     int ciudadId = ciudadSelected.getId();
-                    Log.d("MapaFragment", "ID de ciudad seleccionada: " + ciudadId);
-                    Log.d("MapaFragment", "nombre de ciudad seleccionada: " + ciudadSelected.getNombre());
 
-                    final List<Camara>[] camarasResultado = new List[1];
-                    final List<Incidencia>[] incidenciasResultado = new List[1];
+                    camaras_switch.setEnabled(false);
+                    camaras_switch.setChecked(false);
 
                     new PeticionesIncidencias.ObtenerIncidenciasCiudad() {
                         @Override
@@ -244,8 +251,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     TipoIncidencia tipoSelected = tipoIncidencias.get(position - 1);
                     int tipoId = tipoSelected.getId();
 
-                    final List<Camara>[] camarasResultado = new List[1];
-                    final List<Incidencia>[] incidenciasResultado = new List[1];
+                    camaras_switch.setEnabled(false);
+                    camaras_switch.setChecked(false);
 
                     new PeticionesIncidencias.ObtenerIncidenciasTipoIncidencia() {
                         @Override
@@ -268,6 +275,35 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        incidencias_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (incidencias_switch.isChecked() && camaras_switch.isChecked()) {
+                    actualizarMapa(camarasResultado[0], incidenciasResultado[0]);
+                } else if (incidencias_switch.isChecked()) {
+                    actualizarMapa(null, incidenciasResultado[0]);
+                } else if (camaras_switch.isChecked()) {
+                    actualizarMapa(camarasResultado[0], null);
+                } else {
+                    actualizarMapa(null, null);
+                }
+            }
+        });
+
+        camaras_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (incidencias_switch.isChecked() && camaras_switch.isChecked()) {
+                    actualizarMapa(camarasResultado[0], incidenciasResultado[0]);
+                } else if (camaras_switch.isChecked()) {
+                    actualizarMapa(camarasResultado[0], null);
+                } else if (incidencias_switch.isChecked()) {
+                    actualizarMapa(null, incidenciasResultado[0]);
+                } else {
+                    actualizarMapa(null, null);
+                }
+            }
+        });
 
         ArrayAdapter<String> adapterRegion = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, miListaRegiones);
         adapterRegion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -469,6 +505,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             protected void onPostExecute(List<Incidencia> incidencias) {
                 super.onPostExecute(incidencias);
                 if (incidencias != null && !incidencias.isEmpty()) {
+                    incidenciasResultado[0] = incidencias;
                     pintarIncidencias(incidencias);
                 }
             }
@@ -512,6 +549,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             protected void onPostExecute(List<Camara> camaras) {
                 super.onPostExecute(camaras);
                 if (camaras != null && !camaras.isEmpty()) {
+                    camarasResultado[0] = camaras;
                     pintarCamaras(camaras);
                 }
             }
@@ -526,16 +564,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         pintarIncidencias();
         pintarCamaras();
 
-
         map.getUiSettings().setZoomControlsEnabled(true);
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setMyLocationEnabled(true);
-
 
         } else {
             setPermisosGeoloc();
         }
     }
-
-
 }
