@@ -11,6 +11,7 @@
     <string name="titulo_usuario_contrasena">Contraseña</string>
     <string name="titulo_usuario_correo">Correo</string>
     <string name="titulo_usuario_entrar">Entrar</string>
+    <string name="titulo_usuario_registrar">Registrar</string>
 
     <string name="titulo_provincia">Provincia:</string>
     <string name="provincia_text_prueba">Nombre de Provincia</string>
