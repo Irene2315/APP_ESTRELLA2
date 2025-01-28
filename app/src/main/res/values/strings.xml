@@ -31,6 +31,9 @@
     <string name="titulo_incidencia">DATOS INCIDENCIA</string>
     <string name="titulo_carretera">Carretera:</string>
     <string name="texto_al_carretera">[Nombre de la carretera]</string>
+    
+    <string name="no_incidencias_favoritas">No hay ninguna incidencia favorita en este momento</string>
+    
 
 
 
