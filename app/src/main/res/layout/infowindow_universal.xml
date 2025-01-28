@@ -1,63 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="8dp" >
+    android:padding="8dp">
 
-    <ImageView
+    <!-- Botón de favoritos -->
+    <ImageButton
         android:id="@+id/favoritos"
         android:layout_width="35dp"
         android:layout_height="35dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/estrella_check"
+        android:scaleType="centerInside"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true" />
+        android:layout_marginEnd="8dp" />
 
-    <ImageView
+    <!-- Botón de más información -->
+    <ImageButton
         android:id="@+id/mas_info"
-        android:layout_marginTop="10dp"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:scaleType="centerCrop"
+        android:scaleType="centerInside"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/mas_info"
         android:layout_below="@id/favoritos"
-        android:layout_centerVertical="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp" />
 
-    <!-- Nombre -->
+    <!-- Nombre de la carretera -->
     <TextView
         android:id="@+id/info_window_carretera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/favoritos"
-        android:paddingLeft="8dp"
+        android:layout_toEndOf="@id/favoritos"
+        android:layout_marginStart="8dp"
         android:textSize="16sp"
         android:textStyle="bold"
         android:maxWidth="200dp" />
 
-    <!-- Placas -->
+    <!-- Ciudad -->
     <TextView
         android:id="@+id/info_window_ciudad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="16sp"
         android:layout_below="@id/info_window_carretera"
-        android:layout_toRightOf="@id/favoritos"
-        android:paddingLeft="8dp"
-        android:text="Placas: SX5487"
+        android:layout_toEndOf="@id/favoritos"
+        android:layout_marginStart="8dp"
+        android:textSize="16sp"
+        android:textStyle="bold"
         android:maxWidth="200dp" />
 
-    <!-- Estado -->
+    <!-- Tipo de incidencia -->
     <TextView
         android:id="@+id/info_window_tipoI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/info_window_ciudad"
-        android:layout_toRightOf="@id/favoritos"
-        android:paddingLeft="8dp"
-        android:textStyle="bold"
+        android:layout_below="@id/info_window_ciudad"
+        android:layout_toEndOf="@id/favoritos"
+        android:layout_marginStart="8dp"
         android:textSize="16sp"
+        android:textStyle="bold"
         android:maxWidth="200dp" />
 
 </RelativeLayout>
