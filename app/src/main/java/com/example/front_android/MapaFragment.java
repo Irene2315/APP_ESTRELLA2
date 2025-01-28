@@ -76,6 +76,20 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         // Constructor requerido vacío
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences preferences = getContext().getSharedPreferences("app_localDatos", MODE_PRIVATE);
+        boolean session = preferences.getBoolean("session", false);
+
+        if (!session) {
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
+    }
+
     @SuppressLint("StaticFieldLeak")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,18 +113,20 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         setPermisosGeoloc();
 
         SharedPreferences preferences = getContext().getSharedPreferences("app_localDatos", MODE_PRIVATE);
-        boolean session = preferences.getBoolean("session", false);
+        boolean logueado = preferences.getBoolean("session", false);
 
-        if (!session){
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
+        if (!logueado) {
+            Intent intent = new Intent(requireContext(), LoginActivity.class);
             startActivity(intent);
-            getActivity().finish();
+            requireActivity().finish();
         }
 
         selectRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            boolean primera_carga = true;
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 Log.d("MapaFragment", "Region seleccionada: " + position);
+
 
                 if (regiones != null && !regiones.isEmpty() && position > 0) {
                     Region regionSeleccionada = regiones.get(position - 1);
@@ -350,6 +366,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
+
     public void obtenerGeolocalizacion() {
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -519,4 +536,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             setPermisosGeoloc();
         }
     }
+
+
 }

@@ -157,7 +157,7 @@ public class PeticionesIncidencias {
 
             try {
                 if (params == null || params.length == 0) {
-                    throw new IllegalArgumentException("No se proporcionó un ID de región válido.");
+                    return null;
                 }
 
                 int regionId = params[0];
