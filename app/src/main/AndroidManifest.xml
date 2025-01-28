@@ -22,6 +22,10 @@
             android:value="AIzaSyDlGI_JifsSwqvvGfVNdiaqQNAS2Q9dcX8"/>
 
         <activity
+            android:name=".MainActivity"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -30,10 +34,7 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="false">
-        </activity>
+
 
     </application>
 

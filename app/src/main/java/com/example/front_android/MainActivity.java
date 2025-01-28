@@ -117,8 +117,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-
-
                 break;
             case R.id.nav_camaras:
                 ArrayList<Usuario> miListaUsuarios = new ArrayList<Usuario>();

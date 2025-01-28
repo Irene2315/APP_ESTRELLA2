@@ -500,7 +500,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             map.setMyLocationEnabled(true);
 
 
-
         } else {
             setPermisosGeoloc();
         }
