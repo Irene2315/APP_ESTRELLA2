@@ -66,6 +66,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<String> miListaTipoIncidencias = new ArrayList<>();
     private List<Region> regiones;
     private List<Ciudad> ciudades;
+    private List<TipoIncidencia> tipoIncidencias;
+    private List<Provincia> provincias;
     public MapaFragment() {
         // Constructor requerido vacío
     }
@@ -141,8 +143,27 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
         selectProvincia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                if (provincias != null && !provincias.isEmpty() && position > 0) {
+                    Provincia provinciaSelected = provincias.get(position - 1);
+                    int provinciaId = provinciaSelected.getId();
 
+                    final List<Camara>[] camarasResultado = new List[1];
+                    final List<Incidencia>[] incidenciasResultado = new List[1];
+
+                    new PeticionesIncidencias.ObtenerIncidenciasProvincia() {
+                        @Override
+                        protected void onPostExecute(List<Incidencia> incidencias) {
+                            super.onPostExecute(incidencias);
+                            incidenciasResultado[0] = incidencias;
+
+                            if (incidenciasResultado[0] != null) {
+                                actualizarMapa(null, incidencias);
+                            }
+                        }
+                    }.execute(provinciaId);
+
+                }
             }
 
             @Override
@@ -153,54 +174,66 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         selectCiudad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                Log.d("MapaFragment", "Ciudad seleccionada: " + position);
-
                 if (ciudades != null && !ciudades.isEmpty() && position > 0) {
-                    Ciudad ciudadSeleccionada = ciudades.get(position - 1);
-                    int ciudadId = ciudadSeleccionada.getId();
+                    Ciudad ciudadSelected = ciudades.get(position - 1);
+                    int ciudadId = ciudadSelected.getId();
                     Log.d("MapaFragment", "ID de ciudad seleccionada: " + ciudadId);
+                    Log.d("MapaFragment", "nombre de ciudad seleccionada: " + ciudadSelected.getNombre());
 
+                    final List<Camara>[] camarasResultado = new List[1];
                     final List<Incidencia>[] incidenciasResultado = new List[1];
 
                     new PeticionesIncidencias.ObtenerIncidenciasCiudad() {
                         @Override
                         protected void onPostExecute(List<Incidencia> incidencias) {
                             super.onPostExecute(incidencias);
-                            Log.d("MapaFragment", "Incidencias: " + (incidencias != null ? incidencias.size() : 0));
+                            Log.d("MapaFragment", "Incidencias en la ciudad: " + (incidencias != null ? incidencias.size() : 0));
                             incidenciasResultado[0] = incidencias;
 
                             if (incidenciasResultado[0] != null) {
-                                actualizarMapa(null, incidenciasResultado[0]);
+                                actualizarMapa(null, incidencias);
                             }
                         }
                     }.execute(ciudadId);
-                } else {
-                    Log.e("MapaFragment", "No se seleccionó una ciudad válida.");
+                    Log.d("MapaFragment", "ID de ciudad pasada a ObtenerIncidenciasCiudad: " + ciudadId);
+
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                Log.d("MapaFragment", "No se seleccionó ninguna ciudad.");
             }
         });
 
 
-
-
-
-
-
         selectTipoIncidencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                String item = adapterView.getItemAtPosition(position).toString();
-                Toast.makeText(getContext(), "Tipo de incidencia seleccionada: " + item, Toast.LENGTH_SHORT).show();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                if (tipoIncidencias != null && !tipoIncidencias.isEmpty() && position > 0) {
+                    TipoIncidencia tipoSelected = tipoIncidencias.get(position - 1);
+                    int tipoId = tipoSelected.getId();
+
+                    final List<Camara>[] camarasResultado = new List[1];
+                    final List<Incidencia>[] incidenciasResultado = new List[1];
+
+                    new PeticionesIncidencias.ObtenerIncidenciasTipoIncidencia() {
+                        @Override
+                        protected void onPostExecute(List<Incidencia> incidencias) {
+                            super.onPostExecute(incidencias);
+                            incidenciasResultado[0] = incidencias;
+
+                            if (incidenciasResultado[0] != null) {
+                                actualizarMapa(null, incidencias);
+                            }
+                        }
+                    }.execute(tipoId);
+                    Log.d("MapaFragment", "ID de tipo pasada a ObtenerIncidenciasTipo: " + tipoId);
+
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -248,19 +281,15 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 super.onPostExecute(ciudades);
 
                 if (ciudades != null && !ciudades.isEmpty()) {
-                    Log.d("MapaFragment", "Ciduades obtenidas: " + ciudades.size());
+                    MapaFragment.this.ciudades = ciudades;
 
-                    miListaCiudades.clear();
                     miListaCiudades.add("Ciudades");
                     for (Ciudad ciudad : ciudades) {
                         miListaCiudades.add(ciudad.getNombre());
-                        Log.d("MapaFragment", "Lista de ciudades: " + miListaCiudades);
 
                     }
 
                     adapterCiudad.notifyDataSetChanged();
-                } else {
-                    Log.d("Región", "No hay ciudades disponibles.");
                 }
             }
         }.execute();
@@ -271,21 +300,17 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 super.onPostExecute(provincias);
 
                 if (provincias != null && !provincias.isEmpty()) {
-                    miListaProvincias.clear();
+                    MapaFragment.this.provincias = provincias;
+
                     miListaProvincias.add("Provincias");
                     for (Provincia provincia : provincias) {
                         miListaProvincias.add(provincia.getNombre());
+
                     }
-
-
                     adapterProvincia.notifyDataSetChanged();
-                } else {
-                    Log.d("Región", "No hay provincias disponibles.");
                 }
             }
         }.execute();
-
-
 
         new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia() {
             @Override
@@ -293,15 +318,16 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 super.onPostExecute(tipoIncidencias);
 
                 if (tipoIncidencias != null && !tipoIncidencias.isEmpty()) {
-                    miListaTipoIncidencias.add("TiposDeIncidencias");
-                    for (TipoIncidencia tipoIncidencia : tipoIncidencias) {
-                        miListaTipoIncidencias.add(tipoIncidencia.getNombre());
+                    MapaFragment.this.tipoIncidencias = tipoIncidencias;
+
+                    miListaTipoIncidencias.add("Tipo de Incidencias");
+                    for (TipoIncidencia t : tipoIncidencias) {
+                        miListaTipoIncidencias.add(t.getNombre());
+
                     }
-
-
                     adapterTipoIncidencia.notifyDataSetChanged();
                 } else {
-                    Log.d("Región", "No hay tipos de incidencias disponibles.");
+                    Log.d("Región", "No hay ciudades disponibles.");
                 }
             }
         }.execute();
@@ -367,14 +393,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
         if (camaras != null && !camaras.isEmpty()) {
             pintarCamaras(camaras);
-        } else {
-            Toast.makeText(getContext(), "No hay cámaras para la región", Toast.LENGTH_SHORT).show();
         }
 
         if (incidencias != null && !incidencias.isEmpty()) {
             pintarIncidencias(incidencias);
-        } else {
-            Toast.makeText(getContext(), "No hay incidencias para la región", Toast.LENGTH_SHORT).show();
         }
     }
 
