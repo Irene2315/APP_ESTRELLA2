@@ -1,7 +1,11 @@
 package com.example.front_android;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -94,6 +98,14 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
         setPermisosGeoloc();
 
+        SharedPreferences preferences = getContext().getSharedPreferences("app_localDatos", MODE_PRIVATE);
+        boolean session = preferences.getBoolean("session", false);
+
+        if (!session){
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            getActivity().finish();
+        }
 
         selectRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -102,7 +114,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
                 if (regiones != null && !regiones.isEmpty() && position > 0) {
                     Region regionSeleccionada = regiones.get(position - 1);
+
                     int regionId = regionSeleccionada.getIdRegion();
+
+
                     Log.d("MapaFragment", "ID de region seleccionada: " + regionId);
 
                     final List<Camara>[] camarasResultado = new List[1];

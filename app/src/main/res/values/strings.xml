@@ -3,10 +3,15 @@
     <string name="abrir_menu_nav">Abrir el menu de navegacion</string>
     <string name="cerrar_menu_nav">Cerrar el menu de navegacion</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="camaras_text">Camaras</string>
     <string name="incidencias_text">Incidencias</string>
     <string name="favoritos">Favoritos</string>
+    
+    <string name="titulo_usuario">Usuario</string>
+    <string name="titulo_usuario_contrasena">Contraseña</string>
+    <string name="titulo_usuario_correo">Correo</string>
+    <string name="titulo_usuario_entrar">Entrar</string>
+    <string name="titulo_usuario_registrar">Registrar</string>
 
     <string name="titulo_provincia">Provincia:</string>
     <string name="provincia_text_prueba">Nombre de Provincia</string>
@@ -19,6 +24,35 @@
     <string name="nombre_cam_text_prueba">Nombre Cam</string>
     <string name="titulo_region">Region:</string>
     <string name="nombre_region_text_prueba">Nombre de region</string>
+
+    <string name="titulo_perfil">DATOS PERFIL</string>
+    <string name="titulo_nombre_user">Nombre:</string>
+    <string name="texto_al_nombre_user">[Nombre del usuario]</string>
+    <string name="titulo_correo_user">Correo:</string>
+    <string name="texto_al_correo_user">[Correo del usuario]</string>
+
+    <string name="titulo_informacion_app">INFORMACIÓN APP</string>
+    <string name="titulo_creado_por">Creado por CODETECH</string>
+
+    <string name="titulo_incidencia">DATOS INCIDENCIA</string>
+    <string name="titulo_carretera">Carretera:</string>
+    <string name="texto_al_carretera">[Nombre de la carretera]</string>
+    <string name="titulo_inicio">Inicio:</string>
+    <string name="texto_al_incidencia">[Nombre del inicio Incidencia]</string>
+    <string name="titulo_causa">Causa:</string>
+    <string name="texto_al_causa">[Causa de la incidencia]</string>
+    <string name="texto_al_tipo_incidencia">[Tipo de la incidencia]</string>
+    <string name="titulo_nivel">Nivel:</string>
+    <string name="texto_al_nivel">[Nivel de la incidencia]</string>
+    <string name="texto_al_provincia">[Provincia de la incidencia]</string>
+    <string name="texto_al_ciudad">[Ciudad de la incidencia]</string>
+    
+    
+    
+    <string name="no_incidencias_favoritas">No hay ninguna incidencia favorita en este momento</string>
+    
+
+
 
 
 </resources>

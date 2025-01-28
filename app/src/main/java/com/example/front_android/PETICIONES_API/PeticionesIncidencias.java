@@ -156,12 +156,13 @@ public class PeticionesIncidencias {
             List<Incidencia> incidencias = new ArrayList<>();
 
             try {
-                // Validación del parámetro
                 if (params == null || params.length == 0) {
                     throw new IllegalArgumentException("No se proporcionó un ID de región válido.");
                 }
 
                 int regionId = params[0];
+
+
                 Log.d("ObtenerIncidenciasRegion", "región ID: " + regionId);
 
                 URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/region?idRegion=" + regionId);
