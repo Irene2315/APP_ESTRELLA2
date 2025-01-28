@@ -215,38 +215,25 @@ public class PeticionesIncidencias {
 
     }
 
-    public static class ObtenerIncidenciasProvincia extends AsyncTask<Void, Void, List<Incidencia>> {
+    public static class ObtenerIncidenciasProvincia extends AsyncTask<Integer, Void, List<Incidencia>> {
 
         @Override
-        protected List<Incidencia> doInBackground(Void... params) {
+        protected List<Incidencia> doInBackground(Integer... params) {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             StringBuilder jsonResult = new StringBuilder();
             List<Incidencia> incidencias = new ArrayList<>();
 
             try {
-
-                URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/provincia?idProvincia=1");
+                int provinciaId = params[0];
+                URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/provincia?idProvincia=" + provinciaId);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
-
                 urlConnection.setRequestMethod("POST");
-
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setDoOutput(true);
 
-                // Crear el JSON con los parámetros que necesitamos (por ejemplo, idRegion)
-//                JSONObject jsonParam = new JSONObject();
-//                jsonParam.put("idRegion", 1);  // Ejemplo de cómo se enviaría el parámetro "idRegion"
-
-
-                DataOutputStream writer = new DataOutputStream(urlConnection.getOutputStream());
-//                writer.writeBytes(jsonParam.toString());
-                writer.flush();
-                writer.close();
-
-                // Verificar código de respuesta
                 int code = urlConnection.getResponseCode();
                 if (code != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + code);
@@ -261,7 +248,7 @@ public class PeticionesIncidencias {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                return null; // Si ocurre un error, retornar null
+                return null;
             } finally {
 
                 if (reader != null) {
@@ -276,7 +263,72 @@ public class PeticionesIncidencias {
                 }
             }
 
-            // Parsear el JSON de la respuesta
+            try {
+                JSONArray jsonArray = new JSONArray(jsonResult.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject incidenciaObject = jsonArray.getJSONObject(i);
+                    Incidencia incidencia = parseIncidencia(incidenciaObject);
+                    incidencias.add(incidencia);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return incidencias;
+        }
+    }
+
+    public static class ObtenerIncidenciasCiudad extends AsyncTask<Integer, Void, List<Incidencia>> {
+
+        @Override
+        protected List<Incidencia> doInBackground(Integer... params) {
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            StringBuilder jsonResult = new StringBuilder();
+            List<Incidencia> incidencias = new ArrayList<>();
+
+            try {
+
+                int ciudadId = params[0];
+                Log.d("ObtenerIncidenciasCiudad: ", "ciudad ID: " + ciudadId);
+
+                URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/ciudad?idCiudad=" + ciudadId);
+                urlConnection = (HttpURLConnection) url.openConnection();
+
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Accept-Charset", "UTF-8");
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setDoOutput(true);
+
+                int code = urlConnection.getResponseCode();
+                if (code != HttpURLConnection.HTTP_OK) {
+                    throw new IOException("Respuesta inválida del servidor: " + code);
+                }
+
+                reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    jsonResult.append(line).append("\n");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } finally {
+
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
             try {
                 JSONArray jsonArray = new JSONArray(jsonResult.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -292,111 +344,10 @@ public class PeticionesIncidencias {
             return incidencias;
         }
 
-        @Override
-        protected void onPostExecute(List<Incidencia> incidencias) {
-            if (incidencias != null) {
-                for (Incidencia incidencia : incidencias) {
-                    Log.d("Incidencia", incidencia.toString());
-
-                }
-            }
-
-
-        }
 
 
     }
 
-    public static class ObtenerIncidenciasCiudad extends AsyncTask<Void, Void, List<Incidencia>> {
-
-        @Override
-        protected List<Incidencia> doInBackground(Void... params) {
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-            StringBuilder jsonResult = new StringBuilder();
-            List<Incidencia> incidencias = new ArrayList<>();
-
-            try {
-
-                URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/ciudad?idCiudad=1");
-                urlConnection = (HttpURLConnection) url.openConnection();
-
-
-                urlConnection.setRequestMethod("POST");
-
-
-                urlConnection.setRequestProperty("Content-Type", "application/json");
-                urlConnection.setRequestProperty("Accept", "application/json");
-                urlConnection.setDoOutput(true);
-
-                // Crear el JSON con los parámetros que necesitamos (por ejemplo, idRegion)
-//                JSONObject jsonParam = new JSONObject();
-//                jsonParam.put("idRegion", 1);  // Ejemplo de cómo se enviaría el parámetro "idRegion"
-
-
-                DataOutputStream writer = new DataOutputStream(urlConnection.getOutputStream());
-//                writer.writeBytes(jsonParam.toString());
-                writer.flush();
-                writer.close();
-
-                // Verificar código de respuesta
-                int code = urlConnection.getResponseCode();
-                if (code != HttpURLConnection.HTTP_OK) {
-                    throw new IOException("Respuesta inválida del servidor: " + code);
-                }
-
-
-                reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    jsonResult.append(line).append("\n");
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null; // Si ocurre un error, retornar null
-            } finally {
-
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-            }
-
-            // Parsear el JSON de la respuesta
-            try {
-                JSONArray jsonArray = new JSONArray(jsonResult.toString());
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject incidenciaObject = jsonArray.getJSONObject(i);
-                    Incidencia incidencia = parseIncidencia(incidenciaObject);
-                    incidencias.add(incidencia);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-            return incidencias;
-        }
-
-        @Override
-        protected void onPostExecute(List<Incidencia> incidencias) {
-            if (incidencias != null) {
-                for (Incidencia incidencia : incidencias) {
-                    Log.d("Incidencia", incidencia.toString());
-                }
-            }
-
-        }
-
-
-    }
 
     public static class ObtenerIncidenciasTipoIncidencia extends AsyncTask<Void, Void, List<Incidencia>> {
 

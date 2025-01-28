@@ -65,7 +65,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<String> miListaCiudades = new ArrayList<>();
     private ArrayList<String> miListaTipoIncidencias = new ArrayList<>();
     private List<Region> regiones;
-
+    private List<Ciudad> ciudades;
     public MapaFragment() {
         // Constructor requerido vacío
     }
@@ -142,28 +142,54 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         selectProvincia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                String item = adapterView.getItemAtPosition(position).toString();
-                Toast.makeText(getContext(), "Provincia seleccionada: " + item, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
         selectCiudad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                String item = adapterView.getItemAtPosition(position).toString();
-                Toast.makeText(getContext(), "Ciudad seleccionada: " + item, Toast.LENGTH_SHORT).show();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                Log.d("MapaFragment", "Ciudad seleccionada: " + position);
+
+                if (ciudades != null && !ciudades.isEmpty() && position > 0) {
+                    Ciudad ciudadSeleccionada = ciudades.get(position - 1);
+                    int ciudadId = ciudadSeleccionada.getId();
+                    Log.d("MapaFragment", "ID de ciudad seleccionada: " + ciudadId);
+
+                    final List<Incidencia>[] incidenciasResultado = new List[1];
+
+                    new PeticionesIncidencias.ObtenerIncidenciasCiudad() {
+                        @Override
+                        protected void onPostExecute(List<Incidencia> incidencias) {
+                            super.onPostExecute(incidencias);
+                            Log.d("MapaFragment", "Incidencias: " + (incidencias != null ? incidencias.size() : 0));
+                            incidenciasResultado[0] = incidencias;
+
+                            if (incidenciasResultado[0] != null) {
+                                actualizarMapa(null, incidenciasResultado[0]);
+                            }
+                        }
+                    }.execute(ciudadId);
+                } else {
+                    Log.e("MapaFragment", "No se seleccionó una ciudad válida.");
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                Log.d("MapaFragment", "No se seleccionó ninguna ciudad.");
             }
         });
+
+
+
+
+
+
 
         selectTipoIncidencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -183,13 +209,15 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         adapterRegion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectRegion.setAdapter(adapterRegion);
 
+        ArrayAdapter<String> adapterCiudad = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, miListaCiudades);
+        adapterCiudad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectCiudad.setAdapter(adapterCiudad);
+
         ArrayAdapter<String> adapterProvincia = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, miListaProvincias);
         adapterProvincia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectProvincia.setAdapter(adapterProvincia);
 
-        ArrayAdapter<String> adapterCiudad = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, miListaCiudades);
-        adapterCiudad.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectCiudad.setAdapter(adapterCiudad);
+
 
         ArrayAdapter<String> adapterTipoIncidencia = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, miListaTipoIncidencias);
         adapterTipoIncidencia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -214,6 +242,28 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         }.execute();
 
+        new PeticionesCiudades.ObtenerTodasLasCiudades() {
+            @Override
+            protected void onPostExecute(List<Ciudad> ciudades) {
+                super.onPostExecute(ciudades);
+
+                if (ciudades != null && !ciudades.isEmpty()) {
+                    Log.d("MapaFragment", "Ciduades obtenidas: " + ciudades.size());
+
+                    miListaCiudades.clear();
+                    miListaCiudades.add("Ciudades");
+                    for (Ciudad ciudad : ciudades) {
+                        miListaCiudades.add(ciudad.getNombre());
+                        Log.d("MapaFragment", "Lista de ciudades: " + miListaCiudades);
+
+                    }
+
+                    adapterCiudad.notifyDataSetChanged();
+                } else {
+                    Log.d("Región", "No hay ciudades disponibles.");
+                }
+            }
+        }.execute();
 
         new PeticionesProvincias.ObtenerTodasLasProvincias() {
             @Override
@@ -235,25 +285,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         }.execute();
 
-        new PeticionesCiudades.ObtenerTodasLasCiudades() {
-            @Override
-            protected void onPostExecute(List<Ciudad> ciudades) {
-                super.onPostExecute(ciudades);
 
-                if (ciudades != null && !ciudades.isEmpty()) {
-                    miListaCiudades.clear();
-                    miListaCiudades.add("Ciudades");
-                    for (Ciudad ciudad : ciudades) {
-                        miListaCiudades.add(ciudad.getNombre());
-                    }
-
-
-                    adapterCiudad.notifyDataSetChanged();
-                } else {
-                    Log.d("Región", "No hay ciudades disponibles.");
-                }
-            }
-        }.execute();
 
         new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia() {
             @Override
