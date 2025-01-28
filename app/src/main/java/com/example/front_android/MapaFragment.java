@@ -96,40 +96,48 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         selectRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                Log.d("MapaFragment", "Region selcted: " + position);
+                Log.d("MapaFragment", "Region seleccionada: " + position);
 
                 if (regiones != null && !regiones.isEmpty() && position > 0) {
                     Region regionSeleccionada = regiones.get(position - 1);
                     int regionId = regionSeleccionada.getIdRegion();
-                    Log.d("MapaFragment", "ID de region selected: " + regionId);
+                    Log.d("MapaFragment", "ID de region seleccionada: " + regionId);
+
+                    final List<Camara>[] camarasResultado = new List[1];
+                    final List<Incidencia>[] incidenciasResultado = new List[1];
 
                     new ObtenerCamarasRegion() {
                         @Override
                         protected void onPostExecute(List<Camara> camaras) {
                             super.onPostExecute(camaras);
-                            Log.d("MapaFragment", "camaras : " + (camaras != null ? camaras.size() : 0));
-                            if (camaras != null && !camaras.isEmpty()) {
-                                pintarCamaras(camaras);
-                            } else {
-                                Toast.makeText(getContext(), "No hay cámaras para  regioon", Toast.LENGTH_SHORT).show();
+                            Log.d("MapaFragment", "Cámaras: " + (camaras != null ? camaras.size() : 0));
+                            camarasResultado[0] = camaras;
+
+                            if (incidenciasResultado[0] != null) {
+                                actualizarMapa(camaras, incidenciasResultado[0]);
                             }
                         }
                     }.execute(regionId);
-                } else {
-                    pintarCamaras();
+
+                    new PeticionesIncidencias.ObtenerIncidenciasRegion() {
+                        @Override
+                        protected void onPostExecute(List<Incidencia> incidencias) {
+                            super.onPostExecute(incidencias);
+                            Log.d("MapaFragment", "Incidencias: " + (incidencias != null ? incidencias.size() : 0));
+                            incidenciasResultado[0] = incidencias;
+
+                            if (camarasResultado[0] != null) {
+                                actualizarMapa(camarasResultado[0], incidencias);
+                            }
+                        }
+                    }.execute(regionId);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                pintarCamaras();
             }
         });
-
-
-
-
-
 
         selectProvincia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -187,8 +195,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         adapterTipoIncidencia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectTipoIncidencia.setAdapter(adapterTipoIncidencia);
 
-
-
         new PeticionesRegiones.ObtenerTodasLasRegiones() {
             @Override
             protected void onPostExecute(List<Region> regiones) {
@@ -207,7 +213,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         }.execute();
-
 
 
         new PeticionesProvincias.ObtenerTodasLasProvincias() {
@@ -320,106 +325,72 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
-    public void pintarIncidencias() {
-
-        new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
-            @Override
-            protected void onPostExecute(List<Incidencia> incidencias) {
-                super.onPostExecute(incidencias);
-
-                if (map == null) {
-                    Log.e("Error", "Mapa no inicializado en onPostExecute.");
-                    return;
-                }
-
-                if (incidencias != null && !incidencias.isEmpty()) {
-                    miListaIncidencias.clear();
-                    miListaIncidencias.addAll(incidencias);
-
-                    for (Incidencia incidencia : miListaIncidencias) {
-                        Log.i("Incidencia",incidencia.toString());
-                        try {
-                            double lat = Double.parseDouble(incidencia.getLatitud());
-                            double lng = Double.parseDouble(incidencia.getLongitud());
-                            LatLng punto = new LatLng(lat, lng);
-                            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.incidencias);
-
-                            Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
-
-
-                            map.setInfoWindowAdapter(new WindowAdapterUniversal(getLayoutInflater()));
-                            Marker marker = map.addMarker(new MarkerOptions()
-                                    .position(punto)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
-
-
-                            marker.setTag(incidencia);
-                        } catch (NumberFormatException e) {
-                            Log.e("Error", "Coordenadas inválidas para la incidencia: " + incidencia.getId(), e);
-                        }
-                    }
-                } else {
-                    Log.d("Incidencia", "No hay incidencias para pintar.");
-                }
-            }
-        }.execute();
-        }
-
-    /*@SuppressLint("StaticFieldLeak")
-    public void pintarCamaras() {
-
-
-        new PeticionesCamaras.ObtenerTodasLasCamaras(){
-
-            protected void onPostExecute(List<Camara> camaras) {
-                super.onPostExecute(camaras);
-
-                if (map == null) {
-                    Log.e("Error", "Mapa no inicializado en onPostExecute.");
-                    return;
-                }
-
-                if (camaras != null && !camaras.isEmpty()) {
-                    miListaCamaras.clear();
-                    miListaCamaras.addAll(camaras);
-
-                    for (Camara camara : miListaCamaras) {
-                        Log.i("Camara",camara.toString());
-                        try {
-                            double lat = Double.parseDouble(camara.getLatitud());
-                            double lng = Double.parseDouble(camara.getLongitud());
-                            LatLng punto = new LatLng(lat, lng);
-                            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.camaras);
-
-                            Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
-
-
-                            map.setInfoWindowAdapter(new WindowAdapterUniversal(getLayoutInflater()));
-                            Marker marker = map.addMarker(new MarkerOptions()
-                                    .position(punto)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
-
-
-                            marker.setTag(camara);
-                        } catch (NumberFormatException e) {
-                            Log.e("Error", "Coordenadas inválidas para la incidencia: " + camara.getId(), e);
-                        }
-                    }
-                } else {
-                    Log.d("Incidencia", "No hay incidencias para pintar.");
-                }
-            }
-        }.execute();
-    }*/
-
-    public void pintarCamaras(List<Camara> camaras) {
+    private void actualizarMapa(List<Camara> camaras, List<Incidencia> incidencias) {
         if (map == null) {
             Log.e("MapaFragment", "Mapa no inicializado.");
             return;
         }
 
         map.clear();
+
+        if (camaras != null && !camaras.isEmpty()) {
+            pintarCamaras(camaras);
+        } else {
+            Toast.makeText(getContext(), "No hay cámaras para la región", Toast.LENGTH_SHORT).show();
+        }
+
+        if (incidencias != null && !incidencias.isEmpty()) {
+            pintarIncidencias(incidencias);
+        } else {
+            Toast.makeText(getContext(), "No hay incidencias para la región", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void pintarIncidencias(List<Incidencia> incidencias) {
+
+        if (incidencias != null && !incidencias.isEmpty()) {
+            for (Incidencia in : incidencias) {
+                Log.d("MapaFragment", "cargando" + in);
+                try {
+                    double lat = Double.parseDouble(in.getLatitud());
+                    double lng = Double.parseDouble(in.getLongitud());
+                    LatLng punto = new LatLng(lat, lng);
+
+                    Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.incidencias);
+                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
+
+                    map.setInfoWindowAdapter(new WindowAdapterUniversal(getLayoutInflater()));
+                    Marker marker = map.addMarker(new MarkerOptions()
+                            .position(punto)
+                            .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+
+                    marker.setTag(in);
+                } catch (NumberFormatException e) {
+                    Log.e("MapaFragment", "Coordenadas inválidas para la incidencia: " + in.getId(), e);
+                }
+            }
+        } else {
+            Log.d("MapaFragment", "No hay incidencias para pintar.");
+        }
+    }
+
+
+
+    @SuppressLint("StaticFieldLeak")
+    public void pintarIncidencias() {
+        new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
+            @Override
+            protected void onPostExecute(List<Incidencia> incidencias) {
+                super.onPostExecute(incidencias);
+                if (incidencias != null && !incidencias.isEmpty()) {
+                    pintarIncidencias(incidencias);
+                }
+            }
+        }.execute();
+    }
+
+
+    public void pintarCamaras(List<Camara> camaras) {
 
         if (camaras != null && !camaras.isEmpty()) {
             for (Camara camara : camaras) {
