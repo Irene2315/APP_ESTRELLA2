@@ -162,6 +162,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 Log.d("MapaFragment", "Region seleccionada: " + position);
 
+                selectCiudad.setSelection(0);
+                selectTipoIncidencia.setSelection(0);
+                selectProvincia.setSelection(0);
 
                 if (regiones != null && !regiones.isEmpty() && position > 0) {
                     Region regionSeleccionada = regiones.get(position - 1);
@@ -211,6 +214,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     Provincia provinciaSelected = provincias.get(position - 1);
                     int provinciaId = provinciaSelected.getId();
 
+                    selectCiudad.setSelection(0);
+                    selectTipoIncidencia.setSelection(0);
+                    selectRegion.setSelection(0);
+
                     camaras_switch.setEnabled(false);
                     camaras_switch.setChecked(false);
 
@@ -239,6 +246,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 if (ciudades != null && !ciudades.isEmpty() && position > 0) {
                     Ciudad ciudadSelected = ciudades.get(position - 1);
                     int ciudadId = ciudadSelected.getId();
+
+                    selectProvincia.setSelection(0);
+                    selectTipoIncidencia.setSelection(0);
+                    selectRegion.setSelection(0);
 
                     camaras_switch.setEnabled(false);
                     camaras_switch.setChecked(false);
@@ -272,6 +283,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 if (tipoIncidencias != null && !tipoIncidencias.isEmpty() && position > 0) {
                     TipoIncidencia tipoSelected = tipoIncidencias.get(position - 1);
                     int tipoId = tipoSelected.getId();
+
+                    selectProvincia.setSelection(0);
+                    selectCiudad.setSelection(0);
+                    selectRegion.setSelection(0);
 
                     camaras_switch.setEnabled(false);
                     camaras_switch.setChecked(false);

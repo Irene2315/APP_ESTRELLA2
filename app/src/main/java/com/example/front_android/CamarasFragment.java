@@ -33,9 +33,6 @@ public class CamarasFragment extends Fragment {
     private List<FavoritoCamara> miListaFavoritosCamaras = new ArrayList<>();
     private CamaraFragment camaraFragment;
 
-
-
-
     public CamarasFragment() {
         // Required empty public constructor
     }
@@ -76,7 +73,6 @@ public class CamarasFragment extends Fragment {
                             }
                         }
 
-
                         if (esFavorito) {
                             camara.setImagen(R.drawable.estrella_favorito_blanco);
                         } else {
@@ -107,21 +103,20 @@ public class CamarasFragment extends Fragment {
                 transaction.commit();
             }
 
+
             @Override
             public void onFavoritoClick(Camara camara) {
 
                 if (camara.getImagen() == R.drawable.estrella_check_blanco) {
                     camara.setImagen(R.drawable.estrella_favorito_blanco);
-                    gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId())); // Inserta en la base de datos
+                    gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId()));
                 } else {
                     camara.setImagen(R.drawable.estrella_check_blanco);
-                    gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId())); // Elimina de la base de datos
+                    gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId()));
                 }
 
-                // Notifica al adaptador para refrescar la lista
                 adaptadorListaCamaras.notifyDataSetChanged();
 
-                // Muestra un mensaje para confirmar el cambio
                 Toast.makeText(getContext(), "Favorito actualizado: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
             }
         });
