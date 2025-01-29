@@ -1,5 +1,6 @@
 package com.example.front_android.Adaptadores;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,14 @@ import com.example.front_android.Modelos.Incidencia;
 import com.example.front_android.R;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class WindowAdapterUniversal implements GoogleMap.InfoWindowAdapter {
     private static final String TAG = "WindowAdapterUniversal";
     private final LayoutInflater inflater;
     private OnCamaraClickListener listenerCamara;
     private OnIncidenciaClickListener listenerIncidencia;
+    private Context context;
 
     // Interfaces para manejar los clics
     public interface OnCamaraClickListener {
@@ -37,7 +40,8 @@ public class WindowAdapterUniversal implements GoogleMap.InfoWindowAdapter {
         this.listenerIncidencia = listenerIncidencia;
     }
 
-    public WindowAdapterUniversal(LayoutInflater inflater) {
+    public WindowAdapterUniversal(Context context, LayoutInflater inflater) {
+        this.context = context;
         this.inflater = inflater;
     }
 
@@ -58,8 +62,10 @@ public class WindowAdapterUniversal implements GoogleMap.InfoWindowAdapter {
 
         Object tag = marker.getTag();
         if (tag instanceof Camara) {
+            mostrarBottomSheetCamara((Camara) tag);
             gestionCamaras(view, (Camara) tag);
         } else if (tag instanceof Incidencia) {
+            mostrarBottomSheetIncidencia((Incidencia) tag);
             gestionIncidencias(view, (Incidencia) tag);
         }
 
@@ -71,9 +77,35 @@ public class WindowAdapterUniversal implements GoogleMap.InfoWindowAdapter {
         return null; // No personalizar completamente la ventana
     }
 
-    private void gestionCamaras(View view, Camara camara) {
+    public void gestionCamaras(View view, Camara camara) {
         if (camara == null) return;
 
+        ImageButton btnFavorito = view.findViewById(R.id.favoritos);
+        ImageButton btnMasInfo = view.findViewById(R.id.mas_info);
+        TextView nombreView = view.findViewById(R.id.info_window_carretera);
+        nombreView.setText("Nombre: " + (camara.getNombre() != null ? camara.getNombre() : "No disponible"));
+
+        TextView regionView = view.findViewById(R.id.info_window_ciudad);
+        String regionNombre = camara.getRegion() != null && camara.getRegion().getNombreEs() != null
+                ? camara.getRegion().getNombreEs() : "No disponible";
+        regionView.setText("Región: " + regionNombre);
+
+        btnFavorito.setOnClickListener(v -> {
+            if (listenerCamara != null) listenerCamara.onFavoritoCamaraClick(camara);
+        });
+
+        btnMasInfo.setOnClickListener(v -> {
+            if (listenerCamara != null) listenerCamara.onCamaraClick(camara);
+        });
+
+    }
+
+    public void mostrarBottomSheetCamara(Camara camara) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+        View view = inflater.inflate(R.layout.infowindow_universal, null);
+
+        ImageButton btnFavorito = view.findViewById(R.id.favoritos);
+        ImageButton btnMasInfo = view.findViewById(R.id.mas_info);
 
         TextView nombreView = view.findViewById(R.id.info_window_carretera);
         nombreView.setText("Nombre: " + (camara.getNombre() != null ? camara.getNombre() : "No disponible"));
@@ -83,28 +115,19 @@ public class WindowAdapterUniversal implements GoogleMap.InfoWindowAdapter {
                 ? camara.getRegion().getNombreEs() : "No disponible";
         regionView.setText("Región: " + regionNombre);
 
-        ImageButton favoritosButton = view.findViewById(R.id.favoritos);
 
-        favoritosButton.setEnabled(true);
-        favoritosButton.setClickable(true);
-        favoritosButton.setFocusable(true);
-        favoritosButton.setVisibility(View.VISIBLE);
-
-        favoritosButton.setOnClickListener(v -> {
-            Log.i("Favorito", "Favorito_camara_clicado"); // Verifica que este log se imprima
-            if (listenerCamara != null) {
-                listenerCamara.onFavoritoCamaraClick(camara);
-            }
+        btnFavorito.setOnClickListener(v -> {
+            if (listenerCamara != null) listenerCamara.onFavoritoCamaraClick(camara);
         });
 
-        /*ImageButton masInfoButton = view.findViewById(R.id.mas_info);
-        masInfoButton.setOnClickListener(v -> {
-            Log.i("MasI","Mas info clicado");
-            if (listenerCamara != null) {
-                listenerCamara.onCamaraClick(camara);
-            }
-        });*/
+        btnMasInfo.setOnClickListener(v -> {
+            if (listenerCamara != null) listenerCamara.onCamaraClick(camara);
+        });
+
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
     }
+
 
     private void gestionIncidencias(View view, Incidencia incidencia) {
         if (incidencia == null) return;
@@ -125,21 +148,49 @@ public class WindowAdapterUniversal implements GoogleMap.InfoWindowAdapter {
                 ? incidencia.getTipoIncidencia().getNombre() : "No especificado";
         tipoView.setText("Incidencia: " + tipoIncidenciaNombre);
 
-        ImageButton favoritosButton = view.findViewById(R.id.favoritos);
-        favoritosButton.setImageResource(incidencia.getImagen());
-        favoritosButton.setOnClickListener(v -> {
-            Log.i("Favorito","Favorito_camara_clicado");
-            if (listenerIncidencia != null) {
-                listenerIncidencia.onFavoritoIncidenciaClick(incidencia);
-            }
+        ImageButton btnFavorito = view.findViewById(R.id.favoritos);
+        ImageButton btnMasInfo = view.findViewById(R.id.mas_info);
+
+        btnFavorito.setOnClickListener(v -> {
+            if (listenerIncidencia != null) listenerIncidencia.onFavoritoIncidenciaClick(incidencia);
         });
 
-        /*ImageButton masInfoButton = view.findViewById(R.id.mas_info);
-        masInfoButton.setOnClickListener(v -> {
-            Log.i("MasI","Mas info clicado");
-            if (listenerIncidencia != null) {
-                listenerIncidencia.onIncidenciaClick(incidencia);
-            }
-        });*/
+        btnMasInfo.setOnClickListener(v -> {
+            if (listenerIncidencia != null) listenerIncidencia.onIncidenciaClick(incidencia);
+        });
+
+    }
+
+    public void mostrarBottomSheetIncidencia(Incidencia incidencia) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+        View view = inflater.inflate(R.layout.infowindow_universal, null);
+
+        ImageButton btnFavorito = view.findViewById(R.id.favoritos);
+        ImageButton btnMasInfo = view.findViewById(R.id.mas_info);
+
+        TextView carreteraView = view.findViewById(R.id.info_window_carretera);
+        carreteraView.setText("Carretera: " + (incidencia.getCarretera() != null ? incidencia.getCarretera() : "No disponible"));
+
+        TextView ciudadView = view.findViewById(R.id.info_window_ciudad);
+        String ciudadNombre = incidencia.getCiudad() != null && incidencia.getCiudad().getNombre() != null
+                ? incidencia.getCiudad().getNombre() : "No disponible";
+        ciudadView.setText("Ciudad: " + ciudadNombre);
+
+        TextView tipoView = view.findViewById(R.id.info_window_tipoI);
+        String tipoIncidenciaNombre = incidencia.getTipoIncidencia() != null && incidencia.getTipoIncidencia().getNombre() != null
+                ? incidencia.getTipoIncidencia().getNombre() : "No especificado";
+        tipoView.setText("Incidencia: " + tipoIncidenciaNombre);
+
+
+        btnFavorito.setOnClickListener(v -> {
+            if (listenerIncidencia != null) listenerIncidencia.onFavoritoIncidenciaClick(incidencia);
+        });
+
+        btnMasInfo.setOnClickListener(v -> {
+            if (listenerIncidencia != null) listenerIncidencia.onIncidenciaClick(incidencia);
+        });
+
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
     }
 }

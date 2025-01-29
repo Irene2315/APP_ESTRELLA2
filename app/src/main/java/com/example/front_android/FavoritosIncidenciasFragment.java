@@ -71,7 +71,7 @@ public class FavoritosIncidenciasFragment extends Fragment {
                     Log.d("Incidencia", "Cargando " + incidencias.size() + " incidencias.");
 
 
-                    miListaIncidencias.clear();
+                    incidenciasFavoritas.clear();
 
 
                     for (Incidencia incidencia : incidencias) {

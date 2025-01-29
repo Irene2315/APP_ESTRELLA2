@@ -127,6 +127,7 @@ public class IncidenciasFragment extends Fragment {
 
             @Override
             public void onFavoritoClick(Incidencia incidencia) {
+                Log.d("INCIDENCIA IMAGEN", String.valueOf(incidencia.getImagen()));
                 if (incidencia.getImagen() == R.drawable.estrella_check_blanco) {
                     incidencia.setImagen(R.drawable.estrella_favorito_blanco);
                     gestorBDD.getGestorIncidenciasFavoritas().insertarFavoritosIncidencias(String.valueOf(incidencia.getId()));

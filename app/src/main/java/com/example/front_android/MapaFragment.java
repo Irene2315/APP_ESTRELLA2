@@ -28,6 +28,9 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.example.front_android.Modelos.FavoritoCamara;
+import com.example.front_android.Modelos.FavoritoIncidencia;
 import com.example.front_android.PETICIONES_API.PeticionesCamaras.ObtenerCamarasRegion;
 
 import com.example.front_android.Adaptadores.WindowAdapterUniversal;
@@ -72,18 +75,24 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<String> miListaProvincias = new ArrayList<>();
     private ArrayList<String> miListaCiudades = new ArrayList<>();
     private ArrayList<String> miListaTipoIncidencias = new ArrayList<>();
-    private List<Region> regiones;
-    private List<Ciudad> ciudades;
-    private List<TipoIncidencia> tipoIncidencias;
-    private List<Provincia> provincias;
+    private List<Region> regiones = new ArrayList<>();
+    private List<Ciudad> ciudades= new ArrayList<>();
+    private List<TipoIncidencia> tipoIncidencias= new ArrayList<>();
+    private List<Provincia> provincias= new ArrayList<>();
     private Switch incidencias_switch;
     private Switch camaras_switch;
     private Switch favoritos_switch;
     final List<Camara>[] camarasResultado = new List[1];
     final List<Incidencia>[] incidenciasResultado = new List[1];
+    private List<Marker> markersList = new ArrayList<>();
 
     private static WindowAdapterUniversal adapterUniversal;
     private GestorBDD gestorBDD;
+    private List<FavoritoIncidencia> miListaFavoritosIncidencias = new ArrayList<>();
+    private List<FavoritoCamara> miListaFavoritosCamaras = new ArrayList<>();
+
+    private List<Incidencia> incidencias_fav = new ArrayList<>();
+    private List<Camara> camaras_fav = new ArrayList<>();
 
     public MapaFragment() {
         // Constructor requerido vacío
@@ -111,6 +120,11 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
         gestorBDD = new GestorBDD(this.getContext());
         gestorBDD.conectar();
+
+        miListaFavoritosIncidencias = gestorBDD.getGestorIncidenciasFavoritas().seleccionarTodasLasIncidenciasFavoritas();
+
+        miListaFavoritosCamaras = gestorBDD.getGestorCamarasFavoritas().seleccionarTodasLasCamarasFavoritas();
+
 
         fs = LocationServices.getFusedLocationProviderClient(getContext());
         selectRegion = view.findViewById(R.id.spinnerRegion);
@@ -313,6 +327,43 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        favoritos_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                for (Incidencia incidencia : miListaIncidencias) {
+
+                    boolean esFavorito = false;
+                    for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
+                        if (incidencia.getId() == favorito.getIdIncidencia()) {
+                            esFavorito = true;
+                            break;
+                        }
+                    }
+                    if (esFavorito) {
+                        incidencias_fav.add(incidencia);
+                    }
+                }
+
+                for (Camara camara : miListaCamaras) {
+
+                    boolean esFavorito = false;
+                    for (FavoritoCamara favorito : miListaFavoritosCamaras) {
+                        if (camara.getId() == favorito.getIdCamara()) {
+                            esFavorito = true;
+                            break;
+                        }
+                    }
+                    if (esFavorito) {
+                        camaras_fav.add(camara);
+                    }
+                }
+
+                actualizarMapa(camaras_fav, incidencias_fav);
+            }
+        });
+
+
         ArrayAdapter<String> adapterRegion = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, miListaRegiones);
         adapterRegion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectRegion.setAdapter(adapterRegion);
@@ -331,7 +382,11 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         adapterTipoIncidencia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectTipoIncidencia.setAdapter(adapterTipoIncidencia);
 
+
+
+
         new PeticionesRegiones.ObtenerTodasLasRegiones() {
+
             @Override
             protected void onPostExecute(List<Region> regiones) {
                 super.onPostExecute(regiones);
@@ -340,7 +395,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     Log.d("MapaFragment", "Regiones obtenidas: " + regiones.size());
                     MapaFragment.this.regiones = regiones;
 
+                    miListaRegiones.clear();
                     miListaRegiones.add("Regiones");
+
                     for (Region region : regiones) {
                         miListaRegiones.add(region.getNombreEs());
                     }
@@ -350,6 +407,11 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         }.execute();
 
+
+        if (!ciudades.isEmpty()){
+            ciudades.clear();
+        }
+        ciudades.clear();
         new PeticionesCiudades.ObtenerTodasLasCiudades() {
             @Override
             protected void onPostExecute(List<Ciudad> ciudades) {
@@ -358,6 +420,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 if (ciudades != null && !ciudades.isEmpty()) {
                     MapaFragment.this.ciudades = ciudades;
 
+                    miListaCiudades.clear();
                     miListaCiudades.add("Ciudades");
                     for (Ciudad ciudad : ciudades) {
                         miListaCiudades.add(ciudad.getNombre());
@@ -369,6 +432,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         }.execute();
 
+        if (!provincias.isEmpty()){
+            provincias.clear();
+        }
         new PeticionesProvincias.ObtenerTodasLasProvincias() {
             @Override
             protected void onPostExecute(List<Provincia> provincias) {
@@ -377,6 +443,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 if (provincias != null && !provincias.isEmpty()) {
                     MapaFragment.this.provincias = provincias;
 
+                    miListaProvincias.clear();
                     miListaProvincias.add("Provincias");
                     for (Provincia provincia : provincias) {
                         miListaProvincias.add(provincia.getNombre());
@@ -387,6 +454,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         }.execute();
 
+        if (!tipoIncidencias.isEmpty()){
+            tipoIncidencias.clear();
+        }
         new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia() {
             @Override
             protected void onPostExecute(List<TipoIncidencia> tipoIncidencias) {
@@ -395,6 +465,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 if (tipoIncidencias != null && !tipoIncidencias.isEmpty()) {
                     MapaFragment.this.tipoIncidencias = tipoIncidencias;
 
+                    miListaTipoIncidencias.clear();
                     miListaTipoIncidencias.add("Tipo de Incidencias");
                     for (TipoIncidencia t : tipoIncidencias) {
                         miListaTipoIncidencias.add(t.getNombre());
@@ -474,19 +545,43 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         if (incidencias != null && !incidencias.isEmpty()) {
             pintarIncidencias(incidencias);
         }
+
+
     }
 
     public void pintarIncidencias(List<Incidencia> incidencias) {
         if (incidencias != null && !incidencias.isEmpty()) {
             // Configura el adaptador universal solo una vez
-            WindowAdapterUniversal adapterUniversal = new WindowAdapterUniversal(getLayoutInflater());
+            WindowAdapterUniversal adapterUniversal = new WindowAdapterUniversal(requireContext(), getLayoutInflater());
             map.setInfoWindowAdapter(adapterUniversal);
+
+                for (Incidencia incidencia : incidencias) {
+
+                    boolean esFavorito = false;
+                    for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
+                        if (incidencia.getId() == favorito.getIdIncidencia()) {
+                            esFavorito = true;
+                            break;
+                        }
+                    }
+                    if (esFavorito) {
+                        incidencia.setImagen(R.drawable.estrella_favorito);
+                        Log.d("fav", "pintarIncidencias: "+incidencia.getImagen());
+                    } else {
+                        incidencia.setImagen(R.drawable.estrella_check);
+                        Log.d("fav", "pintarIncidencias: "+incidencia.getImagen());
+                    }
+
+                    miListaIncidencias.add(incidencia);
+                }
+
 
             // Configura el listener para las incidencias
             adapterUniversal.setOnIncidenciaClickListener(new WindowAdapterUniversal.OnIncidenciaClickListener() {
                 @Override
                 public void onIncidenciaClick(Incidencia incidencia) {
                     if (getContext() != null && getActivity() != null) {
+                        Log.d("INCIDENCIA_CLICK", "ID INCIDENCIA: " + incidencia.getId());
                         Toast.makeText(getContext(), "Incidencia seleccionada: " + incidencia.getCiudad().getNombre(), Toast.LENGTH_SHORT).show();
 
                         // Cambia al fragmento de detalles de incidencia
@@ -498,16 +593,44 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     }
                 }
 
+
                 @Override
                 public void onFavoritoIncidenciaClick(Incidencia incidencia) {
-                    // Cambia el estado de favorito de la incidencia
+                    Log.d("INCIDENCIA_FAV", "IMAGEN INCIDENCIA: " + String.valueOf(incidencia.getImagen()));
                     if (incidencia.getImagen() == R.drawable.estrella_check) {
                         incidencia.setImagen(R.drawable.estrella_favorito);
+
                         gestorBDD.getGestorIncidenciasFavoritas().insertarFavoritosIncidencias(String.valueOf(incidencia.getId()));
+                        Log.d("INCIDENCIA_FAV", "ID INCIDENCIA: " + String.valueOf(incidencia.getId()));
                     } else {
                         incidencia.setImagen(R.drawable.estrella_check);
                         gestorBDD.getGestorIncidenciasFavoritas().eliminarFavoritosIncidencias(String.valueOf(incidencia.getId()));
                     }
+
+                    Marker marker = findMarkerForIncidencia(incidencia);
+
+                    if (marker != null) {
+                        // Actualizar el icono del marcador
+                        int imagenId = incidencia.getImagen();
+                        if (imagenId != 0) {
+                            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), imagenId);
+                            if (originalBitmap != null) {
+                                Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
+                                // Notificar que se ha actualizado el ícono
+                                Log.d("MapaFragment", "Icono actualizado para la cámara: " + incidencia.getCarretera());
+                            } else {
+                                Log.e("MapaFragment", "Error al cargar la imagen: recurso nulo.");
+                            }
+                        } else {
+                            Log.e("MapaFragment", "ID de imagen inválido: " + imagenId);
+                        }
+                    } else {
+                        Log.e("MapaFragment", "No se encontró el marcador para la cámara: " + incidencia.getId());
+                    }
+
+                    Toast.makeText(getContext(), "Favorito actualizado: " + incidencia.getCarretera(), Toast.LENGTH_SHORT).show();
+
                 }
 
 
@@ -534,6 +657,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
                     // Asignar la incidencia como tag al marcador
                     marker.setTag(in);
+                    markersList.add(marker);
 
                 } catch (NumberFormatException e) {
                     Log.e("MapaFragment", "Coordenadas inválidas para la incidencia: " + (in != null ? in.getId() : "null"), e);
@@ -566,9 +690,28 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
     public void pintarCamaras(List<Camara> camaras) {
         if (camaras != null && !camaras.isEmpty()) {
-            // Configura el adaptador universal solo una vez
-            WindowAdapterUniversal adapterUniversal = new WindowAdapterUniversal(getLayoutInflater());
+            WindowAdapterUniversal adapterUniversal = new WindowAdapterUniversal(requireContext(), getLayoutInflater());
             map.setInfoWindowAdapter(adapterUniversal);
+
+            for (Camara camara : camaras) {
+
+                boolean esFavorito = false;
+                for (FavoritoCamara favorito : miListaFavoritosCamaras) {
+                    if (camara.getId() == favorito.getIdCamara()) {
+                        esFavorito = true;
+                        break;
+                    }
+                }
+
+
+                if (esFavorito) {
+                    camara.setImagen(R.drawable.estrella_favorito);
+                } else {
+                    camara.setImagen(R.drawable.estrella_check);
+                }
+
+                miListaCamaras.add(camara);
+            }
 
             // Configura el listener para las cámaras
             adapterUniversal.setOnCamaraClickListener(new WindowAdapterUniversal.OnCamaraClickListener() {
@@ -576,7 +719,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 public void onCamaraClick(Camara camara) {
                     if (getContext() != null && getActivity() != null) {
                         Toast.makeText(getContext(), "Cámara seleccionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
-
                         // Cambia al fragmento de detalles de cámara
                         CamaraFragment camaraFragment = CamaraFragment.newInstance(camara);
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -589,18 +731,38 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onFavoritoCamaraClick(Camara camara) {
                     // Cambia el estado de favorito de la cámara
+                    Log.d("Camara", "IMAGEN CAMARA: " + String.valueOf(camara.getImagen()));
                     if (camara.getImagen() == R.drawable.estrella_check) {
                         camara.setImagen(R.drawable.estrella_favorito);
                         gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId()));
+                        Log.d("Camara", "ID CAMARA: " + String.valueOf(camara.getId()));
                     } else {
-                        camara.setImagen(R.drawable.estrella_check_blanco);
+                        camara.setImagen(R.drawable.estrella_check);
                         gestorBDD.getGestorCamarasFavoritas().eliminarFavoritosCamaras(String.valueOf(camara.getId()));
                     }
 
-                    // Notifica al usuario
+                    Marker marker = findMarkerForCamara(camara);
+
+                    if (marker != null) {
+                        int imagenId = camara.getImagen();
+                        if (imagenId != 0) {
+                            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), imagenId);
+                            if (originalBitmap != null) {
+                                Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
+                                Log.d("MapaFragment", "Icono actualizado para la cámara: " + camara.getNombre());
+                            } else {
+                                Log.e("MapaFragment", "Error al cargar la imagen: recurso nulo.");
+                            }
+                        } else {
+                            Log.e("MapaFragment", "ID de imagen inválido: " + imagenId);
+                        }
+                    } else {
+                        Log.e("MapaFragment", "No se encontró el marcador para la cámara: " + camara.getId());
+                    }
+
                     Toast.makeText(getContext(), "Favorito actualizado: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
                 }
-
 
             });
 
@@ -624,6 +786,9 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     // Asignar la cámara como tag al marcador
                     marker.setTag(camara);
 
+                    // Agregar el marcador a la lista
+                    markersList.add(marker);
+
                 } catch (NumberFormatException e) {
                     Log.e("MapaFragment", "Coordenadas inválidas para la cámara: " + (camara != null ? camara.getId() : "null"), e);
                 } catch (Exception e) {
@@ -635,7 +800,23 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    private Marker findMarkerForCamara(Camara camara) {
+        for (Marker marker : markersList) {
+            if (marker.getTag() instanceof Camara && ((Camara) marker.getTag()).getId() == camara.getId()) {
+                return marker;
+            }
+        }
+        return null;
+    }
 
+    private Marker findMarkerForIncidencia(Incidencia incidencia) {
+        for (Marker marker : markersList) {
+            if (marker.getTag() instanceof Incidencia && ((Incidencia) marker.getTag()).getId() == incidencia.getId()) {
+                return marker;
+            }
+        }
+        return null;
+    }
 
 
     @SuppressLint("StaticFieldLeak")
@@ -667,5 +848,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         } else {
             setPermisosGeoloc();
         }
+
+
     }
 }
