@@ -77,7 +77,7 @@
             android:layout_marginEnd="20dp"
             android:src="@drawable/instagram"
             android:background="?android:attr/selectableItemBackground"
-            android:onClick="abrirInstagram" />
+            />
 
 
         <ImageButton
