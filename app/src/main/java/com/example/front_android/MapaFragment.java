@@ -501,11 +501,11 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onFavoritoIncidenciaClick(Incidencia incidencia) {
                     // Cambia el estado de favorito de la incidencia
-                    if (incidencia.getImagen() == R.drawable.estrella_check_blanco) {
-                        incidencia.setImagen(R.drawable.estrella_favorito_blanco);
+                    if (incidencia.getImagen() == R.drawable.estrella_check) {
+                        incidencia.setImagen(R.drawable.estrella_favorito);
                         gestorBDD.getGestorIncidenciasFavoritas().insertarFavoritosIncidencias(String.valueOf(incidencia.getId()));
                     } else {
-                        incidencia.setImagen(R.drawable.estrella_check_blanco);
+                        incidencia.setImagen(R.drawable.estrella_check);
                         gestorBDD.getGestorIncidenciasFavoritas().eliminarFavoritosIncidencias(String.valueOf(incidencia.getId()));
                     }
                 }
@@ -589,8 +589,8 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onFavoritoCamaraClick(Camara camara) {
                     // Cambia el estado de favorito de la cámara
-                    if (camara.getImagen() == R.drawable.estrella_check_blanco) {
-                        camara.setImagen(R.drawable.estrella_favorito_blanco);
+                    if (camara.getImagen() == R.drawable.estrella_check) {
+                        camara.setImagen(R.drawable.estrella_favorito);
                         gestorBDD.getGestorCamarasFavoritas().insertarFavoritosCamaras(String.valueOf(camara.getId()));
                     } else {
                         camara.setImagen(R.drawable.estrella_check_blanco);

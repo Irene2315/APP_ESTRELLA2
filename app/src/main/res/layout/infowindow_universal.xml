@@ -3,17 +3,6 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-    <!-- Botón de favoritos -->
-    <ImageButton
-        android:id="@+id/favoritos"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/estrella_check"
-        android:scaleType="centerInside"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginEnd="8dp" />
 
     <!-- Botón de más información -->
     <ImageButton
@@ -23,10 +12,19 @@
         android:scaleType="centerInside"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/mas_info"
-        android:layout_below="@id/favoritos"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="8dp" />
 
+    <ImageButton
+        android:id="@+id/favoritos"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:scaleType="centerInside"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/estrella_check"
+        android:layout_below="@id/mas_info"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="0dp" />
     <!-- Nombre de la carretera -->
     <TextView
         android:id="@+id/info_window_carretera"

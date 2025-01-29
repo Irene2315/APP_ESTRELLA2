@@ -84,21 +84,26 @@ public class WindowAdapterUniversal implements GoogleMap.InfoWindowAdapter {
         regionView.setText("Región: " + regionNombre);
 
         ImageButton favoritosButton = view.findViewById(R.id.favoritos);
-        favoritosButton.setImageResource(camara.getImagen());
+
+        favoritosButton.setEnabled(true);
+        favoritosButton.setClickable(true);
+        favoritosButton.setFocusable(true);
+        favoritosButton.setVisibility(View.VISIBLE);
+
         favoritosButton.setOnClickListener(v -> {
-            Log.i("Favorito","Favorito_camara_clicado");
+            Log.i("Favorito", "Favorito_camara_clicado"); // Verifica que este log se imprima
             if (listenerCamara != null) {
                 listenerCamara.onFavoritoCamaraClick(camara);
             }
         });
 
-        ImageButton masInfoButton = view.findViewById(R.id.mas_info);
+        /*ImageButton masInfoButton = view.findViewById(R.id.mas_info);
         masInfoButton.setOnClickListener(v -> {
             Log.i("MasI","Mas info clicado");
             if (listenerCamara != null) {
                 listenerCamara.onCamaraClick(camara);
             }
-        });
+        });*/
     }
 
     private void gestionIncidencias(View view, Incidencia incidencia) {
@@ -129,12 +134,12 @@ public class WindowAdapterUniversal implements GoogleMap.InfoWindowAdapter {
             }
         });
 
-        ImageButton masInfoButton = view.findViewById(R.id.mas_info);
+        /*ImageButton masInfoButton = view.findViewById(R.id.mas_info);
         masInfoButton.setOnClickListener(v -> {
             Log.i("MasI","Mas info clicado");
             if (listenerIncidencia != null) {
                 listenerIncidencia.onIncidenciaClick(incidencia);
             }
-        });
+        });*/
     }
 }
