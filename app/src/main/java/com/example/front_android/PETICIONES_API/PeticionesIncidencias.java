@@ -27,9 +27,9 @@ import java.util.concurrent.Executor;
 
 public class PeticionesIncidencias {
 
-
-
-
+    /**
+     * Método que parsea un objeto JSON para crear una instancia de Incidencia.
+     */
     private static Incidencia parseIncidencia(JSONObject incidenciaObject) throws JSONException {
         Incidencia incidencia = new Incidencia();
 
@@ -52,7 +52,7 @@ public class PeticionesIncidencias {
             incidencia.setCiudad(ciudad);
         } else {
             Log.d("parseIncidencia", "Campo 'ciudad' es null");
-            incidencia.setCiudad(null); // Si no existe, asignar null
+            incidencia.setCiudad(null);
         }
 
         // Parsear Provincia
@@ -99,7 +99,9 @@ public class PeticionesIncidencias {
     }
 
 
-
+    /**
+     * Método asíncrono para obtener todas las incidencias desde la API.
+     */
     public static class ObtenerTodasLasIncidencias extends AsyncTask<Void, Void, List<Incidencia>> {
 
         @Override
@@ -111,12 +113,16 @@ public class PeticionesIncidencias {
             StringBuilder jsonResult = new StringBuilder();
 
             try {
+                // URL de las incidencias
                 URL url = new URL("http://10.10.13.251:8080/incidencias");
                 urlConnection = (HttpURLConnection) url.openConnection();
+
+                //Verificar código de respuesta
                 if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + urlConnection.getResponseCode());
                 }
 
+                // Leer la respuesta del servidor
                 reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -146,6 +152,9 @@ public class PeticionesIncidencias {
 
     }
 
+    /**
+     * Método asincrono para obtener las incidencias por región desde la API
+     */
     public static class ObtenerIncidenciasRegion extends AsyncTask<Integer, Void, List<Incidencia>> {
 
         @Override
@@ -155,6 +164,7 @@ public class PeticionesIncidencias {
             StringBuilder jsonResult = new StringBuilder();
             List<Incidencia> incidencias = new ArrayList<>();
 
+            //Comprueba si ha recibido la regionId
             try {
                 if (params == null || params.length == 0) {
                     return null;
@@ -165,6 +175,7 @@ public class PeticionesIncidencias {
 
                 Log.d("ObtenerIncidenciasRegion", "región ID: " + regionId);
 
+                // URL de la incidencias por regiÓn
                 URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/region?idRegion=" + regionId);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -173,11 +184,13 @@ public class PeticionesIncidencias {
                 urlConnection.setRequestProperty("Content-Type", "application/json");
                 urlConnection.setDoOutput(true);
 
+                //Verificar código de respuesta
                 int code = urlConnection.getResponseCode();
                 if (code != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + code);
                 }
 
+                //Leer la respuesta del servidor
                 reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -199,7 +212,7 @@ public class PeticionesIncidencias {
                     urlConnection.disconnect();
                 }
             }
-
+            //Parsear el JSON
             try {
                 JSONArray jsonArray = new JSONArray(jsonResult.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -216,7 +229,9 @@ public class PeticionesIncidencias {
         }
     }
 
-
+    /**
+     *  Método asíncrono para obtener incidencias por provincia desde la API
+     */
     public static class ObtenerIncidenciasProvincia extends AsyncTask<Integer, Void, List<Incidencia>> {
 
         @Override
@@ -228,6 +243,8 @@ public class PeticionesIncidencias {
 
             try {
                 int provinciaId = params[0];
+
+                //URL de las incidencias por provincia
                 URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/provincia?idProvincia=" + provinciaId);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -236,12 +253,13 @@ public class PeticionesIncidencias {
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setDoOutput(true);
 
+                // Verificar código de respuesta
                 int code = urlConnection.getResponseCode();
                 if (code != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + code);
                 }
 
-
+                // Leer respuesta del servidor
                 reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -265,6 +283,7 @@ public class PeticionesIncidencias {
                 }
             }
 
+            // Parsear el JSON
             try {
                 JSONArray jsonArray = new JSONArray(jsonResult.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -281,6 +300,9 @@ public class PeticionesIncidencias {
         }
     }
 
+    /**
+     * Método asíncrono para obtener incidencias por ciudad desde la API
+     */
     public static class ObtenerIncidenciasCiudad extends AsyncTask<Integer, Void, List<Incidencia>> {
 
         @Override
@@ -295,6 +317,7 @@ public class PeticionesIncidencias {
                 int ciudadId = params[0];
                 Log.d("ObtenerIncidenciasCiudad", "Ciudad ID: " + ciudadId);
 
+                //URL de las incidencias por ciudad
                 URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/ciudad?idCiudad=" + ciudadId);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -306,10 +329,12 @@ public class PeticionesIncidencias {
                 int code = urlConnection.getResponseCode();
                 Log.d("ObtenerIncidenciasCiudad", "Código de respuesta HTTP: " + code);
 
+                // Verificar código de respuesta
                 if (code != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + code);
                 }
 
+                // Leer respuesta del servidor
                 reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -318,7 +343,7 @@ public class PeticionesIncidencias {
 
                 Log.d("ObtenerIncidenciasCiudad", "Respuesta JSON: " + jsonResult.toString());
 
-                // Parse JSON
+                // Parsear el JSON
                 JSONArray jsonArray = new JSONArray(jsonResult.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject incidenciaObject = jsonArray.getJSONObject(i);
@@ -346,7 +371,9 @@ public class PeticionesIncidencias {
         }
     }
 
-
+    /**
+     * Métood asíncrono para obtener las incidencias por el tipo de incidencias desde la API
+     */
     public static class ObtenerIncidenciasTipoIncidencia extends AsyncTask<Integer, Void, List<Incidencia>> {
 
         @Override
@@ -360,6 +387,7 @@ public class PeticionesIncidencias {
             try {
                 int tipoId = params[0];
 
+                //URL de las incidencias por el tipo de incidencia desde la API
                 URL url = new URL("http://10.10.13.251:8080/filtrosIncidencias/tipoIncidencia?idTipoIncidencia=" + tipoId);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -370,16 +398,19 @@ public class PeticionesIncidencias {
 
                 int code = urlConnection.getResponseCode();
 
+                // Verificar código de respuesta
                 if (code != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + code);
                 }
 
+                // Leer la respuesta del servidor
                 reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
                     jsonResult.append(line).append("\n");
                 }
 
+                // Parsear el JSON
                 JSONArray jsonArray = new JSONArray(jsonResult.toString());
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject incidenciaObject = jsonArray.getJSONObject(i);

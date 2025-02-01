@@ -21,6 +21,9 @@ import java.util.List;
 
 public class PeticionesRegiones {
 
+    /**
+     * Método que parsea un objeto JSON para crear una instancia de Region.
+     */
     private static Region parseRegion(JSONObject regionObject) throws JSONException {
         Region region = new Region();
 
@@ -29,13 +32,12 @@ public class PeticionesRegiones {
         region.setNombreEs(regionObject.getString("nombreEs"));
         region.setNombreEu(regionObject.getString("nombreEu"));
 
-
-
         return region;
     }
 
-
-
+    /**
+     * Método asíncrono para obtener todas las regiones desde la API
+     */
     public static abstract class ObtenerTodasLasRegiones extends AsyncTask<Void, Void, List<Region>> {
 
         @Override
@@ -46,7 +48,7 @@ public class PeticionesRegiones {
             List<Region> regiones = new ArrayList<>();
 
             try {
-                // URL de las incidencias
+                // URL de las regiones
                 URL url = new URL("http://10.10.13.251:8080/privateRegions/soloRegiones");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -93,7 +95,7 @@ public class PeticionesRegiones {
                 return null;
             }
 
-            return regiones; // Retorna la lista de incidencias
+            return regiones;
         }
 
 

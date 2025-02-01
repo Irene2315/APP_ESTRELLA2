@@ -11,9 +11,15 @@ public class Camara implements Serializable {
     private int imagen;
     private Region region;
 
+    /**
+     * Constructor vacío de la Camara.
+     */
     public Camara() {
     }
 
+    /**
+     * Constructor para el modelo Camara
+     */
     public Camara(int id, String nombre, String latitud, String longitud, String urlImagen, Region region) {
         this.id = id;
         this.nombre = nombre;
@@ -23,6 +29,16 @@ public class Camara implements Serializable {
         this.region = region;
     }
 
+    /**
+     * Constructor con parámetros para inicializar todos los atributos de la Camara
+     * @param id Identificador de la cámara.
+     * @param nombre Nombre de la cámara.
+     * @param latitud Latitud de la ubicación de la cámara.
+     * @param longitud Longitud de la ubicación de la cámara.
+     * @param urlImagen URL de la imagen de la cámara.
+     * @param imagen Imagen de la cámara.
+     * @param region Región a la que pertenece la cámara.
+     */
     public Camara(int id, String nombre, String latitud, String longitud, String urlImagen, int imagen, Region region) {
         this.id = id;
         this.nombre = nombre;
@@ -32,6 +48,8 @@ public class Camara implements Serializable {
         this.imagen = imagen;
         this.region = region;
     }
+
+    // Getters y Setters para acceder y modificar los atributos de la cámara.
 
     public int getId() {
         return id;
@@ -89,6 +107,9 @@ public class Camara implements Serializable {
         this.imagen = imagen;
     }
 
+    /**
+     * Método que que muestra los datos de la cámara
+     */
     @Override
     public String toString() {
         return "Camara{" +

@@ -17,10 +17,26 @@ public class Incidencia implements Serializable {
     private TipoIncidencia tipoIncidencia;
     private Provincia provincia;
 
-
+    /**
+     * Constructor vacío
+     */
     public Incidencia() {
     }
 
+    /**
+     * Constructor sin imagen.
+     * @param id Identificador de la incidencia.
+     * @param latitud Latitud donde ocurre la incidencia.
+     * @param longitud Longitud donde ocurre la incidencia.
+     * @param causa Causa de la incidencia.
+     * @param nivelIncidencia Nivel de la incidencia.
+     * @param carretera Nombre de la carretera donde ocurre la incidencia.
+     * @param fechaInicio Fecha de inicio de la incidencia.
+     * @param region Región donde ocurre la incidencia.
+     * @param ciudad Ciudad donde ocurre la incidencia.
+     * @param tipoIncidencia Tipo de incidencia.
+     * @param provincia Provincia donde ocurre la incidencia.
+     */
     public Incidencia(int id, String latitud, String longitud, String causa, String nivelIncidencia, String carretera, String fechaInicio, Region region, Ciudad ciudad, TipoIncidencia tipoIncidencia, Provincia provincia) {
         this.id = id;
         this.latitud = latitud;
@@ -35,6 +51,21 @@ public class Incidencia implements Serializable {
         this.provincia = provincia;
     }
 
+    /**
+     * Constructor con imagen.
+     * @param id Identificador de la incidencia.
+     * @param latitud Latitud donde ocurre la incidencia.
+     * @param longitud Longitud donde ocurre la incidencia.
+     * @param causa Causa de la incidencia.
+     * @param nivelIncidencia Nivel de la incidencia.
+     * @param carretera Nombre de la carretera donde ocurre la incidencia.
+     * @param fechaInicio Fecha de inicio de la incidencia.
+     * @param imagen Identificador de la imagen asociada a la incidencia.
+     * @param region Región donde ocurre la incidencia.
+     * @param ciudad Ciudad donde ocurre la incidencia.
+     * @param tipoIncidencia Tipo de incidencia.
+     * @param provincia Provincia donde ocurre la incidencia.
+     */
     public Incidencia(int id, String latitud, String longitud, String causa, String nivelIncidencia, String carretera, String fechaInicio, int imagen, Region region, Ciudad ciudad, TipoIncidencia tipoIncidencia, Provincia provincia) {
         this.id = id;
         this.latitud = latitud;
@@ -49,6 +80,8 @@ public class Incidencia implements Serializable {
         this.tipoIncidencia = tipoIncidencia;
         this.provincia = provincia;
     }
+
+    // Getters y Setters para acceder y modificar los atributos de la incidencia.
 
     public int getId() {
         return id;
@@ -146,6 +179,9 @@ public class Incidencia implements Serializable {
         this.imagen = imagen;
     }
 
+    /**
+     * Método que muestra los datos de la Incidencia.
+     */
     @Override
     public String toString() {
         return "Incidencia{" +

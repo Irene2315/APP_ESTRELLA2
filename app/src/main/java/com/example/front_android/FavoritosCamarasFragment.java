@@ -27,6 +27,7 @@ import java.util.List;
 
 public class FavoritosCamarasFragment extends Fragment {
 
+    // Variables para cámaras favoritas
     private static ListView listaCamarasFavoritas;
     private static ArrayList<Camara> miListaCamaras = new ArrayList<>();
     private static AdaptadorListaCamFavoritas adaptadorListaCamaras;
@@ -52,17 +53,17 @@ public class FavoritosCamarasFragment extends Fragment {
         listaCamarasFavoritas = view.findViewById(R.id.list_listaCamaras);
         mensajeSinFavoritos = view.findViewById(R.id.text_no_favoritos);
 
+        // Conectar a la base de datos
         gestorBDD = new GestorBDD(this.getContext());
         gestorBDD.conectar();
-
 
         adaptadorListaCamaras = new AdaptadorListaCamFavoritas(getContext(), R.layout.fila_lista_cam_favoritas, camarasFavoritas);
         listaCamarasFavoritas.setAdapter(adaptadorListaCamaras);
 
-
+        // Obtener la lista de cámaras favoritas desde la base de datos
         miListaFavoritosCamaras = gestorBDD.getGestorCamarasFavoritas().seleccionarTodasLasCamarasFavoritas();
 
-
+        // Realizar la petición para obtener todas las cámaras desde la API
         new PeticionesCamaras.ObtenerTodasLasCamaras() {
             @Override
             protected void onPostExecute(List<Camara> todasLasCamaras) {
@@ -73,7 +74,7 @@ public class FavoritosCamarasFragment extends Fragment {
 
                     camarasFavoritas.clear();
 
-
+                    // Guardar solo las cámaras que están en la lista de favoritos
                     for (Camara camara : todasLasCamaras) {
                         for (FavoritoCamara favorito : miListaFavoritosCamaras) {
                             if (Integer.valueOf(camara.getId()).equals(favorito.getIdCamara())) {
@@ -99,11 +100,11 @@ public class FavoritosCamarasFragment extends Fragment {
             }
         }.execute();
 
+        // Manejador de click sobre l a lista de cámaras favoritas
         adaptadorListaCamaras.setOnCamaraClickListener(new AdaptadorListaCamFavoritas.OnCamaraClickListener() {
             @Override
             public void onCamaraClick(Camara camara) {
                 Toast.makeText(getContext(), "Cámara seleccionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
-
                 CamaraFragment camaraFragment = CamaraFragment.newInstance(camara);
 
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

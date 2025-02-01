@@ -16,20 +16,21 @@ import com.example.front_android.R;
 
 import java.util.List;
 
+// Adaptador personalizado para mostrar una lista de cámaras en un ListView
 public class AdaptadorListaCamaras extends ArrayAdapter<Camara> {
 
+    // Manejo de clicks en los elementos de la lista
     public interface OnCamaraClickListener {
         void onCamaraClick(Camara camara);
         void onFavoritoClick(Camara camara);
     }
 
-
-    private List<Camara> miListaCamaras;
-    //Definimos el contexto y recurso a utilizar
-    private Context miContexto;
+    private List<Camara> miListaCamaras; // Lista de cámaras
+    private Context miContexto; // Contexto de la aplicación
     private int recursosLayout;
-    private AdaptadorListaCamaras.OnCamaraClickListener listener;
+    private AdaptadorListaCamaras.OnCamaraClickListener listener; // Listener para eventos de click
 
+    // Constructor del Adaptador
     public AdaptadorListaCamaras(@NonNull Context context, int resource, List<Camara> objects) {
         super(context, resource, objects);
         this.miListaCamaras = objects;
@@ -37,46 +38,40 @@ public class AdaptadorListaCamaras extends ArrayAdapter<Camara> {
         this.recursosLayout = resource;
     }
 
-
+    // Método para asignar un listener de clicks
     public void setOnCamaraClickListener(AdaptadorListaCamaras.OnCamaraClickListener listener) {
         this.listener = listener;
     }
 
-
+    // Este método define como se muestra cada elemento en la lista de camaras
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View miVista = convertView;
 
         if(miVista == null){
-            miVista = LayoutInflater.from(miContexto).inflate(R.layout.fila_lista_camaras,null);
-
+            miVista = LayoutInflater.from(miContexto).inflate(R.layout.fila_lista_camaras, null);
         }
 
-        // Definimos como se va a construir el objeto en este adaptador
         Camara camara = miListaCamaras.get(position);
-
-
 
         TextView nombreCam = miVista.findViewById(R.id.texto_nombreCam);
         nombreCam.setText(camara.getNombre() != null ?  camara.getNombre() : "No disponible");
 
-
         TextView region = miVista.findViewById(R.id.texto_region);
         region.setText(camara.getRegion() != null ? camara.getRegion().getNombreEs() : "No disponible");
-
-
 
         ImageButton imagen = miVista.findViewById(R.id.img);
         imagen.setImageResource(camara.getImagen());
 
+        // Manejar el click en la imagen para marcar como favorito
         imagen.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onFavoritoClick(camara);
             }
         });
 
-        // Manejar el clic en el elemento completo
+        // Manejar el clicl de una cámara de la lista
         miVista.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onCamaraClick(camara);
@@ -85,6 +80,4 @@ public class AdaptadorListaCamaras extends ArrayAdapter<Camara> {
 
         return miVista;
     }
-
-
 }

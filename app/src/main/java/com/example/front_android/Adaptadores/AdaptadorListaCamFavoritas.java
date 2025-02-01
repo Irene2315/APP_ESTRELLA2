@@ -15,18 +15,20 @@ import com.example.front_android.R;
 
 import java.util.List;
 
+// Adaptador personalizado para mostrar una lista de cámaras favoritas en un ListView
 public class AdaptadorListaCamFavoritas extends ArrayAdapter<Camara> {
 
+    // Manejar clicks en los elementos de la lista
     public interface OnCamaraClickListener {
         void onCamaraClick(Camara camara);
     }
 
-    private List<Camara> miListaCamaras;
-    private Context miContexto;
+    private List<Camara> miListaCamaras; // Lista de cámaras favoritas
+    private Context miContexto; // Contexto de la aplicación
     private int recursosLayout;
     private AdaptadorListaCamFavoritas.OnCamaraClickListener listener;
 
-    //Creamos un constructor
+    // Constructor del Adaptador
     public AdaptadorListaCamFavoritas(@NonNull Context context, int resource, List<Camara> objects) {
         super(context, resource, objects);
 
@@ -35,45 +37,36 @@ public class AdaptadorListaCamFavoritas extends ArrayAdapter<Camara> {
         this.recursosLayout = resource;
     }
 
+    // Método para asignar un listener de click
     public void setOnCamaraClickListener(AdaptadorListaCamFavoritas.OnCamaraClickListener listener) {
         this.listener = listener;
     }
 
-
+    // Método que define como se muestra cada cámara en la lista
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View miVista = convertView;
 
-        if(miVista == null){
-            miVista = LayoutInflater.from(miContexto).inflate(R.layout.fila_lista_cam_favoritas,null);
-
+        if (miVista == null) {
+            miVista = LayoutInflater.from(miContexto).inflate(R.layout.fila_lista_cam_favoritas, null);
         }
-
-        // Definimos como se va a construir el objeto en este adaptador
 
         Camara camara = miListaCamaras.get(position);
 
-
-
         TextView nombreCam = miVista.findViewById(R.id.texto_nombreCam);
-        nombreCam.setText(camara.getNombre() != null ?  camara.getNombre() : "No disponible");
-
+        nombreCam.setText(camara.getNombre() != null ? camara.getNombre() : "No disponible");
 
         TextView region = miVista.findViewById(R.id.texto_region);
         region.setText(camara.getRegion() != null ? camara.getRegion().getNombreEs() : "No disponible");
 
-
+        // Manejar el click en la cámara
         miVista.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onCamaraClick(camara);
             }
         });
 
-
-
         return miVista;
     }
-
-
 }

@@ -20,10 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PeticionesTiposDeIncidencia {
-
+    /**
+     * Método que parsea un objeto JSON para crear una instancia de Tipo de Incidencia.
+     */
     private static TipoIncidencia parseTipoIncidencia(JSONObject tipoIncidenciaObject) throws JSONException {
         TipoIncidencia tipoIncidencia = new TipoIncidencia();
-
 
         tipoIncidencia.setId(tipoIncidenciaObject.getInt("id"));
         tipoIncidencia.setNombre(tipoIncidenciaObject.getString("nombre"));
@@ -31,6 +32,9 @@ public class PeticionesTiposDeIncidencia {
         return tipoIncidencia;
     }
 
+    /**
+     * Método asíncrono para obtener todos los tipos de incidencias desde la API
+     */
     public static class ObtenerTodasLosTiposDeIncidencia extends AsyncTask<Void, Void, List<TipoIncidencia> >{
 
         @Override
@@ -41,7 +45,7 @@ public class PeticionesTiposDeIncidencia {
             List<TipoIncidencia> tiposIncidencias = new ArrayList<>();
 
             try {
-                // URL de las incidencias
+                // URL de los tipos de incidencias
                 URL url = new URL("http://10.10.13.251:8080/tiposIncidencias");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -88,18 +92,7 @@ public class PeticionesTiposDeIncidencia {
                 return null;
             }
 
-            return tiposIncidencias; // Retorna la lista de incidencias
+            return tiposIncidencias;
         }
-
-
-
-
     }
-
-
-
-
-
-
-
 }

@@ -26,6 +26,7 @@ import java.util.List;
 
 public class CamarasFragment extends Fragment {
 
+    // Variables para las cámaras
     private static ListView listaCamaras;
     private static ArrayList<Camara> miListaCamaras = new ArrayList<>();
     private static AdaptadorListaCamaras adaptadorListaCamaras;
@@ -43,17 +44,19 @@ public class CamarasFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_camaras, container, false);
 
         listaCamaras = view.findViewById(R.id.list_listaCamaras);
+
+        // Conexión a la base de datos
         gestorBDD = new GestorBDD(this.getContext());
         gestorBDD.conectar();
-
 
         adaptadorListaCamaras = new AdaptadorListaCamaras(getContext(), R.layout.fila_lista_camaras, miListaCamaras);
         listaCamaras.setAdapter(adaptadorListaCamaras);
 
-
+        // Obtener la lista de cámaras favoritas desde la base de datos
         miListaFavoritosCamaras = gestorBDD.getGestorCamarasFavoritas().seleccionarTodasLasCamarasFavoritas();
 
 
+        // Petición para obtener todas las cámaras desde la API
         new PeticionesCamaras.ObtenerTodasLasCamaras() {
             @Override
             protected void onPostExecute(List<Camara> camaras) {
@@ -61,10 +64,10 @@ public class CamarasFragment extends Fragment {
 
                 if (camaras != null && !camaras.isEmpty()) {
                     Log.d("Camara", "Cargando " + camaras.size() + " cámaras.");
-
                     miListaCamaras.clear();
-                    for (Camara camara : camaras) {
 
+                    for (Camara camara : camaras) {
+                        // Verificar si la cámara es Favorita
                         boolean esFavorito = false;
                         for (FavoritoCamara favorito : miListaFavoritosCamaras) {
                             if (camara.getId() == favorito.getIdCamara()) {
@@ -72,16 +75,14 @@ public class CamarasFragment extends Fragment {
                                 break;
                             }
                         }
-
+                        // Asignación de una imagen si es favorito o no
                         if (esFavorito) {
                             camara.setImagen(R.drawable.estrella_favorito_blanco);
                         } else {
                             camara.setImagen(R.drawable.estrella_check_blanco);
                         }
-
                         miListaCamaras.add(camara);
                     }
-
                     adaptadorListaCamaras.notifyDataSetChanged();
                 } else {
                     Log.d("Camara", "No se obtuvieron cámaras de la API.");
@@ -90,13 +91,13 @@ public class CamarasFragment extends Fragment {
         }.execute();
 
 
+        // Manejador de los clicks sobre la lista de la cámara
         adaptadorListaCamaras.setOnCamaraClickListener(new AdaptadorListaCamaras.OnCamaraClickListener() {
+
             @Override
             public void onCamaraClick(Camara camara) {
                 Toast.makeText(getContext(), "Cámara seleccionada: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
-
                 CamaraFragment camaraFragment = CamaraFragment.newInstance(camara);
-
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, camaraFragment);
                 transaction.addToBackStack(null);
@@ -120,8 +121,6 @@ public class CamarasFragment extends Fragment {
                 Toast.makeText(getContext(), "Favorito actualizado: " + camara.getNombre(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
         return view;
     }
 }

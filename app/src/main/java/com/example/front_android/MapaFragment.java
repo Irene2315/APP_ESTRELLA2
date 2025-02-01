@@ -63,6 +63,7 @@ import java.util.List;
 
 public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
+    // Variables de elementos de la interfaz y para almacenar
     private GoogleMap map;
     private FusedLocationProviderClient fs;
     private List<Incidencia> miListaIncidencias = new ArrayList<>();
@@ -102,6 +103,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
 
+        // Verificar si el usuario tiene una sesión activa
         SharedPreferences preferences = getContext().getSharedPreferences("app_localDatos", MODE_PRIVATE);
         boolean session = preferences.getBoolean("session", false);
 
@@ -118,11 +120,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
         View view = inflater.inflate(R.layout.fragment_mapa, container, false);
 
+        // Conexión a la base de datos
         gestorBDD = new GestorBDD(this.getContext());
         gestorBDD.conectar();
 
+        // Obtener las cámaras e incidencias favoritas de la base de datos
         miListaFavoritosIncidencias = gestorBDD.getGestorIncidenciasFavoritas().seleccionarTodasLasIncidenciasFavoritas();
-
         miListaFavoritosCamaras = gestorBDD.getGestorCamarasFavoritas().seleccionarTodasLasCamarasFavoritas();
 
 
@@ -135,9 +138,11 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         camaras_switch = view.findViewById(R.id.switch_camaras);
         favoritos_switch = view.findViewById(R.id.switch_fevoritos);
 
+        // Establece los switches activados
         incidencias_switch.setChecked(true);
         camaras_switch.setChecked(true);
 
+        // Inicializa el mapa dentro del fragmento
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -146,8 +151,10 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             Toast.makeText(getContext(), "Error al cargar el mapa", Toast.LENGTH_SHORT).show();
         }
 
+        // Establece los permisos necesarios para la geolocalización
         setPermisosGeoloc();
 
+        // Verifica si el usuario está logueado, redirigiéndolo al login si no lo está
         SharedPreferences preferences = getContext().getSharedPreferences("app_localDatos", MODE_PRIVATE);
         boolean logueado = preferences.getBoolean("session", false);
 
@@ -157,11 +164,13 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             requireActivity().finish();
         }
 
+        // Configuración del Spinner de Región
         selectRegion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 Log.d("MapaFragment", "Region seleccionada: " + position);
 
+                // Reinicia las selecciones de los demás Spinners
                 selectCiudad.setSelection(0);
                 selectTipoIncidencia.setSelection(0);
                 selectProvincia.setSelection(0);
@@ -174,6 +183,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     camaras_switch.setEnabled(true);
                     camaras_switch.setChecked(true);
 
+                    // Realiza la consulta de cámaras para la región seleccionada
                     new ObtenerCamarasRegion() {
                         @Override
                         protected void onPostExecute(List<Camara> camaras) {
@@ -187,6 +197,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                         }
                     }.execute(regionId);
 
+                    // Realiza la consulta de incidencias para la región seleccionada
                     new PeticionesIncidencias.ObtenerIncidenciasRegion() {
                         @Override
                         protected void onPostExecute(List<Incidencia> incidencias) {
@@ -207,6 +218,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        // Configuración del Spinner de Provincia
         selectProvincia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
@@ -214,6 +226,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     Provincia provinciaSelected = provincias.get(position - 1);
                     int provinciaId = provinciaSelected.getId();
 
+                    // Reinicia las selecciones de los demás Spinners
                     selectCiudad.setSelection(0);
                     selectTipoIncidencia.setSelection(0);
                     selectRegion.setSelection(0);
@@ -221,6 +234,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     camaras_switch.setEnabled(false);
                     camaras_switch.setChecked(false);
 
+                    // Realiza la consulta de incidencia para la provincia seleccionada
                     new PeticionesIncidencias.ObtenerIncidenciasProvincia() {
                         @Override
                         protected void onPostExecute(List<Incidencia> incidencias) {
@@ -240,6 +254,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        // Configuración del Spinner de Ciudad
         selectCiudad.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
@@ -247,6 +262,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     Ciudad ciudadSelected = ciudades.get(position - 1);
                     int ciudadId = ciudadSelected.getId();
 
+                    // Reinicia las selecciones de los demás Spinners
                     selectProvincia.setSelection(0);
                     selectTipoIncidencia.setSelection(0);
                     selectRegion.setSelection(0);
@@ -254,6 +270,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     camaras_switch.setEnabled(false);
                     camaras_switch.setChecked(false);
 
+                    // Realiza la consulta de incidencias para la ciudad seleccionada
                     new PeticionesIncidencias.ObtenerIncidenciasCiudad() {
                         @Override
                         protected void onPostExecute(List<Incidencia> incidencias) {
@@ -276,7 +293,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
+        // Configuración del Spinner de Tipo de incidencia
         selectTipoIncidencia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
@@ -284,6 +301,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     TipoIncidencia tipoSelected = tipoIncidencias.get(position - 1);
                     int tipoId = tipoSelected.getId();
 
+                    // Reinicia las selecciones de los demás Spinners
                     selectProvincia.setSelection(0);
                     selectCiudad.setSelection(0);
                     selectRegion.setSelection(0);
@@ -291,6 +309,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     camaras_switch.setEnabled(false);
                     camaras_switch.setChecked(false);
 
+                    // Realiza la consulta de incidencias para el tipo de incidenecia seleccionada
                     new PeticionesIncidencias.ObtenerIncidenciasTipoIncidencia() {
                         @Override
                         protected void onPostExecute(List<Incidencia> incidencias) {
@@ -303,7 +322,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                         }
                     }.execute(tipoId);
                     Log.d("MapaFragment", "ID de tipo pasada a ObtenerIncidenciasTipo: " + tipoId);
-
                 }
             }
 
@@ -312,6 +330,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        // Listener para el cambio del switch de incidencias
         incidencias_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -327,6 +346,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        // Listener oara el cambio del switch de cámaras
         camaras_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -342,43 +362,39 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        // Listener oara el cambio del switch de favoritos
         favoritos_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                incidencias_fav.clear();
+                camaras_fav.clear();
 
-                for (Incidencia incidencia : miListaIncidencias) {
-
-                    boolean esFavorito = false;
-                    for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
-                        if (incidencia.getId() == favorito.getIdIncidencia()) {
-                            esFavorito = true;
-                            break;
+                if (isChecked) {
+                    // Filtra las incidencias favoritas
+                    for (Incidencia incidencia : miListaIncidencias) {
+                        for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
+                            if (incidencia.getId() == favorito.getIdIncidencia()) {
+                                incidencias_fav.add(incidencia);
+                                break;
+                            }
                         }
                     }
-                    if (esFavorito) {
-                        incidencias_fav.add(incidencia);
-                    }
-                }
 
-                for (Camara camara : miListaCamaras) {
-
-                    boolean esFavorito = false;
-                    for (FavoritoCamara favorito : miListaFavoritosCamaras) {
-                        if (camara.getId() == favorito.getIdCamara()) {
-                            esFavorito = true;
-                            break;
+                    // Filtra las cámaras favoritas
+                    for (Camara camara : miListaCamaras) {
+                        for (FavoritoCamara favorito : miListaFavoritosCamaras) {
+                            if (camara.getId() == favorito.getIdCamara()) {
+                                camaras_fav.add(camara);
+                                break;
+                            }
                         }
                     }
-                    if (esFavorito) {
-                        camaras_fav.add(camara);
-                    }
                 }
-
                 actualizarMapa(camaras_fav, incidencias_fav);
             }
         });
 
-
+        // Configuración de adaptadores para los Spinners
         ArrayAdapter<String> adapterRegion = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, miListaRegiones);
         adapterRegion.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectRegion.setAdapter(adapterRegion);
@@ -391,15 +407,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         adapterProvincia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectProvincia.setAdapter(adapterProvincia);
 
-
-
         ArrayAdapter<String> adapterTipoIncidencia = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, miListaTipoIncidencias);
         adapterTipoIncidencia.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectTipoIncidencia.setAdapter(adapterTipoIncidencia);
 
 
-
-
+        // Carga el Spinner de región
         new PeticionesRegiones.ObtenerTodasLasRegiones() {
 
             @Override
@@ -422,11 +435,12 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
             }
         }.execute();
 
-
         if (!ciudades.isEmpty()){
             ciudades.clear();
         }
         ciudades.clear();
+
+        // Carga el Spinner de ciudad
         new PeticionesCiudades.ObtenerTodasLasCiudades() {
             @Override
             protected void onPostExecute(List<Ciudad> ciudades) {
@@ -450,6 +464,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         if (!provincias.isEmpty()){
             provincias.clear();
         }
+        // Carga el Spinner de provincia
         new PeticionesProvincias.ObtenerTodasLasProvincias() {
             @Override
             protected void onPostExecute(List<Provincia> provincias) {
@@ -472,6 +487,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         if (!tipoIncidencias.isEmpty()){
             tipoIncidencias.clear();
         }
+        // Carga el Spinner de tipo de incidencias
         new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia() {
             @Override
             protected void onPostExecute(List<TipoIncidencia> tipoIncidencias) {
@@ -496,7 +512,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
-
+    // Método que obtiene la ubicación actual del dispositivo
     public void obtenerGeolocalizacion() {
 
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -518,6 +534,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    // Método que otorga permisos de geolocalización
     public void setPermisosGeoloc() {
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -526,6 +543,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    // Método que verifica la respuesta de la solicitud de permisos de geolocalización.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -545,6 +563,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    // Método que actualiza el mapa de la aplicación
     private void actualizarMapa(List<Camara> camaras, List<Incidencia> incidencias) {
         if (map == null) {
             Log.e("MapaFragment", "Mapa no inicializado.");
@@ -560,157 +579,151 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         if (incidencias != null && !incidencias.isEmpty()) {
             pintarIncidencias(incidencias);
         }
-
-
     }
 
+    // Método que pinta las incidencias en el mapa, agregando marcadores y configurando los favoritos.
     public void pintarIncidencias(List<Incidencia> incidencias) {
-        if (incidencias != null && !incidencias.isEmpty()) {
-            // Configura el adaptador universal solo una vez
-            WindowAdapterUniversal adapterUniversal = new WindowAdapterUniversal(requireContext(), getLayoutInflater());
-            map.setInfoWindowAdapter(adapterUniversal);
+            if (incidencias != null && !incidencias.isEmpty()) {
+                // Configuración del adaptador universal solo una vez
+                WindowAdapterUniversal adapterUniversal = new WindowAdapterUniversal(requireContext(), getLayoutInflater());
+                map.setInfoWindowAdapter(adapterUniversal);
 
-                for (Incidencia incidencia : incidencias) {
+                    for (Incidencia incidencia : incidencias) {
 
-                    boolean esFavorito = false;
-                    for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
-                        if (incidencia.getId() == favorito.getIdIncidencia()) {
-                            esFavorito = true;
-                            break;
+                        boolean esFavorito = false;
+                        // Verifica si la incidencia es favorita comparando con la lista de favoritos
+                        for (FavoritoIncidencia favorito : miListaFavoritosIncidencias) {
+                            if (incidencia.getId() == favorito.getIdIncidencia()) {
+                                esFavorito = true;
+                                break;
+                            }
+                        }
+                        // Si la incidencia es favorita, se le asigna un ícono de estrella favorita
+                        if (esFavorito) {
+                            incidencia.setImagen(R.drawable.estrella_favorito);
+                            Log.d("fav", "pintarIncidencias: "+incidencia.getImagen());
+                        } else {
+                            // Si no es favorita, se asigna un ícono de estrella no seleccionada
+                            incidencia.setImagen(R.drawable.estrella_check);
+                            Log.d("fav", "pintarIncidencias: "+incidencia.getImagen());
+                        }
+                        miListaIncidencias.add(incidencia);
+                    }
+
+
+                // Configura el listener para manejar los clicks sobre las incidencias y los favoritos
+                adapterUniversal.setOnIncidenciaClickListener(new WindowAdapterUniversal.OnIncidenciaClickListener() {
+                    @Override
+                    public void onIncidenciaClick(Incidencia incidencia) {
+                        if (getContext() != null && getActivity() != null) {
+                            Log.d("INCIDENCIA_CLICK", "ID INCIDENCIA: " + incidencia.getId());
+                            Toast.makeText(getContext(), "Incidencia seleccionada: " + incidencia.getCiudad().getNombre(), Toast.LENGTH_SHORT).show();
+
+                            IncidenciaFragment incidenciaFragment = IncidenciaFragment.newInstance(incidencia);
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.fragment_container, incidenciaFragment);
+                            transaction.addToBackStack(null);
+                            transaction.commit();
                         }
                     }
-                    if (esFavorito) {
-                        incidencia.setImagen(R.drawable.estrella_favorito);
-                        Log.d("fav", "pintarIncidencias: "+incidencia.getImagen());
-                    } else {
-                        incidencia.setImagen(R.drawable.estrella_check);
-                        Log.d("fav", "pintarIncidencias: "+incidencia.getImagen());
-                    }
 
-                    miListaIncidencias.add(incidencia);
-                }
+                    @Override
+                    public void onFavoritoIncidenciaClick(Incidencia incidencia) {
+                        Log.d("INCIDENCIA_FAV", "IMAGEN INCIDENCIA: " + String.valueOf(incidencia.getImagen()));
+                        if (incidencia.getImagen() == R.drawable.estrella_check) {
+                            incidencia.setImagen(R.drawable.estrella_favorito);
 
+                            gestorBDD.getGestorIncidenciasFavoritas().insertarFavoritosIncidencias(String.valueOf(incidencia.getId()));
+                            Log.d("INCIDENCIA_FAV", "ID INCIDENCIA: " + String.valueOf(incidencia.getId()));
+                        } else {
+                            incidencia.setImagen(R.drawable.estrella_check);
+                            gestorBDD.getGestorIncidenciasFavoritas().eliminarFavoritosIncidencias(String.valueOf(incidencia.getId()));
+                        }
 
-            // Configura el listener para las incidencias
-            adapterUniversal.setOnIncidenciaClickListener(new WindowAdapterUniversal.OnIncidenciaClickListener() {
-                @Override
-                public void onIncidenciaClick(Incidencia incidencia) {
-                    if (getContext() != null && getActivity() != null) {
-                        Log.d("INCIDENCIA_CLICK", "ID INCIDENCIA: " + incidencia.getId());
-                        Toast.makeText(getContext(), "Incidencia seleccionada: " + incidencia.getCiudad().getNombre(), Toast.LENGTH_SHORT).show();
+                        Marker marker = findMarkerForIncidencia(incidencia);
 
-                        // Cambia al fragmento de detalles de incidencia
-                        IncidenciaFragment incidenciaFragment = IncidenciaFragment.newInstance(incidencia);
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, incidenciaFragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                    }
-                }
-
-
-                @Override
-                public void onFavoritoIncidenciaClick(Incidencia incidencia) {
-                    Log.d("INCIDENCIA_FAV", "IMAGEN INCIDENCIA: " + String.valueOf(incidencia.getImagen()));
-                    if (incidencia.getImagen() == R.drawable.estrella_check) {
-                        incidencia.setImagen(R.drawable.estrella_favorito);
-
-                        gestorBDD.getGestorIncidenciasFavoritas().insertarFavoritosIncidencias(String.valueOf(incidencia.getId()));
-                        Log.d("INCIDENCIA_FAV", "ID INCIDENCIA: " + String.valueOf(incidencia.getId()));
-                    } else {
-                        incidencia.setImagen(R.drawable.estrella_check);
-                        gestorBDD.getGestorIncidenciasFavoritas().eliminarFavoritosIncidencias(String.valueOf(incidencia.getId()));
-                    }
-
-                    Marker marker = findMarkerForIncidencia(incidencia);
-
-                    if (marker != null) {
-                        // Actualizar el icono del marcador
-                        int imagenId = incidencia.getImagen();
-                        if (imagenId != 0) {
-                            Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), imagenId);
-                            if (originalBitmap != null) {
-                                Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
-                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
-                                // Notificar que se ha actualizado el ícono
-                                Log.d("MapaFragment", "Icono actualizado para la cámara: " + incidencia.getCarretera());
+                        if (marker != null) {
+                            // Actualizar el icono del marcador
+                            int imagenId = incidencia.getImagen();
+                            if (imagenId != 0) {
+                                Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), imagenId);
+                                if (originalBitmap != null) {
+                                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
+                                    marker.setIcon(BitmapDescriptorFactory.fromBitmap(resizedBitmap));
+                                    // Notificar que se ha actualizado el ícono
+                                    Log.d("MapaFragment", "Icono actualizado para la cámara: " + incidencia.getCarretera());
+                                } else {
+                                    Log.e("MapaFragment", "Error al cargar la imagen: recurso nulo.");
+                                }
                             } else {
-                                Log.e("MapaFragment", "Error al cargar la imagen: recurso nulo.");
+                                Log.e("MapaFragment", "ID de imagen inválido: " + imagenId);
                             }
                         } else {
-                            Log.e("MapaFragment", "ID de imagen inválido: " + imagenId);
+                            Log.e("MapaFragment", "No se encontró el marcador para la cámara: " + incidencia.getId());
                         }
-                    } else {
-                        Log.e("MapaFragment", "No se encontró el marcador para la cámara: " + incidencia.getId());
+                        Toast.makeText(getContext(), "Favorito actualizado: " + incidencia.getCarretera(), Toast.LENGTH_SHORT).show();
                     }
+                });
 
-                    Toast.makeText(getContext(), "Favorito actualizado: " + incidencia.getCarretera(), Toast.LENGTH_SHORT).show();
+                // Itera y agrega los marcadores al mapa
+                for (Incidencia in : incidencias) {
+                    Log.d("MapaFragment", "Cargando incidencia: " + in);
 
+                    try {
+                        // Validar latitud y longitud
+                        double lat = Double.parseDouble(in.getLatitud());
+                        double lng = Double.parseDouble(in.getLongitud());
+                        LatLng punto = new LatLng(lat, lng);
+
+                        // Crear el icono redimensionado
+                        Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.incidencias);
+                        Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
+
+                        // Agregar marcador al mapa
+                        Marker marker = map.addMarker(new MarkerOptions()
+                                .position(punto)
+                                .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
+
+                        // Asignar la incidencia como tag al marcador
+                        marker.setTag(in);
+                        markersList.add(marker);
+
+                    } catch (NumberFormatException e) {
+                        Log.e("MapaFragment", "Coordenadas inválidas para la incidencia: " + (in != null ? in.getId() : "null"), e);
+                    } catch (Exception e) {
+                        Log.e("MapaFragment", "Error al procesar la incidencia: " + in, e);
+                    }
                 }
-
-
-            });
-
-            // Itera y agrega los marcadores al mapa
-            for (Incidencia in : incidencias) {
-                Log.d("MapaFragment", "Cargando incidencia: " + in);
-
-                try {
-                    // Validar latitud y longitud
-                    double lat = Double.parseDouble(in.getLatitud());
-                    double lng = Double.parseDouble(in.getLongitud());
-                    LatLng punto = new LatLng(lat, lng);
-
-                    // Crear el icono redimensionado
-                    Bitmap originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.incidencias);
-                    Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 50, 50, false);
-
-                    // Agregar marcador al mapa
-                    Marker marker = map.addMarker(new MarkerOptions()
-                            .position(punto)
-                            .icon(BitmapDescriptorFactory.fromBitmap(resizedBitmap)));
-
-                    // Asignar la incidencia como tag al marcador
-                    marker.setTag(in);
-                    markersList.add(marker);
-
-                } catch (NumberFormatException e) {
-                    Log.e("MapaFragment", "Coordenadas inválidas para la incidencia: " + (in != null ? in.getId() : "null"), e);
-                } catch (Exception e) {
-                    Log.e("MapaFragment", "Error al procesar la incidencia: " + in, e);
-                }
+            } else {
+                Log.d("MapaFragment", "No hay incidencias para pintar.");
             }
-        } else {
-            Log.d("MapaFragment", "No hay incidencias para pintar.");
         }
-    }
 
-
-
-
+    // Método asincrónico que obtiene todas las incidencias y las pasa al método pintarIncidencias
     @SuppressLint("StaticFieldLeak")
-    public void pintarIncidencias() {
-        new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
-            @Override
-            protected void onPostExecute(List<Incidencia> incidencias) {
-                super.onPostExecute(incidencias);
-                if (incidencias != null && !incidencias.isEmpty()) {
-                    incidenciasResultado[0] = incidencias;
-                    pintarIncidencias(incidencias);
+        public void pintarIncidencias() {
+            new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
+                @Override
+                protected void onPostExecute(List<Incidencia> incidencias) {
+                    super.onPostExecute(incidencias);
+                    if (incidencias != null && !incidencias.isEmpty()) {
+                        incidenciasResultado[0] = incidencias;
+                        pintarIncidencias(incidencias);
+                    }
                 }
-            }
-        }.execute();
-    }
+            }.execute();
+        }
 
-
+    // Método que pinta las cámaras en el mapa, agregando marcadores y configurando los favoritos.
     public void pintarCamaras(List<Camara> camaras) {
         if (camaras != null && !camaras.isEmpty()) {
             WindowAdapterUniversal adapterUniversal = new WindowAdapterUniversal(requireContext(), getLayoutInflater());
             map.setInfoWindowAdapter(adapterUniversal);
 
             for (Camara camara : camaras) {
-
                 boolean esFavorito = false;
+
+                // Verifica si la cámara es favorita comparando con la lista de favoritos
                 for (FavoritoCamara favorito : miListaFavoritosCamaras) {
                     if (camara.getId() == favorito.getIdCamara()) {
                         esFavorito = true;
@@ -718,17 +731,18 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
                     }
                 }
 
-
+                // Si la cámara es favorita, se le asigna un ícono de estrella favorita
                 if (esFavorito) {
                     camara.setImagen(R.drawable.estrella_favorito);
                 } else {
+                    // Si no es favorita, se asigna un ícono de estrella no seleccionada
                     camara.setImagen(R.drawable.estrella_check);
                 }
 
                 miListaCamaras.add(camara);
             }
 
-            // Configura el listener para las cámaras
+            // Configura el listener para manejar los clics sobre las cámaras y los favoritos
             adapterUniversal.setOnCamaraClickListener(new WindowAdapterUniversal.OnCamaraClickListener() {
                 @Override
                 public void onCamaraClick(Camara camara) {
@@ -815,6 +829,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    // Método para buscar un marcador (Marker) asociado a una cámara (Camara) en la lista de marcadores (markersList)
     private Marker findMarkerForCamara(Camara camara) {
         for (Marker marker : markersList) {
             if (marker.getTag() instanceof Camara && ((Camara) marker.getTag()).getId() == camara.getId()) {
@@ -823,7 +838,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }
         return null;
     }
-
+    // Método para buscar un marcador (Marker) asociado a una incidencia (Incidencia) en la lista de marcadores (markersList)
     private Marker findMarkerForIncidencia(Incidencia incidencia) {
         for (Marker marker : markersList) {
             if (marker.getTag() instanceof Incidencia && ((Incidencia) marker.getTag()).getId() == incidencia.getId()) {
@@ -833,7 +848,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         return null;
     }
 
-
+    // Método asincrónico que obtiene todas las cámaras y las pasa al método pintarCamaras
     @SuppressLint("StaticFieldLeak")
     public void pintarCamaras() {
         new PeticionesCamaras.ObtenerTodasLasCamaras() {
@@ -848,7 +863,7 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         }.execute();
     }
 
-
+    // Método que se llama cuando el mapa de Google está listo
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
@@ -863,7 +878,5 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         } else {
             setPermisosGeoloc();
         }
-
-
     }
 }

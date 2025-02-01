@@ -50,7 +50,7 @@ public class PeticionesUsuarios {
     }
 
     /**
-     * Clase AsyncTask para obtener un usuario desde el servidor.
+     * Método asíncrono para obtener un usuario desde la API.
      */
     public static class ObtenerUsuarios extends AsyncTask<Void, Void, Usuario> {
 
@@ -61,10 +61,11 @@ public class PeticionesUsuarios {
             StringBuilder jsonResult = new StringBuilder();
 
             try {
+                //URL de los usuarios
                 URL url = new URL("http://10.10.13.251:8080/usuarios");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
-                // Verificar el código de respuesta del servidor
+                // Verificar el código de respuesta
                 int code = urlConnection.getResponseCode();
 
                 if (code != HttpURLConnection.HTTP_OK) {
@@ -84,6 +85,7 @@ public class PeticionesUsuarios {
                 e.printStackTrace();
                 return null;
             } finally {
+
                 // Cerrar recursos
                 if (reader != null) {
                     try {
@@ -109,8 +111,6 @@ public class PeticionesUsuarios {
             }
         }
 
-
-
         @Override
         protected void onPostExecute(Usuario usuario) {
             if (usuario != null) {
@@ -122,9 +122,10 @@ public class PeticionesUsuarios {
         }
     }
 
+    /**
+     * Método asíncrono para obtner solo un usuario
+     */
     public static class ObtenerUnUsuario extends AsyncTask<Integer, Void, Usuario> {
-
-
 
         @Override
         protected Usuario doInBackground(Integer... params) {
@@ -134,11 +135,10 @@ public class PeticionesUsuarios {
 
             try {
                 int idUsuario = params[0];
-                // Construye la URL con el ID del usuario
+                // URL de un usuario
                 URL url = new URL("http://10.10.13.251:8080/usuarios/" + idUsuario);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
-                // Configura la conexión
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Accept", "application/json");
 
@@ -185,6 +185,9 @@ public class PeticionesUsuarios {
         }
     }
 
+    /**
+     * Método asíncrono para loguear un usuario
+     */
     public static class LoguearUsuario extends AsyncTask<String, Void, String> {
         private Context context;
 
@@ -199,7 +202,9 @@ public class PeticionesUsuarios {
             StringBuilder jsonResult = new StringBuilder();
 
             try {
+                // Url del servidor para iniciar sesión
                 URL url = new URL("http://10.10.13.251:8080/loginAndroid");
+
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
                 urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -209,19 +214,17 @@ public class PeticionesUsuarios {
                 String nombre = strings[0];
                 String contraseña = strings[1];
 
-                //String hash = HasherPass.calcularSHA256(contraseña);
-
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("nombre", nombre);
                 jsonParam.put("contraseña", contraseña);
 
-                Log.d("LoguearUsuario", "JSON enviado: " + jsonParam.toString());
-
+                // Enviar datos al servidor
                 try (DataOutputStream writer = new DataOutputStream(urlConnection.getOutputStream())) {
                     writer.write(jsonParam.toString().getBytes(StandardCharsets.UTF_8));
                     writer.flush();
                 }
 
+                // Obtener respuesta del servidor
                 int responseCode = urlConnection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8));
@@ -251,18 +254,21 @@ public class PeticionesUsuarios {
         protected void onPostExecute(String result) {
             if (result != null) {
                 try {
+
+                    // Parsear la respuesta del servidor
                     JSONObject responseJson = new JSONObject(result);
 
                     String rol = responseJson.optString("rol");
 
+                    // Redirige al MainActivity
                     if (rol != null && !rol.isEmpty()) {
                         Intent intent = new Intent(context, MainActivity.class);
                         context.startActivity(intent);
 
                     }
 
+                    // Guarda el ID del usuario en el SharedPreferences
                     String id = responseJson.optString("id");
-
                     SharedPreferences preferences = context.getSharedPreferences("app_localDatos", MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.clear();
@@ -283,6 +289,9 @@ public class PeticionesUsuarios {
 
     }
 
+    /**
+     * Método asíncrono para registrar un usuario
+     */
     public static class RegistrarUsuario extends AsyncTask<String, Void, String> {
 
         @Override
@@ -292,6 +301,7 @@ public class PeticionesUsuarios {
             StringBuilder jsonResult = new StringBuilder();
 
             try {
+                // Url del servidor para registrar un usuario
                 URL url = new URL("http://10.10.13.251:8080/registroAndroid");
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
@@ -307,17 +317,15 @@ public class PeticionesUsuarios {
                 JSONObject jsonParam = new JSONObject();
                 jsonParam.put("nombre", nombre);
                 jsonParam.put("contraseña", contrasena);
-                //jsonParam.put("contraseña", HasherPass.hasherContraseña(contrasena));
                 jsonParam.put("correo", correo);
 
-
-                Log.d("RegistrarUsuario", "JSON enviado: " + jsonParam.toString());
-
+                // Enviar datos al servidor
                 try (DataOutputStream writer = new DataOutputStream(urlConnection.getOutputStream())) {
                     writer.write(jsonParam.toString().getBytes(StandardCharsets.UTF_8));
                     writer.flush();
                 }
 
+                // Leer respuesta del servidor
                 int responseCode = urlConnection.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8));

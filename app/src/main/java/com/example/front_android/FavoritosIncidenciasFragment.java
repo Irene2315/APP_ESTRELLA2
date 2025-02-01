@@ -27,6 +27,7 @@ import java.util.List;
 
 public class FavoritosIncidenciasFragment extends Fragment {
 
+    // Variables para incidencias favoritas
     private static ListView listaIncidenciasFavoritas;
     private static ArrayList<Incidencia> miListaIncidencias = new ArrayList<>();
     private static AdaptadorListaInciFavoritas adaptadorListaIncidencias;
@@ -35,13 +36,9 @@ public class FavoritosIncidenciasFragment extends Fragment {
     private List <Incidencia> incidenciasFavoritas = new ArrayList<>();
     TextView mensajeSinFavoritos;
 
-
-
     public FavoritosIncidenciasFragment() {
         // Required empty public constructor
     }
-
-
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -53,14 +50,17 @@ public class FavoritosIncidenciasFragment extends Fragment {
         listaIncidenciasFavoritas = view.findViewById(R.id.list_listaIncidencias);
         mensajeSinFavoritos = view.findViewById(R.id.text_no_favoritos);
 
+        // Conectar a la base de datos
         gestorBDD = new GestorBDD(this.getContext());
-
         gestorBDD.conectar();
 
         adaptadorListaIncidencias = new AdaptadorListaInciFavoritas(getContext(),R.layout.fila_lista_inci_favoritas,incidenciasFavoritas);
         listaIncidenciasFavoritas.setAdapter(adaptadorListaIncidencias);
 
+        // Obtener la lista de incidencias favoritas desde la base de datos
         miListaFavoritosIncidencias = gestorBDD.getGestorIncidenciasFavoritas().seleccionarTodasLasIncidenciasFavoritas();
+
+        // Realizar la petición para obtener todas las incidencias desde la API
 
         new PeticionesIncidencias.ObtenerTodasLasIncidencias() {
             @Override
@@ -70,10 +70,9 @@ public class FavoritosIncidenciasFragment extends Fragment {
                 if (incidencias != null && !incidencias.isEmpty()) {
                     Log.d("Incidencia", "Cargando " + incidencias.size() + " incidencias.");
 
-
                     incidenciasFavoritas.clear();
 
-
+                    // Guardar solo las incidencia que están en la lista de favoritos
                     for (Incidencia incidencia : incidencias) {
 
                        for(FavoritoIncidencia favoritoIncidencia: miListaFavoritosIncidencias){
@@ -98,14 +97,11 @@ public class FavoritosIncidenciasFragment extends Fragment {
             }
         }.execute();
 
-
-
+        // Manejador de click sobre l a lista de incidencias favoritas
         adaptadorListaIncidencias.setOnIncidenciaClickListener(new AdaptadorListaInciFavoritas.OnIncidenciaClickListener() {
             @Override
             public void onIncidenciaClick(Incidencia incidencia) {
                 Toast.makeText(getContext(), "Incidencia selecionada: " + incidencia.getCiudad().getNombre(), Toast.LENGTH_SHORT).show();
-
-
                 IncidenciaFragment incidenciaFragment = IncidenciaFragment.newInstance(incidencia);
 
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -113,11 +109,7 @@ public class FavoritosIncidenciasFragment extends Fragment {
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
-
-
         });
-
-
         return view;
     }
 }

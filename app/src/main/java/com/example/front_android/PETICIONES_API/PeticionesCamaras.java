@@ -21,6 +21,9 @@ import java.util.List;
 
 public class PeticionesCamaras {
 
+    /**
+     * Método que parsea un objeto JSON para crear una instancia de Camara.
+     */
     private static Camara parseCamara(JSONObject camaraObject) throws JSONException {
         Camara camara = new Camara();
 
@@ -30,14 +33,14 @@ public class PeticionesCamaras {
         camara.setLatitud(camaraObject.getString("latitud"));
         camara.setLongitud(camaraObject.getString("longitud"));
 
-
+        // Verifica si existe la URL de la imagen
         if (!camaraObject.isNull("urlImage")) {
             camara.setUrlImagen(camaraObject.getString("urlImage"));
         } else {
             camara.setUrlImagen(null);
         }
 
-
+        // Verifica si existe la información de la región
         if (!camaraObject.isNull("region")) {
             JSONObject regionObject = camaraObject.getJSONObject("region");
             Region region = new Region();
@@ -57,7 +60,9 @@ public class PeticionesCamaras {
     }
 
 
-
+    /**
+     * Método asíncrono para obtener todas las cámaras desde la API.
+     */
 
     public static class ObtenerTodasLasCamaras extends AsyncTask<Void, Void, List<Camara>> {
 
@@ -69,7 +74,7 @@ public class PeticionesCamaras {
             List<Camara> camaras = new ArrayList<>();
 
             try {
-                // URL de las incidencias
+                // URL de las cámaras
                 URL url = new URL("http://10.10.13.251:8080/privateCameras");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -116,14 +121,13 @@ public class PeticionesCamaras {
                 return null;
             }
 
-            return camaras; // Retorna la lista de incidencias
+            return camaras; // Retorna la lista de cámara
         }
-
-
-
-
     }
 
+    /**
+     * Método asíncrono para obtener las cámaras de una región específica desde la API.
+     */
     public static class ObtenerCamarasRegion extends AsyncTask<Integer, Void, List<Camara>> {
 
         @Override
@@ -140,11 +144,13 @@ public class PeticionesCamaras {
                 URL url = new URL("http://10.10.13.251:8080/privateCameras/region/" + regionId);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
+                // Verificar el código de respuesta
                 int code = urlConnection.getResponseCode();
                 if (code != HttpURLConnection.HTTP_OK) {
                     throw new IOException("Respuesta inválida del servidor: " + code);
                 }
 
+                // Leer la respuesta del servidor
                 reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -183,9 +189,6 @@ public class PeticionesCamaras {
 
             return camaras;
         }
-
-
-
     }
 }
 

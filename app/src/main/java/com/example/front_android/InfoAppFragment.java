@@ -13,25 +13,24 @@ import android.widget.ImageButton;
 
 
 public class InfoAppFragment extends Fragment {
+
+    // Botones para las redes sociales
     private ImageButton instagram, facebook, ex;
 
     public InfoAppFragment() {
         // Required empty public constructor
     }
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
        View view = inflater.inflate(R.layout.fragment_info_app, container, false);
 
         instagram = view.findViewById(R.id.imagen_instagram);
         facebook = view.findViewById(R.id.imagen_facebook);
         ex = view.findViewById(R.id.imagen_ex);
 
+        // Configurar el botón de Instagram para abrir la URL de Instagram en el navegador
         instagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,6 +40,7 @@ public class InfoAppFragment extends Fragment {
             }
         });
 
+        // Configurar el botón de Facebook para abrir la URL de Facebook en el navegador
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +50,7 @@ public class InfoAppFragment extends Fragment {
             }
         });
 
+        // Configurar el botón X para abrir la URL en el navegador
         ex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,10 +60,5 @@ public class InfoAppFragment extends Fragment {
             }
         });
         return view;
-
     }
-
-
-
-
 }

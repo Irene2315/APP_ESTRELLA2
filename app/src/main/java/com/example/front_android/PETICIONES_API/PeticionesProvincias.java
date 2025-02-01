@@ -20,22 +20,21 @@ import java.util.List;
 
 public class PeticionesProvincias {
 
+    /**
+     * Método que parsea un objeto JSON para crear una instancia de Provincia.
+     */
     private static Provincia parseProvincia(JSONObject provinciaObject) throws JSONException {
         Provincia provincia = new Provincia();
 
-        // Obtener los valores básicos del objeto Provincia
         provincia.setId(provinciaObject.getInt("id"));
         provincia.setNombre(provinciaObject.getString("nombre"));
         provincia.setLatitud(provinciaObject.getString("latitud"));
         provincia.setLongitud(provinciaObject.getString("longitud"));
 
-        // Obtener el JSONArray de las ciudades
         JSONArray ciudadesArray = provinciaObject.getJSONArray("ciudad");
 
-        // Crear una lista de ciudades
         List<Ciudad> ciudades = new ArrayList<>();
 
-        // Recorrer el JSONArray y crear objetos Ciudad
         for (int i = 0; i < ciudadesArray.length(); i++) {
             JSONObject ciudadObject = ciudadesArray.getJSONObject(i);
 
@@ -46,18 +45,18 @@ public class PeticionesProvincias {
             ciudad.setLatitud(ciudadObject.getString("latitud"));
             ciudad.setLongitud(ciudadObject.getString("longitud"));
 
-            // Añadir la ciudad a la lista
             ciudades.add(ciudad);
         }
 
-        // Asignar la lista de ciudades al objeto Provincia
         provincia.setCiudades(ciudades);
 
-        // Devolver el objeto Provincia con las ciudades
         return provincia;
     }
 
 
+    /**
+     * Método asíncrono para obtener todas las provincias desde la API
+     */
     public static class ObtenerTodasLasProvincias extends AsyncTask<Void, Void, List<Provincia>> {
 
         @Override
@@ -68,7 +67,7 @@ public class PeticionesProvincias {
             List<Provincia> provincias = new ArrayList<>();
 
             try {
-                // URL de las incidencias
+                // URL de las provincias
                 URL url = new URL("http://10.10.13.251:8080/provincias");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -115,12 +114,7 @@ public class PeticionesProvincias {
                 return null;
             }
 
-            return provincias; // Retorna la lista de incidencias
+            return provincias;
         }
-
-
-
     }
-
-
 }

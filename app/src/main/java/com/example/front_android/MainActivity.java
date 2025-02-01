@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    // Variables de los elementos y fragmentos
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
@@ -55,28 +55,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         navigationView.bringToFront();
 
+        // Configuración del menú lateral (DrawerLayout) con el ActionBar
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.abrir_menu_nav, R.string.cerrar_menu_nav);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-
+        // Establecer el listener para los elementos del menú de navegación
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-
         fragmentTransaction.replace(R.id.fragment_container,mapaFragment);
         fragmentTransaction.commit();
 
-
     }
-
-
 
     @Override
     public void onBackPressed() {
+        // Si el menú lateral está abierto, lo cierra en lugar de salir de la app
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show();
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -88,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Obtiene el ID del ítem seleccionado
         int id = item.getItemId();
         String message = "";
 
@@ -97,36 +96,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_mapa:
                 message = "Mapa seleccionado";
-//                new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
+
                 new PeticionesIncidencias.ObtenerIncidenciasRegion().execute();
-                //new PeticionesIncidencias.ObtenerIncidenciasProvincia().execute();
-                //new PeticionesIncidencias.ObtenerIncidenciasCiudad().execute();
-                //new PeticionesIncidencias.ObtenerIncidenciasTipoIncidencia().execute();
-                //new PeticionesCiudades.ObtenerTodasLasCiudades().execute();
-                //new PeticionesProvincias.ObtenerTodasLasProvincias().execute();
-                //  new PeticionesRegiones.ObtenerTodasLasRegiones().execute();
-                //new PeticionesTiposDeIncidencia.ObtenerTodasLosTiposDeIncidencia().execute();
-
                 new PeticionesCamaras.ObtenerTodasLasCamaras().execute();
-
-                //new PeticionesCamaras.ObtenerCamarasRegion().execute();
-
                 fragmentTransaction.replace(R.id.fragment_container,mapaFragment);
-
-
-
-
                 break;
+
             case R.id.nav_camaras:
                 ArrayList<Usuario> miListaUsuarios = new ArrayList<Usuario>();
                 message = "Cámaras seleccionado";
                 fragmentTransaction.replace(R.id.fragment_container,camarasFragment);
 
-
                 break;
             case R.id.nav_incidencias:
                 message = "Incidencias seleccionado";
-//                new PeticionesIncidencias.ObtenerTodasLasIncidencias().execute();
                 fragmentTransaction.replace(R.id.fragment_container,incidenciasFragment);
                 break;
             case R.id.nav_favoritos_camaras:
@@ -143,11 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_perfil:
                 message = "Perfil seleccionado";
-
                 fragmentTransaction.replace(R.id.fragment_container,perfilFragment);
-
-                //new PeticionesUsuarios.ObtenerUsuarios().execute();
-
                 break;
             case R.id.nav_cerrar_sesion:
                 Intent i = new Intent(this, LoginActivity.class);
@@ -159,18 +138,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         fragmentTransaction.commit();
 
-        // Mostrar el mensaje si existe
         if (!message.isEmpty()) {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
 
         // Cerrar el Drawer después de seleccionar
         drawerLayout.closeDrawer(GravityCompat.START);
+
         return true;
     }
-
-
-
-
-
 }

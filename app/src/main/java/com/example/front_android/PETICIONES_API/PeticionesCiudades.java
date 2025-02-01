@@ -20,6 +20,9 @@ import java.util.List;
 
 public class PeticionesCiudades {
 
+    /**
+     * Método que parsea un objeto JSON para crear una instancia de Ciudad.
+     */
     private static Ciudad parseCiudad(JSONObject incidenciaObject) throws JSONException {
         Ciudad ciudad = new Ciudad();
 
@@ -28,11 +31,12 @@ public class PeticionesCiudades {
         ciudad.setLatitud(incidenciaObject.getString("latitud"));
         ciudad.setLongitud(incidenciaObject.getString("longitud"));
 
-
-
         return ciudad;
     }
 
+    /**
+     * Método asíncrono para obtener todas las ciudades desde la API.
+     */
     public static class ObtenerTodasLasCiudades extends AsyncTask<Void, Void, List<Ciudad>> {
 
         @Override
@@ -43,7 +47,7 @@ public class PeticionesCiudades {
             List<Ciudad> ciudades = new ArrayList<>();
 
             try {
-                // URL de las incidencias
+                // URL de las ciudades
                 URL url = new URL("http://10.10.13.251:8080/ciudades");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -90,10 +94,8 @@ public class PeticionesCiudades {
                 return null;
             }
 
-            return ciudades; // Retorna la lista de incidencias
+            return ciudades; // Retorna la lista de ciudades
         }
-
-
 
 
     }

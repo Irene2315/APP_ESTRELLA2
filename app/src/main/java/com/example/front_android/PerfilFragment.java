@@ -20,15 +20,13 @@ import com.example.front_android.PETICIONES_API.PeticionesUsuarios;
 
 public class PerfilFragment extends Fragment {
 
+    // Varibles de elementos
     private TextView nombreUsuario;
     private TextView correoUsuario;
 
     public PerfilFragment() {
         // Required empty public constructor
     }
-
-
-
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -39,23 +37,19 @@ public class PerfilFragment extends Fragment {
         nombreUsuario = view.findViewById(R.id.nombre_usuario);
         correoUsuario = view.findViewById(R.id.correo_usuario);
 
+        // Obtiene las preferencias de la aplicación
         SharedPreferences preferences = getContext().getSharedPreferences("app_localDatos", MODE_PRIVATE);
-
         // Obtener el idUsuario y convertirlo a int
         String idUsuarioString = preferences.getString("idUsuario", "default");
 
-        int idUsuario = -1; // Valor por defecto si no es válido
+        int idUsuario = -1;
 
-        // Intentar convertir el String a un int
         try {
             idUsuario = Integer.parseInt(idUsuarioString);
         } catch (NumberFormatException e) {
             Log.e("Usuario", "Error al convertir idUsuario a int: " + e.getMessage());
         }
 
-        Log.d("Usuario", "ID de usuario obtenido: " + idUsuario);
-
-        // Verifica si el idUsuario es válido (es decir, no es -1 o el valor por defecto)
         if (idUsuario != -1) {
             Log.d("Usuario", "ID de usuario obtenido: " + idUsuario);
 
@@ -75,10 +69,7 @@ public class PerfilFragment extends Fragment {
             }.execute(idUsuario);
         } else {
             Log.e("Usuario", "El ID de usuario es nulo o inválido.");
-            // Aquí puedes manejar la situación cuando no hay ID guardado, como mostrar un mensaje o redirigir al login
         }
-
-
         return view;
     }
 

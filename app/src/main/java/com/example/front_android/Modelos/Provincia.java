@@ -1,8 +1,8 @@
 package com.example.front_android.Modelos;
 
-
 import java.io.Serializable;
 import java.util.List;
+
 
 public class Provincia implements Serializable {
     private int id;
@@ -12,9 +12,20 @@ public class Provincia implements Serializable {
 
     private List<Ciudad> ciudades;
 
+    /**
+     * Constructor vacío.
+     */
     public Provincia() {
     }
 
+    /**
+     * Constructor con parámetros para inicializar una provincia.
+     * @param ciudades Lista de ciudades pertenecientes a la provincia.
+     * @param id Identificador único de la provincia.
+     * @param latitud Latitud geográfica de la provincia.
+     * @param longitud Longitud geográfica de la provincia.
+     * @param nombre Nombre de la provincia.
+     */
     public Provincia(List<Ciudad> ciudades, int id, String latitud, String longitud, String nombre) {
         this.ciudades = ciudades;
         this.id = id;
@@ -23,9 +34,12 @@ public class Provincia implements Serializable {
         this.nombre = nombre;
     }
 
+    // Getters y Setters para acceder y modificar los atributos de la Provincia.
+
     public List<Ciudad> getCiudades() {
         return ciudades;
     }
+
 
     public void setCiudades(List<Ciudad> ciudades) {
         this.ciudades = ciudades;
@@ -47,9 +61,11 @@ public class Provincia implements Serializable {
         this.latitud = latitud;
     }
 
+
     public String getLongitud() {
         return longitud;
     }
+
 
     public void setLongitud(String longitud) {
         this.longitud = longitud;
@@ -63,7 +79,9 @@ public class Provincia implements Serializable {
         this.nombre = nombre;
     }
 
-
+    /**
+     * Método que muestra los datos de la Provincia.
+     */
     @Override
     public String toString() {
         return "Provincia{" +
@@ -75,5 +93,3 @@ public class Provincia implements Serializable {
                 '}';
     }
 }
-
-

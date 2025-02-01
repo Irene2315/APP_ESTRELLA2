@@ -17,7 +17,7 @@ import com.example.front_android.Modelos.Camara;
 
 public class CamaraFragment extends Fragment {
 
-
+    // Variables para almacenar información de la cámara
     private Camara camaraSelect;
     private TextView nombreCamara;
     private TextView regionCamara;
@@ -27,7 +27,7 @@ public class CamaraFragment extends Fragment {
         // Required empty public constructor
     }
 
-
+    // Método para crear un instancia de CamaraFragment
     public static CamaraFragment newInstance(Camara camara) {
         CamaraFragment fragment = new CamaraFragment();
         Bundle args = new Bundle();
@@ -46,24 +46,26 @@ public class CamaraFragment extends Fragment {
         regionCamara = view.findViewById(R.id.region_camara);
         imagenCamara = view.findViewById(R.id.imagen_camara);
 
+        // Obtener la cámara seleccionada
         camaraSelect = (Camara) getArguments().getSerializable("camara");
 
         Log.d("CamaraFragment", "Cámara seleccionada: " + camaraSelect.toString());
 
-
+        // Configurar el nombre de la cámara
         if (camaraSelect.getNombre() != null) {
             nombreCamara.setText(camaraSelect.getNombre());
         } else {
             nombreCamara.setText("Nombre no disponible");
         }
 
+        // Configurar la región de la cámara
         if (camaraSelect.getRegion() != null && camaraSelect.getRegion().getNombreEs() != null) {
             regionCamara.setText(camaraSelect.getRegion().getNombreEs());
         } else {
             regionCamara.setText("Región no disponible");
         }
 
-
+        // Cargar la imagen de la cámara
         if (camaraSelect.getUrlImagen() != null && !camaraSelect.getUrlImagen().isEmpty()) {
             Glide.with(getContext())
                     .load(camaraSelect.getUrlImagen())
@@ -75,8 +77,6 @@ public class CamaraFragment extends Fragment {
                     .load(R.drawable.defecto)
                     .into(imagenCamara);
         }
-
-
         return view;
     }
 }

@@ -9,17 +9,27 @@ public class Region implements Serializable {
     private String nombreEs;
     private String nombreEu;
 
-
-
+    /**
+     * Constructor vacío.
+     */
     public Region() {
     }
 
+    /**
+     * Constructor con parámetros para inicializar una región.
+     * @param id Identificador único de la región.
+     * @param idRegion Identificador adicional de la región.
+     * @param nombreEs Nombre de la región en español.
+     * @param nombreEu Nombre de la región en euskera.
+     */
     public Region(int id, int idRegion, String nombreEs, String nombreEu) {
         this.id = id;
         this.idRegion = idRegion;
         this.nombreEs = nombreEs;
         this.nombreEu = nombreEu;
     }
+
+    // Getters y Setters para acceder y modificar los atributos de la Region.
 
     public int getId() {
         return id;
@@ -53,6 +63,9 @@ public class Region implements Serializable {
         this.nombreEu = nombreEu;
     }
 
+    /**
+     * Método que muestra los datos de la Region.
+     */
     @Override
     public String toString() {
         return "Region{" +
